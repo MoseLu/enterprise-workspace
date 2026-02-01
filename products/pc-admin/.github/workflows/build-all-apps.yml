@@ -1,0 +1,203 @@
+name: Build All Apps
+
+# 全量构建工作流：使用可复用工作流并行构建所有8个应用
+# - 触发条件：
+#   1. repository_dispatch 事件（通过 API 触发，event_type: build-all-apps）
+#   2. workflow_dispatch（手动触发）
+# - 使用矩阵策略并行构建所有应用
+# - 构建完成后，自动触发全量部署工作流
+on:
+  repository_dispatch:
+    types: [build-all-apps]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+  packages: write
+
+jobs:
+  build-all:
+    name: Build All Apps
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - app_name: system-app
+          - app_name: admin-app
+          - app_name: logistics-app
+          - app_name: quality-app
+          - app_name: production-app
+          - app_name: engineering-app
+          - app_name: finance-app
+      fail-fast: false
+      max-parallel: 8
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      
+      - name: Get pnpm store directory
+        shell: bash
+        id: pnpm-cache
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+          echo "PNPM_STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.PNPM_STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            **/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+      
+      - name: Restore built packages cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            packages/*/dist
+            packages/*/build
+          key: packages-build-${{ github.sha }}
+          restore-keys: |
+            packages-build-
+      
+      - name: Build shared dependencies
+        run: |
+          echo "🔨 构建共享依赖包..."
+          echo "  这确保共享组件包（如 @btc/shared-components）的修改能够生效"
+          echo ""
+          
+          # 始终重新构建共享依赖，确保修改生效
+          # 使用 --force 确保即使缓存存在也重新构建
+          echo "📦 构建 @btc/vite-plugin..."
+          pnpm --filter @btc/vite-plugin run build --force || pnpm --filter @btc/vite-plugin run build
+          
+          echo "📦 构建 @btc/shared-utils..."
+          pnpm --filter @btc/shared-utils run build --force || pnpm --filter @btc/shared-utils run build
+          
+          echo "📦 构建 @btc/shared-core..."
+          pnpm --filter @btc/shared-core run build --force || pnpm --filter @btc/shared-core run build
+          
+          echo "📦 构建 @btc/shared-components..."
+          pnpm --filter @btc/shared-components run build --force || pnpm --filter @btc/shared-components run build
+          
+          echo "📦 构建 @btc/subapp-manifests..."
+          pnpm --filter @btc/subapp-manifests run build --force || pnpm --filter @btc/subapp-manifests run build
+          
+          echo "✅ 共享依赖包构建完成"
+      
+      - name: Build ${{ matrix.app_name }}
+        run: |
+          echo "Building ${{ matrix.app_name }}..."
+          pnpm --filter ${{ matrix.app_name }} run build
+      
+      - name: Verify build output
+        run: |
+          if [ ! -d "apps/${{ matrix.app_name }}/dist" ] || [ -z "$(ls -A apps/${{ matrix.app_name }}/dist 2>/dev/null)" ]; then
+            echo "[ERROR] Build output is empty or does not exist"
+            exit 1
+          fi
+          echo "[SUCCESS] Build output verified"
+      
+      - name: Validate GitHub Token
+        run: |
+          echo "Validating GitHub token for registry access..."
+          
+          if [ -n "${{ secrets.GITHUB_TOKEN }}" ]; then
+            TOKEN="${{ secrets.GITHUB_TOKEN }}"
+            echo "[INFO] Using GITHUB_TOKEN"
+          else
+            echo "[ERROR] No token available"
+            exit 1
+          fi
+          
+          echo "[SUCCESS] Token is available"
+          echo "TOKEN=$TOKEN" >> $GITHUB_ENV
+      
+      - name: Prepare Docker tags
+        id: tags
+        run: |
+          REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          GIT_SHA="${{ github.sha }}"
+          GIT_SHA_SHORT="${GIT_SHA:0:7}"
+          echo "repository_lower=$REPO_LOWER" >> $GITHUB_OUTPUT
+          echo "git_sha_short=$GIT_SHA_SHORT" >> $GITHUB_OUTPUT
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ env.TOKEN }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          build-args: |
+            APP_DIR=apps/${{ matrix.app_name }}
+          push: true
+          tags: |
+            ghcr.io/${{ steps.tags.outputs.repository_lower }}/${{ matrix.app_name }}:latest
+            ghcr.io/${{ steps.tags.outputs.repository_lower }}/${{ matrix.app_name }}:${{ steps.tags.outputs.git_sha_short }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+        env:
+          DOCKER_BUILDKIT: 1
+
+  trigger-deploy:
+    name: Trigger Deploy All Apps
+    needs: build-all
+    if: always() && !contains(needs.build-all.result, 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check build results
+        run: |
+          echo "检查构建结果..."
+          echo "build-all result: ${{ needs.build-all.result }}"
+      
+      - name: Trigger deploy-all-apps workflow
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              const response = await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'deploy-all-apps.yml',
+                ref: 'develop',
+                inputs: {}
+              });
+              console.log('✅ 全量部署工作流已触发');
+            } catch (error) {
+              console.error('❌ 触发全量部署工作流失败:', error.message);
+              throw error;
+            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

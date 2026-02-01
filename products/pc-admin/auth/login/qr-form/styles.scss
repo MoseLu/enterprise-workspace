@@ -1,0 +1,46 @@
+// 二维码登录表单样式
+.qr-login {
+  width: 100%; // 占据完整宽度
+  max-width: 400px; // 但限制最大宽度
+  margin: 0 auto; // 居中显示
+
+  .qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+
+    .qr-code {
+      width: 200px;
+      height: 200px;
+      border: 1px solid var(--el-border-color-light);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--el-bg-color-page);
+      margin-bottom: 16px;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .qr-tips {
+      text-align: center;
+
+      p {
+        margin: 0 0 12px 0;
+        color: var(--el-text-color-regular);
+        font-size: 14px;
+      }
+
+      .el-button {
+        color: var(--el-color-primary);
+        font-size: 14px;
+      }
+    }
+  }
+}

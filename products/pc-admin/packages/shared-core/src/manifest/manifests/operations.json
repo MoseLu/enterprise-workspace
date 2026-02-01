@@ -1,0 +1,95 @@
+{
+  "app": {
+    "id": "operations",
+    "basePath": "/operations",
+    "nameKey": "menu.operations.name",
+    "app-name": "domain.type.operations"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "labelKey": "menu.operations.overview",
+      "tab": {
+        "enabled": false
+      },
+      "breadcrumbs": []
+    },
+    {
+      "path": "/ops/error",
+      "labelKey": "menu.operations.error",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.operations.error"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.operations.name", "icon": "Monitor" },
+        { "labelKey": "menu.operations.error", "icon": "Warning" }
+      ]
+    },
+    {
+      "path": "/ops/deployment-test",
+      "labelKey": "menu.operations.deploymentTest",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.operations.deploymentTest"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.operations.name", "icon": "Monitor" },
+        { "labelKey": "menu.operations.deploymentTest", "icon": "Setting" }
+      ]
+    },
+    {
+      "path": "/ops/log-query",
+      "labelKey": "menu.log_query",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.log_query"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.operations.name", "icon": "Monitor" },
+        { "labelKey": "menu.log_query", "icon": "Document" }
+      ]
+    },
+    {
+      "path": "/ops/log-reporter-test",
+      "labelKey": "menu.log_reporter_test",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.log_reporter_test"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.operations.name", "icon": "Monitor" },
+        { "labelKey": "menu.log_reporter_test", "icon": "Document" }
+      ]
+    }
+  ],
+  "menus": [
+    {
+      "index": "ops",
+      "labelKey": "menu.operations.name",
+      "icon": "Monitor",
+      "children": [
+        {
+          "index": "/ops/error",
+          "labelKey": "menu.operations.error",
+          "icon": "Warning"
+        },
+        {
+          "index": "/ops/deployment-test",
+          "labelKey": "menu.operations.deploymentTest",
+          "icon": "Setting"
+        },
+        {
+          "index": "/ops/log-query",
+          "labelKey": "menu.log_query",
+          "icon": "Document"
+        },
+        {
+          "index": "/ops/log-reporter-test",
+          "labelKey": "menu.log_reporter_test",
+          "icon": "Document"
+        }
+      ]
+    }
+  ]
+}

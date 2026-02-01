@@ -1,0 +1,152 @@
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "btc": {
+    "spacing": {
+      "0": { "value": "{spacing.scale.0}", "type": "spacing", "description": "约束间距 0" },
+      "0-5": { "value": "{spacing.scale.0-5}", "type": "spacing", "description": "约束间距 0.5" },
+      "1": { "value": "{spacing.scale.1}", "type": "spacing", "description": "约束间距 1" },
+      "1-5": { "value": "{spacing.scale.1-5}", "type": "spacing", "description": "约束间距 1.5" },
+      "2": { "value": "{spacing.scale.2}", "type": "spacing", "description": "约束间距 2" },
+      "2-5": { "value": "{spacing.scale.2-5}", "type": "spacing", "description": "约束间距 2.5" },
+      "3": { "value": "{spacing.scale.3}", "type": "spacing", "description": "约束间距 3" },
+      "3-5": { "value": "{spacing.scale.3-5}", "type": "spacing", "description": "约束间距 3.5" },
+      "4": { "value": "{spacing.scale.4}", "type": "spacing", "description": "约束间距 4" },
+      "5": { "value": "{spacing.scale.5}", "type": "spacing", "description": "约束间距 5" },
+      "6": { "value": "{spacing.scale.6}", "type": "spacing", "description": "约束间距 6" },
+      "7": { "value": "{spacing.scale.7}", "type": "spacing", "description": "约束间距 7" },
+      "8": { "value": "{spacing.scale.8}", "type": "spacing", "description": "约束间距 8" },
+      "9": { "value": "{spacing.scale.9}", "type": "spacing", "description": "约束间距 9" },
+      "10": { "value": "{spacing.scale.10}", "type": "spacing", "description": "约束间距 10" },
+      "11": { "value": "{spacing.scale.11}", "type": "spacing", "description": "约束间距 11" },
+      "12": { "value": "{spacing.scale.12}", "type": "spacing", "description": "约束间距 12" },
+      "14": { "value": "{spacing.scale.14}", "type": "spacing", "description": "约束间距 14" },
+      "16": { "value": "{spacing.scale.16}", "type": "spacing", "description": "约束间距 16" },
+      "20": { "value": "{spacing.scale.20}", "type": "spacing", "description": "约束间距 20" },
+      "24": { "value": "{spacing.scale.24}", "type": "spacing", "description": "约束间距 24" },
+      "28": { "value": "{spacing.scale.28}", "type": "spacing", "description": "约束间距 28" },
+      "32": { "value": "{spacing.scale.32}", "type": "spacing", "description": "约束间距 32" },
+      "36": { "value": "{spacing.scale.36}", "type": "spacing", "description": "约束间距 36" },
+      "40": { "value": "{spacing.scale.40}", "type": "spacing", "description": "约束间距 40" },
+      "44": { "value": "{spacing.scale.44}", "type": "spacing", "description": "约束间距 44" },
+      "48": { "value": "{spacing.scale.48}", "type": "spacing", "description": "约束间距 48" },
+      "52": { "value": "{spacing.scale.52}", "type": "spacing", "description": "约束间距 52" },
+      "56": { "value": "{spacing.scale.56}", "type": "spacing", "description": "约束间距 56" },
+      "60": { "value": "{spacing.scale.60}", "type": "spacing", "description": "约束间距 60" },
+      "64": { "value": "{spacing.scale.64}", "type": "spacing", "description": "约束间距 64" },
+      "72": { "value": "{spacing.scale.72}", "type": "spacing", "description": "约束间距 72" },
+      "80": { "value": "{spacing.scale.80}", "type": "spacing", "description": "约束间距 80" },
+      "96": { "value": "{spacing.scale.96}", "type": "spacing", "description": "约束间距 96" }
+    },
+    "style": {
+      "minimal": {
+        "surface": {
+          "page": { "value": "{style.minimal.surface.page}", "type": "color", "description": "极简：页面背景" },
+          "card": { "value": "{style.minimal.surface.card}", "type": "color", "description": "极简：卡片背景" },
+          "panel": { "value": "{style.minimal.surface.panel}", "type": "color", "description": "极简：面板背景" }
+        },
+        "border": {
+          "base": { "value": "{style.minimal.border.base}", "type": "color", "description": "极简：基础边框" },
+          "muted": { "value": "{style.minimal.border.muted}", "type": "color", "description": "极简：弱边框" }
+        },
+        "shadow": {
+          "card": { "value": "{style.minimal.shadow.card}", "type": "shadow", "description": "极简：卡片阴影" },
+          "panel": { "value": "{style.minimal.shadow.panel}", "type": "shadow", "description": "极简：面板阴影" }
+        },
+        "effect": {
+          "blur": { "value": "{style.minimal.effect.blur}", "type": "size", "description": "极简：玻璃模糊" }
+        }
+      },
+      "glass": {
+        "surface": {
+          "page": { "value": "{style.glass.surface.page}", "type": "color", "description": "玻璃：页面背景" },
+          "card": { "value": "{style.glass.surface.card}", "type": "color", "description": "玻璃：卡片背景" },
+          "panel": { "value": "{style.glass.surface.panel}", "type": "color", "description": "玻璃：面板背景" }
+        },
+        "border": {
+          "base": { "value": "{style.glass.border.base}", "type": "color", "description": "玻璃：基础边框" },
+          "muted": { "value": "{style.glass.border.muted}", "type": "color", "description": "玻璃：弱边框" }
+        },
+        "shadow": {
+          "card": { "value": "{style.glass.shadow.card}", "type": "shadow", "description": "玻璃：卡片阴影" },
+          "panel": { "value": "{style.glass.shadow.panel}", "type": "shadow", "description": "玻璃：面板阴影" }
+        },
+        "effect": {
+          "blur": { "value": "{style.glass.effect.blur}", "type": "size", "description": "玻璃：玻璃模糊" }
+        }
+      },
+      "cyber": {
+        "surface": {
+          "page": { "value": "{style.cyber.surface.page}", "type": "color", "description": "赛博：页面背景" },
+          "card": { "value": "{style.cyber.surface.card}", "type": "color", "description": "赛博：卡片背景" },
+          "panel": { "value": "{style.cyber.surface.panel}", "type": "color", "description": "赛博：面板背景" }
+        },
+        "border": {
+          "base": { "value": "{style.cyber.border.base}", "type": "color", "description": "赛博：基础边框" },
+          "muted": { "value": "{style.cyber.border.muted}", "type": "color", "description": "赛博：弱边框" }
+        },
+        "shadow": {
+          "card": { "value": "{style.cyber.shadow.card}", "type": "shadow", "description": "赛博：卡片阴影" },
+          "panel": { "value": "{style.cyber.shadow.panel}", "type": "shadow", "description": "赛博：面板阴影" }
+        },
+        "effect": {
+          "blur": { "value": "{style.cyber.effect.blur}", "type": "size", "description": "赛博：玻璃模糊" }
+        }
+      }
+    },
+    "crud": {
+      "gap": {
+        "value": "{spacing.crud.gap}",
+        "type": "spacing",
+        "description": "CRUD 组件行之间的垂直间距"
+      },
+      "opWidth": {
+        "value": "{spacing.crud.opWidth}",
+        "type": "sizing",
+        "description": "CRUD 操作列的固定宽度"
+      },
+      "searchWidth": {
+        "value": "{spacing.crud.searchWidth}",
+        "type": "sizing",
+        "description": "CRUD 搜索框的宽度，默认继承操作列宽度"
+      },
+      "btnColor": {
+        "value": "{color.crud.button}",
+        "type": "color",
+        "description": "CRUD 按钮的文字颜色"
+      },
+      "iconColor": {
+        "value": "{color.crud.icon}",
+        "type": "color",
+        "description": "CRUD 图标按钮的颜色"
+      }
+    },
+    "icon": {
+      "color": {
+        "value": "{color.icon}",
+        "type": "color",
+        "description": "通用图标按钮的颜色"
+      }
+    },
+    "breath": {
+      "color": {
+        "value": "{color.breath}",
+        "type": "color",
+        "description": "通知/消息图标的呼吸灯动画颜色"
+      }
+    },
+    "table": {
+      "buttonColor": {
+        "value": "{color.table.button}",
+        "type": "color",
+        "description": "表格工具栏按钮的颜色"
+      }
+    },
+    "loading": {
+      "circleGapColor": {
+        "value": "{color.accent.jade}",
+        "type": "color",
+        "description": "Loading circle 缺口玉色轮廓"
+      }
+    }
+  }
+}

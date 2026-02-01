@@ -1,0 +1,331 @@
+# Complete BTC ShopFlow Applications Deployment
+# This file contains all applications with consistent NodePort configuration
+
+---
+# Logistics App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-logistics-app
+  namespace: btc-shopflow
+  labels:
+    app: btc-logistics-app
+    component: frontend
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-logistics-app
+  template:
+    metadata:
+      labels:
+        app: btc-logistics-app
+        component: frontend
+        tier: web
+    spec:
+      # 注意：镜像地址会在部署时被动态替换为私有仓库地址
+      # 格式：<PRIVATE_REGISTRY>/logistics-app:<GIT_SHA>
+      containers:
+      - name: logistics-app
+        image: btc-shopflow/logistics-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: VITE_APP_TITLE
+          value: "BTC车间管理-物流系统"
+        - name: VITE_BASE_API
+          value: "/api"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-logistics-app-service
+  namespace: btc-shopflow
+  labels:
+    app: btc-logistics-app
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30082
+    protocol: TCP
+    name: http
+  selector:
+    app: btc-logistics-app
+
+---
+# Quality App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-quality-app
+  namespace: btc-shopflow
+  labels:
+    app: btc-quality-app
+    component: frontend
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-quality-app
+  template:
+    metadata:
+      labels:
+        app: btc-quality-app
+        component: frontend
+        tier: web
+    spec:
+      # 注意：镜像地址会在部署时被动态替换为私有仓库地址
+      # 格式：<PRIVATE_REGISTRY>/quality-app:<GIT_SHA>
+      containers:
+      - name: quality-app
+        image: btc-shopflow/quality-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: VITE_APP_TITLE
+          value: "BTC车间管理-质量系统"
+        - name: VITE_BASE_API
+          value: "/api"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "25m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-quality-app-service
+  namespace: btc-shopflow
+  labels:
+    app: btc-quality-app
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30083
+    protocol: TCP
+    name: http
+  selector:
+    app: btc-quality-app
+
+---
+# Production App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-production-app
+  namespace: btc-shopflow
+  labels:
+    app: btc-production-app
+    component: frontend
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-production-app
+  template:
+    metadata:
+      labels:
+        app: btc-production-app
+        component: frontend
+        tier: web
+    spec:
+      # 注意：镜像地址会在部署时被动态替换为私有仓库地址
+      # 格式：<PRIVATE_REGISTRY>/production-app:<GIT_SHA>
+      containers:
+      - name: production-app
+        image: btc-shopflow/production-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: VITE_APP_TITLE
+          value: "BTC车间管理-生产系统"
+        - name: VITE_BASE_API
+          value: "/api"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "25m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-production-app-service
+  namespace: btc-shopflow
+  labels:
+    app: btc-production-app
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30084
+    protocol: TCP
+    name: http
+  selector:
+    app: btc-production-app
+
+---
+# Engineering App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-engineering-app
+  namespace: btc-shopflow
+  labels:
+    app: btc-engineering-app
+    component: frontend
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-engineering-app
+  template:
+    metadata:
+      labels:
+        app: btc-engineering-app
+        component: frontend
+        tier: web
+    spec:
+      # 注意：镜像地址会在部署时被动态替换为私有仓库地址
+      # 格式：<PRIVATE_REGISTRY>/engineering-app:<GIT_SHA>
+      containers:
+      - name: engineering-app
+        image: btc-shopflow/engineering-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: VITE_APP_TITLE
+          value: "BTC车间管理-工程系统"
+        - name: VITE_BASE_API
+          value: "/api"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "25m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-engineering-app-service
+  namespace: btc-shopflow
+  labels:
+    app: btc-engineering-app
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30085
+    protocol: TCP
+    name: http
+  selector:
+    app: btc-engineering-app
+

@@ -1,0 +1,792 @@
+@use 'variables' as *;
+
+// ===== 苹果风格毛玻璃效果 =====
+// 适用于所有认证页面：登录、注册、忘记密码
+
+// 毛玻璃认证卡片 - 只修改卡片边框，不改变背景
+.auth-page.glassmorphism {
+
+  .login-card {
+    // 毛玻璃卡片边框效果 - 只修改视觉效果，不改变布局定位
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+    // 移除原有边框，使用伪元素创建双层渐变边框
+    border: none !important;
+
+    // 双层渐变边框实现 - 使用相对定位避免影响卡片位置
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      pointer-events: none;
+      z-index: -1; // 确保边框在卡片内容下方
+    }
+
+    // 外层边框：青蓝→淡紫渐变 + 呼吸发光动画
+    &::before {
+      background: linear-gradient(135deg,
+        #00e5ff 0%,     // 科技青蓝
+        #40c4ff 25%,    // 中青蓝
+        #7c4dff 50%,    // 蓝紫过渡
+        #9d4edd 75%,    // 淡紫
+        #c77dff 100%    // 浅紫
+      );
+      padding: 2px;
+      border-radius: 16px;
+
+      // 关键修复：确保 mask 属性在页面加载时立即生效，避免显示整个紫色背景
+      // 使用 will-change 提示浏览器优化渲染
+      will-change: mask, -webkit-mask;
+      // 强制 GPU 加速，确保 mask 立即生效
+      transform: translateZ(0);
+      
+      // 现代浏览器 mask 方案（必须在 opacity 之前设置，确保 mask 立即生效）
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      
+      // 降级方案：在页面刷新瞬间，如果 mask 还未生效，先隐藏渐变背景
+      // 使用极短的延迟确保 mask 属性已生效，避免显示整个紫色背景
+      // 如果 mask 已生效，opacity 不会影响显示（因为 mask 会裁剪掉内部区域）
+      // 如果 mask 未生效，opacity: 0 会隐藏整个渐变背景
+      opacity: 0;
+      // 使用极短的动画延迟（0.01s），确保在 mask 生效后立即显示边框
+      // 这样既能避免刷新瞬间的紫色背景，又不会让用户感觉到边框延迟
+      animation: borderFadeIn 0.15s ease-out 0.01s forwards, breathingGlow 3s ease-in-out 0.16s infinite;
+
+      // 旧版浏览器备用方案
+      @supports not (mask-composite: xor) {
+        background: linear-gradient(135deg,
+          #00e5ff 0%, #40c4ff 25%, #7c4dff 50%, #9d4edd 75%, #c77dff 100%
+        );
+        border: 2px solid transparent;
+        background-clip: padding-box;
+        // 旧版浏览器也需要延迟显示
+        opacity: 0;
+        animation: borderFadeIn 0.3s ease-out 0.1s forwards;
+      }
+
+      filter: blur(0.5px);
+    }
+
+    // 内层边框：浅白半透明渐变
+    &::after {
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 255, 255, 0.2) 25%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.2) 75%,
+        rgba(255, 255, 255, 0.3) 100%
+      );
+      padding: 1px;
+      border-radius: 15px;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      z-index: 1;
+    }
+
+    // 立体阴影效果
+    box-shadow:
+      // 外层外阴影 - 柔和扩散
+      0 0 20px rgba(0, 229, 255, 0.15),
+      0 0 40px rgba(157, 78, 221, 0.1),
+      0 8px 32px rgba(31, 38, 135, 0.15),
+      // 内层内阴影 - 轻微收缩
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+
+    // 卡片淡入动画
+    animation: glassCardFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+    // Hover 时发光强度提升 30%
+    &:hover {
+      &::before {
+        animation: breathingGlowHover 3s ease-in-out infinite;
+        filter: blur(0.3px);
+      }
+
+      box-shadow:
+        // 增强外发光
+        0 0 26px rgba(0, 229, 255, 0.2),
+        0 0 52px rgba(157, 78, 221, 0.13),
+        0 8px 32px rgba(31, 38, 135, 0.2),
+        // 保持内阴影
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+    }
+
+    // 卡片头部双层渐变边框效果
+    .card-header {
+      border-bottom: none;
+      border-radius: 16px 16px 0 0;
+      position: relative;
+      overflow: hidden;
+      // 确保头部不影响卡片整体定位
+
+      // 头部双层边框
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: 16px 16px 0 0;
+        z-index: 0; // 确保在内容下方
+      }
+
+      // 头部外层边框：青蓝→淡紫渐变
+      &::before {
+        background: linear-gradient(90deg,
+          #00e5ff 0%,     // 科技青蓝
+          #40c4ff 30%,    // 中青蓝
+          #7c4dff 60%,    // 蓝紫过渡
+          #9d4edd 100%    // 淡紫
+        );
+        padding: 0 0 1px 0; // 只在底部添加边框
+        
+        // 关键修复：确保 mask 属性在页面加载时立即生效
+        will-change: mask, -webkit-mask;
+        transform: translateZ(0);
+        
+        // 现代浏览器 mask 方案
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: xor;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        
+        // 降级方案：避免刷新瞬间显示整个紫色背景
+        opacity: 0;
+        animation: borderFadeIn 0.15s ease-out 0.01s forwards, breathingGlow 4s ease-in-out 0.16s infinite;
+        filter: blur(0.3px);
+      }
+
+      // 头部内层边框：浅白半透明
+      &::after {
+        background: linear-gradient(90deg,
+          rgba(255, 255, 255, 0.3) 0%,
+          rgba(255, 255, 255, 0.2) 50%,
+          rgba(255, 255, 255, 0.3) 100%
+        );
+        padding: 0 0 0.5px 0;
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: xor;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        z-index: 1;
+      }
+
+      .title h1 {
+        font-weight: 600;
+        letter-spacing: -0.025em;
+        position: relative;
+        z-index: 2;
+      }
+    }
+
+    // 卡片内容区域双层渐变边框效果
+    .card-content {
+      position: relative;
+      // 确保内容区域不影响卡片整体定位
+
+      // 内容区域边框装饰
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 12px;
+        right: 12px;
+        height: 1px;
+        background: linear-gradient(90deg,
+          transparent 0%,
+          rgba(0, 229, 255, 0.3) 20%,
+          rgba(124, 77, 255, 0.4) 50%,
+          rgba(157, 78, 221, 0.3) 80%,
+          transparent 100%
+        );
+        // 降级方案：避免刷新瞬间显示紫色装饰线
+        opacity: 0;
+        animation: borderFadeIn 0.15s ease-out 0.01s forwards, breathingGlow 5s ease-in-out 0.16s infinite;
+      }
+
+      // 内容区域侧边装饰线
+      &::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        bottom: 20px;
+        left: 0;
+        width: 2px;
+        background: linear-gradient(180deg,
+          transparent 0%,
+          rgba(0, 229, 255, 0.2) 30%,
+          rgba(124, 77, 255, 0.3) 50%,
+          rgba(157, 78, 221, 0.2) 70%,
+          transparent 100%
+        );
+        border-radius: 0 2px 2px 0;
+        // 降级方案：避免刷新瞬间显示紫色装饰线
+        opacity: 0;
+        animation: borderFadeIn 0.15s ease-out 0.01s forwards, breathingGlow 6s ease-in-out 0.16s infinite;
+      }
+    }
+  }
+}
+
+// 暗黑模式适配 - 双层渐变边框效果
+html.dark .auth-page.glassmorphism {
+  .login-card {
+    // 暗黑模式下的外层边框：更深的科技色调
+    &::before {
+      background: linear-gradient(135deg,
+        #006064 0%,     // 深青蓝
+        #0277bd 25%,    // 中青蓝
+        #512da8 50%,    // 深蓝紫
+        #6a1b9a 75%,    // 深紫
+        #7b1fa2 100%    // 深紫红
+      );
+      // 关键修复：确保 mask 属性在页面加载时立即生效
+      will-change: mask, -webkit-mask;
+      transform: translateZ(0);
+      // 降级方案：避免刷新瞬间显示整个紫色背景
+      opacity: 0;
+      animation: borderFadeIn 0.15s ease-out 0.01s forwards, breathingGlow 3s ease-in-out 0.16s infinite;
+      filter: blur(0.8px);
+    }
+
+    // 暗黑模式下的内层边框：更暗的半透明
+    &::after {
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.08) 25%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0.08) 75%,
+        rgba(255, 255, 255, 0.12) 100%
+      );
+    }
+
+    // 暗黑模式立体阴影
+    box-shadow:
+      // 外层发光 - 更柔和
+      0 0 15px rgba(0, 229, 255, 0.1),
+      0 0 30px rgba(157, 78, 221, 0.08),
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      // 内层高光 - 更微妙
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+
+    // 暗黑模式 Hover 效果
+    &:hover {
+      &::before {
+        filter: blur(0.5px);
+      }
+
+      box-shadow:
+        // 增强暗黑模式发光
+        0 0 20px rgba(0, 229, 255, 0.15),
+        0 0 40px rgba(157, 78, 221, 0.12),
+        0 8px 32px rgba(0, 0, 0, 0.5),
+        // 保持内阴影
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+    }
+
+    .card-header {
+      // 暗黑模式头部边框
+      &::before {
+        background: linear-gradient(90deg,
+          #006064 0%,     // 深青蓝
+          #0277bd 30%,    // 中青蓝
+          #512da8 60%,    // 深蓝紫
+          #6a1b9a 100%    // 深紫
+        );
+        // 关键修复：确保 mask 属性在页面加载时立即生效
+        will-change: mask, -webkit-mask;
+        transform: translateZ(0);
+        // 降级方案：避免刷新瞬间显示整个紫色背景
+        opacity: 0;
+        animation: borderFadeIn 0.15s ease-out 0.01s forwards, breathingGlow 4s ease-in-out 0.16s infinite;
+        filter: blur(0.5px);
+      }
+
+      &::after {
+        background: linear-gradient(90deg,
+          rgba(255, 255, 255, 0.1) 0%,
+          rgba(255, 255, 255, 0.05) 50%,
+          rgba(255, 255, 255, 0.1) 100%
+        );
+      }
+    }
+
+    .card-content {
+      // 暗黑模式内容区域装饰
+      &::before {
+        background: linear-gradient(90deg,
+          transparent 0%,
+          rgba(0, 96, 100, 0.4) 20%,
+          rgba(81, 45, 168, 0.5) 50%,
+          rgba(106, 27, 154, 0.4) 80%,
+          transparent 100%
+        );
+        // 降级方案：避免刷新瞬间显示紫色装饰线
+        opacity: 0;
+        animation: borderFadeIn 0.15s ease-out 0.01s forwards, breathingGlow 5s ease-in-out 0.16s infinite;
+      }
+
+      &::after {
+        background: linear-gradient(180deg,
+          transparent 0%,
+          rgba(0, 96, 100, 0.3) 30%,
+          rgba(81, 45, 168, 0.4) 50%,
+          rgba(106, 27, 154, 0.3) 70%,
+          transparent 100%
+        );
+        // 降级方案：避免刷新瞬间显示紫色装饰线
+        opacity: 0;
+        animation: borderFadeIn 0.15s ease-out 0.01s forwards, breathingGlow 6s ease-in-out 0.16s infinite;
+      }
+    }
+  }
+}
+
+// ===== 苹果风格输入框 =====
+.auth-page.glassmorphism {
+  :deep(.el-input) {
+    .el-input__wrapper {
+      background: rgba(255, 255, 255, 0.4);
+      border: none;
+      border-radius: 8px;
+      box-shadow:
+        inset 0 1px 3px rgba(0, 0, 0, 0.1),
+        0 1px 0 rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+
+      // 移除默认边框
+      &::after {
+        content: none;
+      }
+
+      // 聚焦时的底部蓝色下划线
+      &::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: #0071e3;
+        border-radius: 1px;
+        transform: translateX(-50%);
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      &.is-focus {
+        background: rgba(255, 255, 255, 0.6);
+        box-shadow:
+          inset 0 1px 3px rgba(0, 0, 0, 0.05),
+          0 2px 8px rgba(0, 113, 227, 0.15),
+          0 1px 0 rgba(255, 255, 255, 0.7);
+        transform: translateY(-1px);
+
+        &::before {
+          width: 100%;
+        }
+      }
+
+      &:hover:not(.is-focus) {
+        background: rgba(255, 255, 255, 0.5);
+        transform: translateY(-0.5px);
+      }
+    }
+
+    .el-input__inner {
+      background: transparent;
+      border: none;
+      color: rgba(17, 24, 39, 0.9);
+      font-size: 16px;
+      font-weight: 400;
+      padding: 12px 16px;
+
+      &::placeholder {
+        color: rgba(107, 114, 128, 0.8);
+        font-weight: 400;
+      }
+
+      &:focus {
+        box-shadow: none;
+        outline: none;
+      }
+    }
+  }
+}
+
+// 暗黑模式输入框
+html.dark .auth-page.glassmorphism {
+  :deep(.el-input) {
+    .el-input__wrapper {
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow:
+        inset 0 1px 3px rgba(0, 0, 0, 0.3),
+        0 1px 0 rgba(255, 255, 255, 0.1);
+
+      &.is-focus {
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow:
+          inset 0 1px 3px rgba(0, 0, 0, 0.2),
+          0 2px 8px rgba(0, 113, 227, 0.25),
+          0 1px 0 rgba(255, 255, 255, 0.15);
+      }
+
+      &:hover:not(.is-focus) {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    .el-input__inner {
+      color: rgba(248, 250, 252, 0.95);
+
+      &::placeholder {
+        color: rgba(148, 163, 184, 0.8);
+      }
+    }
+  }
+}
+
+// ===== 苹果风格按钮 =====
+.auth-page.glassmorphism {
+  :deep(.el-button) {
+    &.el-button--primary {
+      background: #0071e3;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 12px 24px;
+      min-height: 44px;
+      box-shadow:
+        0 2px 8px rgba(0, 113, 227, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+
+      // 按钮光泽效果
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      &:hover {
+        background: #0056b3;
+        transform: translateY(-1px);
+        box-shadow:
+          0 4px 12px rgba(0, 113, 227, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+
+        &::before {
+          left: 100%;
+        }
+      }
+
+      &:active {
+        transform: translateY(0);
+        box-shadow:
+          0 1px 4px rgba(0, 113, 227, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      &.is-loading {
+        background: #0071e3;
+        opacity: 0.8;
+        transform: none;
+      }
+    }
+  }
+}
+
+// ===== 响应式设计 =====
+// 平板横屏（低高度）优化
+@media (min-width: 769px) and (max-height: 900px) {
+  .auth-page.glassmorphism {
+    .login-card {
+      // 覆盖毛玻璃样式的 !important 规则，保持垂直居中，同时限制高度避免被截断
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      max-height: calc(100vh - 40px) !important;
+      height: auto !important;
+      // overflow 已移除，由基础样式和 el-scrollbar 处理滚动
+
+      .card-content-scrollbar {
+        // 移除 overflow 限制，让 el-scrollbar 处理滚动
+        // overflow 已在 .card-content-scrollbar 基础样式中设置
+
+        // 隐藏第三方登录 - 使用多种选择器确保生效
+        :deep(.third-party-login) {
+          display: none !important;
+        }
+
+        // 调整登录表单区域的 flex 值，因为第三方登录已隐藏
+        :deep(.login-form-layout) {
+          flex: 1 !important; // 占据更多空间，因为第三方登录已隐藏
+        }
+      }
+
+      .card-content {
+        // 移除 overflow 限制，让 el-scrollbar 处理滚动
+        // 但保留 position: relative，因为 glassmorphism 需要它
+        position: relative;
+      }
+    }
+  }
+}
+
+// 中等宽度屏幕（平板竖屏）优化
+@media (min-width: 769px) and (max-width: 1200px) {
+  .auth-page.glassmorphism {
+    .login-card {
+      // 覆盖毛玻璃样式的 !important 规则，确保中等宽度下有足够的右边距
+      right: max(20px, 3%) !important;
+      max-width: calc(100vw - max(40px, 6%)) !important;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-page.glassmorphism {
+    padding: 20px;
+
+    .login-card {
+      // 覆盖毛玻璃样式的 !important 规则，确保窄屏下居中显示
+      position: relative !important;
+      left: auto !important;
+      right: auto !important;
+      top: auto !important;
+      transform: none !important;
+      width: min(95vw, 450px) !important; // 使用 95% 视口宽度，但不超过 450px
+      max-width: min(95vw, 450px) !important;
+      margin: 20px auto !important;
+      border-radius: 20px;
+
+      // 移动端双层边框适配
+      &::before,
+      &::after {
+        border-radius: 20px;
+      }
+
+      &::before {
+        padding: 2px; // 保持边框宽度
+      }
+
+      &::after {
+        border-radius: 19px; // 内层圆角稍小
+      }
+
+      .card-header {
+        padding: 20px 24px 16px;
+        border-radius: 20px 20px 0 0;
+
+        // 移动端头部边框适配
+        &::before,
+        &::after {
+          border-radius: 20px 20px 0 0;
+        }
+
+        .title h1 {
+          font-size: 18px;
+        }
+      }
+
+      .card-content {
+        // 移动端内容区域装饰适配
+        &::before {
+          left: 16px;
+          right: 16px;
+        }
+      }
+
+      .card-content {
+        padding: 20px 24px 24px;
+      }
+    }
+
+    :deep(.el-input) {
+      .el-input__wrapper {
+        border-radius: 10px;
+      }
+
+      .el-input__inner {
+        font-size: 16px; // 防止 iOS Safari 缩放
+        padding: 14px 16px;
+      }
+    }
+
+    :deep(.el-button) {
+      &.el-button--primary {
+        border-radius: 10px;
+        min-height: 48px;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+// 超小屏幕适配
+@media (max-width: 480px) {
+  .auth-page.glassmorphism {
+    padding: 16px;
+
+    .login-card {
+      // 覆盖毛玻璃样式的 !important 规则，确保超小屏下居中显示
+      position: relative !important;
+      left: auto !important;
+      right: auto !important;
+      top: auto !important;
+      transform: none !important;
+      width: min(95vw, 450px) !important; // 使用 95% 视口宽度，但不超过 450px
+      max-width: min(95vw, 450px) !important;
+      margin: 20px auto !important;
+      border-radius: 16px;
+
+      // 超小屏幕双层边框适配
+      &::before,
+      &::after {
+        border-radius: 16px;
+      }
+
+      &::before {
+        padding: 1.5px; // 稍微减小边框宽度适应小屏
+      }
+
+      &::after {
+        border-radius: 15px;
+      }
+
+      .card-header {
+        padding: 16px 20px 12px;
+        border-radius: 16px 16px 0 0;
+
+        // 超小屏幕头部边框适配
+        &::before,
+        &::after {
+          border-radius: 16px 16px 0 0;
+        }
+      }
+
+      .card-content {
+        // 超小屏幕内容区域装饰适配
+        &::before {
+          left: 12px;
+          right: 12px;
+        }
+      }
+
+      .card-content {
+        padding: 16px 20px 20px;
+      }
+    }
+  }
+}
+
+// ===== 动画增强 =====
+.auth-page.glassmorphism {
+  :deep(.login-form-layout) {
+    .form-container {
+      animation: formSlideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+    }
+
+    .button-container {
+      animation: buttonFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
+    }
+  }
+}
+
+@keyframes glassCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+@keyframes formSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes buttonFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 呼吸发光动画 - 正常状态
+@keyframes breathingGlow {
+  0%, 100% {
+    opacity: 0.8;
+    filter: blur(0.5px) brightness(1);
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(0.3px) brightness(1.2);
+    transform: scale(1.002);
+  }
+}
+
+// 呼吸发光动画 - Hover 增强状态
+@keyframes breathingGlowHover {
+  0%, 100% {
+    opacity: 1;
+    filter: blur(0.3px) brightness(1.2);
+    transform: scale(1.002);
+  }
+  50% {
+    opacity: 1.3;
+    filter: blur(0.2px) brightness(1.5);
+    transform: scale(1.004);
+  }
+}
+
+// 边框淡入动画 - 确保在 CSS 加载完成后再显示渐变边框，避免刷新瞬间显示整个紫色背景
+@keyframes borderFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+

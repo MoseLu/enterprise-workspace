@@ -1,0 +1,19 @@
+{
+  "app": {
+    "id": "dashboard",
+    "basePath": "/dashboard",
+    "nameKey": "micro_app.dashboard.title",
+    "app-name": "domain.type.dashboard"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "labelKey": "micro_app.dashboard.title",
+      "tab": {
+        "enabled": false
+      },
+      "breadcrumbs": []
+    }
+  ],
+  "menus": []
+}

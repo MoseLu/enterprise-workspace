@@ -1,0 +1,126 @@
+// 导入共享组件样式（必须在文件开头，确保优先级）
+// 使用 @import 确保在构建时，SCSS 预处理器会将共享组件样式合并到 global.scss 中
+// 使用 @use ... as * 确保样式被正确导入并应用到全局（兼容 @use 模块化）
+@use '@btc/shared-components/styles/index.scss' as *;
+
+// Global styles for dashboard app
+
+// 自定义 CSS 变量（与 cool-admin 保持一致）
+:root {
+  --bg-color: var(--el-fill-color-lighter);
+}
+
+// 确保 body 和 html 有正确的背景色（双层背景效果）
+html,
+body {
+  background-color: var(--el-bg-color-page, #ffffff);
+  color: var(--el-text-color-primary, #303133);
+}
+
+// 暗色模式下的背景色
+html.dark,
+html.dark body {
+  background-color: var(--el-bg-color-page, #0a0a0a);
+  color: var(--el-text-color-primary, #e5eaf3);
+}
+
+// Reset default styles
+// 关键：使用更具体的选择器和 !important 确保覆盖浏览器默认样式
+// 浏览器默认的 body { display: block; margin: 8px; } 需要被覆盖
+html {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: block !important;
+  margin: 0 !important; // 使用 !important 确保覆盖浏览器默认样式
+  padding: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  // 当使用 layout-app 时，#app 挂载到 #subapp-viewport，由 layout-app 的样式控制宽度和布局
+  // 独立运行时，body 和 html 已经设置了 width: 100%，所以 #app 不需要额外设置
+}
+
+// Custom scrollbar (align with cool-admin)
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+// Debug borders (uncomment to debug layout)
+// .btc-crud-row {
+//   border: 1px dashed red !important;
+// }
+
+// .btc-flex1 {
+//   background: rgba(255, 255, 0, 0.2) !important;
+//   border: 1px solid green !important;
+// }
+
+// .btc-search-key {
+//   border: 1px dashed blue !important;
+// }
+
+// 通用图标按钮样式（与 cool-admin 的 .cl-comm__icon 保持一致）
+.btc-comm__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  width: 26px;
+  background-color: var(--el-bg-color);
+  border: 1px solid var(--el-fill-color-dark);
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  .btc-svg {
+    font-size: 16px;
+    color: var(--el-text-color-primary);
+  }
+
+  &:hover {
+    border-color: var(--el-color-primary);
+    background-color: transparent;
+  }
+}

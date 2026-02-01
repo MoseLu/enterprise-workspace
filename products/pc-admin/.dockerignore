@@ -1,0 +1,69 @@
+# 仅影响 btc-shopflow-monorepo 作为构建上下文
+# 排除所有不必要的文件，只保留 Dockerfile 需要的文件
+
+# Git
+.git
+.gitignore
+.github
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 构建缓存和临时文件
+**/.turbo
+**/.cache
+**/.vite
+**/build
+**/coverage
+**/test-results
+**/.pnpm-store
+**/node_modules
+**/*.log
+**/*.tsbuildinfo
+
+# 源代码（Dockerfile 只需要 dist 和配置文件）
+apps/*/src
+apps/*/public
+apps/*/tests
+apps/*/test
+apps/*/*.config.*
+apps/*/tsconfig.json
+apps/*/vite.config.*
+apps/*/package.json
+apps/*/pnpm-lock.yaml
+
+# 共享包源代码
+packages/*/src
+packages/*/tests
+packages/*/test
+packages/*/*.config.*
+packages/*/tsconfig.json
+packages/*/package.json
+
+# 其他不需要的文件
+scripts
+configs
+auth
+docs
+*.md
+.env*
+.npmrc
+pnpm-lock.yaml
+pnpm-workspace.yaml
+package.json
+turbo.json
+uno.config.ts
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# 注意：保留 dist 目录和 docker 目录，因为 Dockerfile 需要它们
+# 只排除其他应用的 dist，保留当前构建应用的 dist
+# 这需要在构建时动态处理，但为了简化，我们允许所有 dist
+
+

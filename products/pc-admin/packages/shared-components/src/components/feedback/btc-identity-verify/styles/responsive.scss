@@ -1,0 +1,174 @@
+// 响应式样式
+.identity-verify {
+  // 响应式设计
+  @media (max-width: 768px) {
+    // 平板及以下：改为上下布局
+    &__header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 12px 16px;
+
+      &-left {
+        width: 100%;
+        padding: 0;
+        margin-bottom: 8px;
+      }
+
+      &-right {
+        width: 100%;
+        padding: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      &-desc {
+        font-size: 13px;
+        line-height: 1.5;
+      }
+    }
+
+    // 关闭按钮在移动端也固定在右上角
+    &__close-icon {
+      top: 12px;
+      right: 16px;
+    }
+
+    &__content {
+      flex-direction: column;
+
+      &-left {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--el-border-color-lighter);
+        padding: 12px 16px;
+
+        .verify-tabs {
+          display: flex;
+          flex-direction: row;
+
+          &__item {
+            flex: 1;
+            text-align: center;
+            padding: 12px 16px;
+            margin-right: 0;
+            margin-bottom: 0;
+            border-left: none;
+            border-bottom: 2px solid transparent;
+
+            &.is-active {
+              border-bottom-color: var(--el-color-primary);
+
+              &::after {
+                display: none;
+              }
+
+              &::before {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background-color: var(--el-color-primary);
+              }
+            }
+          }
+        }
+      }
+
+      &-right {
+        width: 100%;
+        padding: 20px 16px;
+      }
+    }
+
+    .verify-form {
+      width: 100%;
+
+      &__divider {
+        margin-left: 0; // 移动端不需要左边距
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    // 手机端：进一步优化间距
+    &__header {
+      padding: 10px 12px;
+
+      &-title {
+        font-size: 16px;
+      }
+
+      &-desc {
+        font-size: 12px;
+      }
+    }
+
+    // 关闭按钮在手机端也固定在右上角
+    &__close-icon {
+      top: 10px;
+      right: 12px;
+    }
+
+    &__content {
+      &-left {
+        padding: 10px 12px;
+
+        .verify-tabs__item {
+          padding: 10px 12px;
+          font-size: 14px;
+        }
+      }
+
+      &-right {
+        padding: 16px 12px;
+      }
+    }
+
+    .verify-form {
+      &__item {
+        margin-bottom: 20px;
+
+        &-label {
+          width: 70px;
+          font-size: 14px;
+        }
+
+        &-button {
+          width: 100%;
+          margin-left: 0; // 移动端不需要左边距
+        }
+
+        &-tip {
+          margin-left: 0; // 移动端不需要左边距
+        }
+
+        &-error {
+          margin-left: 0; // 移动端不需要左边距
+        }
+      }
+
+      &__divider {
+        margin-left: 0; // 移动端不需要左边距
+      }
+    }
+  }
+}
+
+// 暗色模式支持
+@media (prefers-color-scheme: dark) {
+  .identity-verify {
+    &__header {
+      border-bottom-color: var(--el-border-color);
+    }
+
+    &__content {
+      &-left {
+        border-right-color: var(--el-border-color);
+      }
+    }
+  }
+}
+

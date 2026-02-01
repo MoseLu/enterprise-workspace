@@ -1,0 +1,483 @@
+# BTC ShopFlow Monorepo Cursor Rules
+
+## Git 快速提交到 GitHub Develop 分支
+
+### 使用斜杠命令提交
+
+**重要**：为避免误触，只有使用 `/commit` 斜杠命令才会触发自动提交功能。
+
+普通对话中的 "commit"、"push"、"提交" 等词汇**不会**自动触发提交操作。
+
+### 使用方法
+
+1. **使用 `/commit` 斜杠命令**
+   - 在 Cursor 聊天框中输入 `/commit`
+   - AI 会自动分析最近的代码变更并生成合适的提交消息
+   - 然后执行完整的 git 提交流程到 develop 分支
+
+2. **带自定义提交信息（可选）**
+   - 如果用户提供了提交信息，则使用用户提供的
+   - `/commit 更新 Jenkins 配置`
+   - `/commit "修复构建问题"`
+
+### 默认行为
+
+- **默认分支**: `develop`
+- **默认远程**: `origin`
+- **提交信息生成**: AI 自动分析最近的代码变更并生成合适的提交消息（如果用户未提供）
+- **自动切换分支**: 如果当前不在 develop 分支，自动切换
+
+### 执行流程
+
+当使用 `/commit` 命令时，按以下顺序执行：
+
+1. 检查当前工作目录是否为项目根目录
+2. 使用 `git status --porcelain` 检查是否有未提交的更改（**不使用 `git diff`**）
+3. 使用 `git status` 查看变更的文件列表和类型
+4. 如果没有用户提供的提交信息，AI 需要：
+   - 分析变更的文件和修改内容
+   - 根据变更类型（新增、修改、删除）和涉及的文件/功能
+   - 自动生成合适的提交消息（格式：`type: description`，如 `feat: 添加新功能`、`fix: 修复bug`、`chore: 更新配置` 等）
+5. 如果当前分支不是 develop，执行 `git checkout develop`
+6. 执行 `git add .` 添加所有更改
+7. 执行 `git commit -m "生成的或用户提供的提交消息"`
+8. 执行 `git push origin develop` 推送到远程
+9. 显示提交结果和相关信息
+
+### 重要注意事项
+
+- ❌ **禁止使用 `git diff`**：根据用户记忆，`git diff` 会导致命令中止/卡住
+- ✅ **使用 `git status --porcelain`**：用于检查变更状态
+- ✅ **使用 `git status`**：用于显示变更信息（如果需要）
+- ✅ **执行前确认**：在执行推送前，可以显示将要提交的文件摘要
+- ⚠️ **只响应 `/commit` 命令**：普通对话中的 "commit"、"push" 等词不会触发提交
+
+### 脚本支持
+
+项目提供了便捷脚本（可在终端中直接使用）：
+- **Windows PowerShell**: `.\scripts\quick-commit.ps1 [提交信息]`
+- **Linux/Mac**: `bash scripts/quick-commit.sh [提交信息]`
+
+
+
+---
+
+## 🎯 项目技能系统（Cursor Skills）
+
+本项目配置了多个专属技能，帮助AI快速理解项目结构和操作流程。
+
+### ⚠️ 重要：对话开始时的自动操作
+
+**在每次新对话开始时，AI必须自动执行以下操作：**
+
+1. **自动加载所有技能索引**
+   - 执行 `node scripts/commands/skills/list-skills.mjs` 获取所有可用技能列表
+   - 读取 `.cursor/skills/all-skills-loader/SKILL.md`（技能索引）
+   - 建立技能索引表（技能名称 → 功能描述 → 使用场景）
+
+2. **保持技能索引在上下文**
+   - 将技能索引保存在对话上下文中
+   - 在对话过程中随时可以引用技能列表
+   - 当用户提问时，根据技能索引自动匹配相关技能
+
+**这样AI就能：**
+- 了解项目中有哪些技能可用
+- 根据用户问题快速匹配相关技能
+- 在需要时自动加载特定技能的完整内容
+- 无需用户知道有哪些技能，也能提供专业的帮助
+
+### 核心技能（日常必备）⭐⭐⭐⭐⭐
+- all-skills-loader - **自动加载所有技能索引**（每次对话开始时自动触发）
+- monorepo-quick-start - Monorepo快速上手
+- dev-workflow - 开发工作流  
+- build-guide - 构建指南
+- scripts-navigator - Scripts导航器
+- cursor-agent-opener - 打开新的Cursor Agent页面（并行处理任务）
+
+### 高频技能（常用操作）⭐⭐⭐⭐
+- release-automation - 发布自动化
+- i18n-toolkit - 国际化工具包
+- deploy-toolkit - 部署工具包
+- quality-assurance - 质量保证
+- common-mistakes-prevention - 避免常见错误和遵循项目规范
+- page-creation-guide - 页面创建指南
+
+### 使用方式
+
+AI会根据对话自动加载相关技能，或你可以主动要求：
+- '读取 dev-workflow 技能'
+- '使用 build-guide 技能帮我构建'
+- 使用 `/skills` 查看所有可用技能列表
+
+技能文件位置: `.cursor/skills/{skill-name}/SKILL.md` 或 `.claude/skills/{skill-name}/SKILL.md`（优先查找父目录的 `.cursor/skills`）
+
+---
+
+## 🔄 Skills自我纠正与优化系统
+
+本项目已集成Skills自我纠正与优化系统，能够自动记录执行情况、收集反馈、优化skills。
+
+### 系统功能
+
+1. **执行跟踪**：自动记录skill执行的详细过程，包括步骤级别跟踪
+2. **智能提示**：首次执行时详细询问，后续基于历史经验智能提示
+3. **反馈收集**：智能分析用户反馈，推断多维度评分
+4. **自动优化**：基于执行数据自动优化skills内容
+5. **Skills拆分**：自动将复杂skills拆分为子skills
+
+### 并行执行支持（重要）
+
+**核心功能**：Skills 系统支持自动打开新的 Chat 对话来执行子级 skills，实现并行子任务处理。
+
+**使用方式**：
+- 当 skill 执行过程中需要并行处理子任务时，使用 `executeSubTasksInParallel()` 或 `openChatForChildSkill()`
+- 系统会自动向 Cursor 发送快捷键（Ctrl+L），打开 Chat 面板
+- 子级 skills 可以在新 Chat 中独立执行，不影响主对话上下文
+- 每个子任务有独立的执行记录和反馈收集
+
+**AI 集成示例**：
+
+当 skill 执行过程中需要并行处理子任务时，使用以下方式：
+
+```javascript
+import { 
+  executeSubTasksInParallel, 
+  openChatForChildSkill,
+  getParallelExecutionInfo 
+} from './scripts/commands/skills/parallel-executor.mjs';
+import { createExecution } from './scripts/commands/skills/execution-tracker.mjs';
+
+// 方式1: 批量执行子任务（自动为每个子任务打开新 Chat）
+const executionId = createExecution('parent-skill', { description: '复杂任务' });
+const result = await executeSubTasksInParallel('parent-skill', executionId, taskInfo, [
+  { skillName: 'dev-workflow', description: '启动开发服务器' },
+  { skillName: 'build-guide', description: '构建共享包' },
+  { skillName: 'i18n-toolkit', description: '检查翻译' }
+]);
+
+// 获取所有子任务的 Chat ID 和状态
+console.log('子任务 Chat IDs:', result.chatIds);
+console.log('子任务统计:', result.stats);
+
+// 方式2: 单个子任务
+const childResult = await openChatForChildSkill(
+  'child-skill', 
+  parentExecutionId, 
+  '任务描述', 
+  '请使用 child-skill 执行以下任务：...'
+);
+console.log('子任务 Chat ID:', childResult.chatId);
+
+// 方式3: 查询和管理子任务（主 skill 使用）
+const parallelInfo = getParallelExecutionInfo(parentExecutionId);
+console.log('所有子任务:', parallelInfo.all);
+console.log('活跃子任务:', parallelInfo.active);
+console.log('所有 Chat ID:', parallelInfo.chatIds);
+```
+
+**实际使用场景**：
+- 复杂任务分解：将大任务拆分为多个独立的子任务，每个子任务在新 Chat 中执行
+- 并行处理：主 Chat 处理核心逻辑，子 Chat 处理辅助任务（如构建、检查等）
+- 上下文隔离：避免不同任务的上下文混淆
+
+**工作流程**：
+1. AI 检测到需要并行执行的子任务
+2. 调用 `executeSubTasksInParallel()` 或 `openChatForChildSkill()`
+3. 系统自动生成唯一的 Chat ID 并记录到数据库
+4. 系统自动发送 Ctrl+L 快捷键到 Cursor 窗口
+5. Cursor Chat 面板打开，用户点击 "+ New Chat"
+6. 新 Chat 中包含子任务的执行指令和 Chat ID
+7. 子任务在新 Chat 中独立执行，不影响主对话
+8. 主 skill 可以通过 `getParallelExecutionInfo()` 查询所有子任务的 Chat ID、状态等信息
+
+**统一管理接口**：
+
+主 skill 可以通过以下接口查询和管理所有子任务：
+
+```javascript
+import { 
+  getParallelExecutionInfo,
+  getChildExecutions,
+  getParallelExecutionStats,
+  getActiveChildExecutions,
+  updateParallelExecutionStatus,
+  getParallelExecutionByChatId
+} from './scripts/commands/skills/parallel-executor.mjs';
+import {
+  markAllChildrenCompleted,
+  cancelAllChildExecutions
+} from './scripts/commands/skills/parallel-manager.mjs';
+
+// 获取所有子任务信息（包含 Chat ID、状态、进程信息等）
+const info = getParallelExecutionInfo(parentExecutionId);
+console.log('所有 Chat ID:', info.chatIds);
+console.log('子任务列表:', info.all);
+console.log('活跃子任务:', info.active);
+console.log('状态统计:', info.stats);
+
+// 根据 Chat ID 查询子任务
+const childTask = getParallelExecutionByChatId('chat_xxx');
+
+// 更新子任务状态
+updateParallelExecutionStatus('chat_xxx', 'started', {
+  startedAt: Date.now(),
+  childExecutionId: 'exec_xxx'
+});
+
+// 标记所有子任务为已完成
+markAllChildrenCompleted(parentExecutionId);
+
+// 取消所有未完成的子任务
+cancelAllChildExecutions(parentExecutionId);
+```
+
+**任务完成确认和完成阶段操作**：
+
+当主任务完成时，使用以下方式确认任务完成并执行完成阶段操作：
+
+```javascript
+import { 
+  confirmTaskCompletion,
+  completeTaskWithAllPhases 
+} from './scripts/commands/skills/task-completion-handler.mjs';
+
+// 方式1: 确认任务完成并执行所有完成阶段操作（推荐）
+const result = await confirmTaskCompletion(parentExecutionId, {
+  askQuestion: askQuestion, // AskQuestion 工具函数
+  skipConfirm: false, // 是否跳过确认（默认需要确认）
+  completionMessage: '任务执行情况总结...', // 自定义完成消息
+  skipSummary: false, // 是否跳过总结（默认生成）
+  skipRating: false // 是否跳过评级（默认评级）
+});
+
+// 方式2: 一步完成（包含执行数据更新）
+const result = await completeTaskWithAllPhases(parentExecutionId, {
+  status: 'completed',
+  completionMessage: '任务已完成！',
+  // 其他执行数据...
+}, {
+  askQuestion: askQuestion,
+  skipConfirm: false,
+  skipSummary: false,
+  skipRating: false
+});
+```
+
+系统会通过 `AskQuestion` 询问用户**是否确认任务完成**，用户可以选择：
+- 是，确认完成 - 执行所有完成阶段操作（总结、评级、关闭Chat、完成记录）
+- 否，继续执行 - 不执行完成操作，继续任务
+- 稍后确认 - 暂不确认，稍后处理
+
+**完成阶段操作包括**：
+1. 📝 生成执行总结并写入参考文件（`.claude/skills-meta/executions/summaries/`）
+2. ⭐ 对skill进行评级（生成健康度报告）
+3. 🔒 关闭所有并行子任务的Chat
+4. ✅ 完成主任务执行记录
+
+**CLI 查询**：
+```bash
+# 查看并行执行信息
+node scripts/commands/skills/cli.mjs parallel <parent_execution_id>
+
+# 查看执行详情（包括子任务）
+node scripts/commands/skills/cli.mjs show-execution <execution_id>
+
+# 关闭所有子任务 Chat
+node scripts/commands/skills/cli.mjs close-chats <parent_execution_id> [--force]
+```
+
+**配置**：在 `.claude/skills-meta/config.json` 中配置 `parallel_execution` 选项。
+
+**技术实现**：
+- 使用 PowerShell 脚本 `send-cursor-shortcut.ps1` 发送快捷键到 Cursor 窗口
+- 自动激活 Cursor 窗口并发送 Ctrl+L 打开 Chat 面板
+- 用户需要在新打开的 Chat 面板中点击 "+ New Chat" 按钮
+- 每个新 Chat 包含完整的子任务执行指令
+
+### 对话场景记录（重要）
+
+**核心原则**：除了直接使用skills，日常对话中的需求也应该记录，作为skills优化的基础数据源。
+
+**何时记录对话场景**：
+- 用户询问如何做某事（即使没有明确使用skill）
+- 用户遇到问题或错误
+- 用户提出改进建议或反馈
+- 用户表达困惑或不清楚的地方
+- 任何可能与现有skills相关的内容
+
+**AI应该自动执行**：
+
+1. **自动记录对话场景**
+   ```javascript
+   import { recordConversationScenario } from './scripts/commands/skills/conversation-analyzer.mjs';
+   
+   // 在回答用户问题后，自动记录
+   const conversationId = recordConversationScenario(userQuery, aiResponse);
+   ```
+
+2. **识别skill使用场景**
+   - 系统会自动识别对话内容与哪些skills相关
+   - 例如：用户问"如何构建应用" → 自动关联到 build-guide skill
+   - 例如：用户问"开发服务器启动不了" → 自动关联到 dev-workflow skill
+   - 例如：用户说"操作太复杂" → 关联到相关skill，生成简化建议
+
+3. **提取优化数据**
+   - 系统会自动提取意图、关键词、潜在问题
+   - 生成优化建议并关联到相关skills
+   - 这些数据会纳入skills的自动优化分析
+
+**示例**：
+- 用户："如何构建应用？" → 记录对话，关联 build-guide，生成"可发现性"优化建议
+- 用户："构建总是失败，提示找不到模块" → 记录对话，关联 build-guide，生成"问题解决方案"优化建议
+- 用户："创建页面的步骤太多了" → 记录对话，关联 page-creator，生成"复杂度降低"优化建议
+
+### 命令自动跟踪（新增）
+
+**重要**：当执行特定命令时，系统会自动识别并记录相关skill的执行。
+
+**命令到skill的映射**：
+- `dev:all`, `dev`, `dev:app` → dev-workflow
+- `build:all`, `build:app`, `build-cdn:*`, `build-dist:*` → build-guide
+- `release:push`, `release:version` → release-automation
+- `check:i18n`, `locale:merge` → i18n-toolkit
+- `lint:all`, `type-check:all`, `check:circular` → quality-assurance
+- `deploy:*` → deploy-toolkit
+- `create-app` → monorepo-quick-start
+
+**自动跟踪机制**：
+- 当执行上述命令时，系统会自动：
+  1. 识别对应的skill
+  2. 创建执行记录
+  3. 跟踪命令执行过程（包括步骤、耗时等）
+  4. 记录执行结果（成功/失败、耗时等）
+  5. 即使没有明确使用skill，也会记录为skill执行
+  6. 支持长期运行命令（如dev服务器）的异步跟踪
+
+**实现方式**：
+- 命令脚本中已集成 `interceptCommand()` 函数
+- 自动识别命令并创建skill执行记录
+- 长期运行命令（dev服务器）会立即记录，不等待完成
+
+**示例**：
+- 用户执行 `pnpm dev:all` → 自动记录 dev-workflow skill 执行
+- 用户执行 `pnpm build:all` → 自动记录 build-guide skill 执行
+- 用户执行 `pnpm release:push` → 自动记录 release-automation skill 执行
+
+**配置**：
+在 `.claude/skills-meta/config.json` 中：
+```json
+{
+  "command_interception": {
+    "enabled": true,
+    "auto_track": true,
+    "track_on_start": true,
+    "track_on_complete": true
+  }
+}
+```
+
+### AI自动使用
+
+当执行skill时，AI应该：
+
+1. **检查是否为首次执行**
+   - 使用 `isFirstExecution(skillName)` 检查
+   - 如果是首次执行，进入详细询问模式
+
+2. **创建执行记录**
+   - 使用 `createExecution(skillName, context)` 创建执行记录
+   - 获取 `executionId`
+
+3. **分步骤执行跟踪**
+   - 每个步骤开始时：`createStep(executionId, stepName, stepOrder, stepType, context)`
+   - 在关键步骤触发智能提示：
+     - 首次执行：使用 `generateFirstExecutionQuestions()` 生成询问清单
+     - 经验模式：使用 `getHintSuggestions()` 获取提示
+     - 使用 `AskQuestion` 工具展示提示/询问
+     - 记录反馈：`recordHintFeedback(executionId, stepId, hintId, feedback)`
+   - 步骤完成时：`completeStep(stepId, result)`
+
+4. **完成执行**
+   - 计算步骤综合评分：`calculateStepScores(executionId, config)`
+   - 完成执行记录：`completeExecution(executionId, result)`
+
+5. **收集反馈**
+   - 从用户自然反馈中推断：`collectFeedback(executionId, feedback)`
+   - 如果反馈不够明确，使用 `AskQuestion` 主动询问
+   - 使用 `generateFeedbackQuestions()` 生成结构化问题
+
+6. **更新提示库**
+   - 首次执行的询问结果：`convertQuestionsToHints(skillName, questionResults)`
+   - 提示反馈会自动更新提示库权重
+
+7. **Skills拆分分析**（可选）
+   - 如果skill过于复杂：`analyzeComplexity(skillName)`
+   - 如果达到拆分阈值：`splitSkill(skillName)`
+
+8. **自动优化**（后台）
+   - 定期检查：`checkOptimizationNeeded(skillName)`
+   - 如果需要优化：`autoOptimize(skillName)`
+
+### 使用示例
+
+```javascript
+// 在执行skill时
+import { createExecution, createStep, completeStep, completeExecution } from './scripts/commands/skills/execution-tracker.mjs';
+import { isFirstExecution, generateFirstExecutionQuestions, getHintSuggestions } from './scripts/commands/skills/hint-system.mjs';
+import { collectFeedback } from './scripts/commands/skills/feedback-collector.mjs';
+
+// 1. 检查首次执行
+const isFirst = isFirstExecution('build-guide');
+
+// 2. 创建执行记录
+const executionId = createExecution('build-guide', { userRequest: '...' });
+
+// 3. 执行步骤
+const stepId = createStep(executionId, '检查依赖', 1, 'check');
+
+// 4. 获取提示（如果是首次执行）
+if (isFirst) {
+  const questions = generateFirstExecutionQuestions('build-guide');
+  // 使用AskQuestion展示问题
+}
+
+// 5. 完成步骤
+completeStep(stepId, { completion_score: 1.0, status: 'completed' });
+
+// 6. 完成执行
+completeExecution(executionId, {
+  status: 'completed',
+  step_scores: calculateStepScores(executionId),
+  multi_dimension_scores: { accuracy: 4, completeness: 4, ... }
+});
+
+// 7. 收集反馈
+collectFeedback(executionId, { rawText: '执行很好，但缺少一些说明' });
+```
+
+### 管理工具
+
+使用CLI工具管理skills：
+
+```bash
+# 初始化数据库
+node scripts/commands/skills/cli.mjs init
+
+# 查看执行记录
+node scripts/commands/skills/cli.mjs list-executions [skill-name]
+
+# 生成健康度报告
+node scripts/commands/skills/cli.mjs analyze <skill-name>
+
+# 手动触发优化
+node scripts/commands/skills/cli.mjs optimize <skill-name>
+
+# 拆分复杂skill
+node scripts/commands/skills/cli.mjs split <skill-name>
+```
+
+### 系统配置
+
+配置文件位置：`.claude/skills-meta/config.json`
+
+可以调整优化阈值、提示系统参数等。

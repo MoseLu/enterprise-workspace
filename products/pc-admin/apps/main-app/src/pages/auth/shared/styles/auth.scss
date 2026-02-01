@@ -1,0 +1,14 @@
+// 认证页面主样式文件
+// 使用 @use 导入各个模块
+
+@use 'variables';
+@use 'base';
+@use 'login-card';
+@use 'login-tabs';
+@use 'card-content';
+@use 'form-elements';
+@use 'registration';
+@use 'steps';
+@use 'components';
+@use 'global-override';
+@use 'responsive';

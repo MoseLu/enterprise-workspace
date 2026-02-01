@@ -1,0 +1,48 @@
+/**
+ * 容器宽度设置样式
+ */
+
+@import '@btc-assets/icons/system/iconfont.css';
+
+.container-settings {
+  .container-width {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+
+    .item {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
+      height: 60px;
+      cursor: pointer;
+      border: 2px solid var(--el-border-color-light);
+      border-radius: 10px;
+      transition: all 0.3s;
+
+      &.is-active {
+        border-color: var(--el-color-primary);
+
+        .iconfont-sys {
+          color: var(--el-color-primary) !important;
+        }
+      }
+
+      .iconfont-sys {
+        margin-right: 10px;
+        font-size: 22px;
+        font-style: normal;
+        color: var(--el-text-color-regular);
+      }
+
+      span {
+        font-size: 14px;
+        color: var(--el-text-color-regular);
+        background: transparent !important;
+      }
+    }
+  }
+}
+

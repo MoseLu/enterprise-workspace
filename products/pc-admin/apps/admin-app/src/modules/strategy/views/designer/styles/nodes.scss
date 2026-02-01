@@ -1,0 +1,273 @@
+// SVG 节点样式 - draw.io 风格
+.strategy-node {
+  cursor: move;
+  // 节点作为独立元素，需要捕获所有点击事件
+  pointer-events: all;
+
+  &.selected {
+    .node-rect {
+      stroke-width: 2;
+      filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
+    }
+  }
+
+  .node-rect {
+    // 无填充，只显示形状轮廓
+    fill: none;
+    // 确保边框可见
+    stroke-width: 2;
+    // 使用 Element Plus 最明显的边框色
+    // 亮色主题：使用主文本色（最深的黑色）
+    stroke: var(--el-text-color-primary);
+    
+    &:hover {
+      filter: brightness(1.05);
+    }
+  }
+  
+  // 暗色主题下使用白色边框（最明显）
+  html.dark & {
+    .node-rect {
+      stroke: var(--el-color-white);
+    }
+  }
+
+  .node-text {
+    pointer-events: none;
+    user-select: none;
+    // 文字颜色与边框颜色保持一致
+    fill: var(--el-text-color-primary);
+  }
+  
+  // 暗色主题下文字颜色使用白色
+  html.dark & {
+    .node-text {
+      fill: var(--el-color-white);
+    }
+  }
+
+  .text-edit-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .node-text-input {
+    width: 90%;
+    height: auto; // 由内容自适应高度，避免视觉下移
+    border: none;
+    outline: none;
+    background: transparent;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    font-style: inherit;
+    color: inherit;
+    line-height: 1;
+    box-sizing: border-box;
+    // 绝对居中，严格对齐几何中心
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+    }
+  }
+
+  .connection-arrows {
+    // 默认隐藏
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+
+    // 显示状态（悬浮在节点上时显示）
+    &.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .connection-arrow-group {
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+
+      // 默认半透明
+      opacity: 0.6;
+      pointer-events: auto;
+
+      .arrow-shape {
+        fill: var(--el-color-primary-light-5);  // 使用主题色浅色版本，稍微深一些
+        stroke: none;
+        transition: all 0.15s ease;
+      }
+
+      // 暗色主题下的默认状态
+      @media (prefers-color-scheme: dark) {
+        .arrow-shape {
+          fill: #409eff;                        // 在暗色主题下使用明确的蓝色
+          opacity: 0.7;                         // 稍微透明
+        }
+      }
+
+      // 悬浮激活状态 - 更加明显
+      &.active {
+        opacity: 1;
+        .arrow-shape {
+          fill: var(--el-color-primary);           // 主题色
+          stroke: #ffffff;                        // 白色描边，在任何背景下都清晰
+          stroke-width: 2;                        // 描边宽度
+          filter: drop-shadow(0 0 6px rgba(64, 158, 255, 0.8)); // 蓝色发光效果
+        }
+
+        // 暗色主题下的特殊处理
+        @media (prefers-color-scheme: dark) {
+          .arrow-shape {
+            fill: #409eff;                        // 确保在暗色主题下使用明确的蓝色
+            stroke: #ffffff;                      // 白色描边
+            stroke-width: 2;
+            filter: drop-shadow(0 0 8px rgba(64, 158, 255, 1)); // 更强的发光效果
+          }
+        }
+      }
+
+      &:hover {
+        opacity: 0.8;
+        .arrow-shape {
+          fill: var(--el-color-primary-light-3);  // 悬停时稍微加深
+        }
+
+        // 暗色主题下的悬停状态
+        @media (prefers-color-scheme: dark) {
+          .arrow-shape {
+            fill: #409eff;                        // 在暗色主题下使用明确的蓝色
+            opacity: 0.9;                         // 稍微透明
+          }
+        }
+      }
+    }
+  }
+
+  .connection-label {
+    pointer-events: none;
+    user-select: none;
+    font-family: Arial, sans-serif;
+  }
+
+  // 调整大小手柄样式
+  .resize-handles {
+    .boundary-box {
+      fill: none;
+      stroke: #409eff;
+      stroke-width: 2;
+      stroke-dasharray: 6, 6;
+      opacity: 1;
+    }
+
+    .resize-handle {
+      filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.1));
+
+      &:hover {
+        fill: #66b1ff;
+        filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.2));
+      }
+    }
+  }
+
+  // 节点类型颜色定义（已移除，使用 Vue 组件中的动态样式）
+  // 填充色和边框色现在由 getNodeFillColor 和 getNodeStrokeColor 函数控制
+  // 所有节点统一使用 Element Plus 主题边框色，无填充色
+  &.START {
+    // fill 和 stroke 由组件中的 :fill 和 :stroke 属性控制
+    .node-icon text {
+      fill: #67c23a;
+    }
+  }
+
+  &.END {
+    .node-icon text {
+      fill: #f56c6c;
+    }
+  }
+
+  &.CONDITION {
+    .node-icon text {
+      fill: #e6a23c;
+    }
+  }
+
+  &.ACTION {
+    .node-icon text {
+      fill: #409eff;
+    }
+  }
+
+  &.DECISION {
+    .node-icon text {
+      fill: #909399;
+    }
+  }
+
+  &.GATEWAY {
+    .node-icon text {
+      fill: #9c27b0;
+    }
+  }
+}
+
+// Overlay 层样式 - 确保手柄和箭头可见可交互
+.overlay-layer {
+  pointer-events: none; // 父层不拦截事件
+
+  .handles-group,
+  .boundary-group,
+  .arrows-group {
+    pointer-events: auto; // 子组可交互
+  }
+
+  .resize-handle {
+    fill: #409eff;
+    stroke: white;
+    stroke-width: 2;
+    cursor: pointer;
+    pointer-events: auto;
+
+    &:hover {
+      fill: #66b1ff;
+      filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.2));
+    }
+  }
+
+  .boundary-box {
+    fill: none;
+    stroke: #409eff;
+    stroke-width: 1;
+    stroke-dasharray: 4, 4;
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  .arrow-group {
+    cursor: pointer;
+    pointer-events: auto;
+
+    .arrow-shape {
+      fill: rgba(64, 158, 255, 0.25);
+      stroke: #409eff;
+      stroke-width: 1;
+      transition: all 0.15s ease;
+    }
+
+    &:hover .arrow-shape {
+      fill: rgba(64, 158, 255, 0.5);
+      stroke: #409eff;
+      stroke-width: 2;
+      filter: drop-shadow(0 0 4px rgba(64, 158, 255, 0.6));
+    }
+  }
+}

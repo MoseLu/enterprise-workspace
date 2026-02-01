@@ -1,0 +1,318 @@
+// ==================== 布局相关样式 ====================
+
+// 页面容器样式（由 .page 系统接管）
+// 所有页面级路由的根元素由 App.vue 自动应用 .page 类
+// 页面组件内部使用 .page BEM 规范：.page__header, .page__body, .page__footer
+
+// 确保 router-view 渲染的页面组件能正确填充
+.app-layout__content > router-view,
+.app-layout__content .content-mount--main-app > router-view {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	width: 100%;
+	height: 100%;
+}
+
+// 页面组件根元素（.page 容器）自动填充父容器
+.app-layout__content > router-view > .page,
+.app-layout__content .content-mount--main-app > router-view > .page {
+	flex: 1;
+	min-height: 0;
+}
+
+// 关键：确保子应用挂载点（#subapp-viewport）内的内容能够正确填充高度
+// 子应用内容直接挂载在 #subapp-viewport 中，不经过 router-view
+.app-layout__content > #subapp-viewport {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	overflow: hidden;
+	flex: 1; // 子应用挂载点需要占据完整高度
+
+	// 确保子应用内容根元素能够正确填充高度
+	> * {
+		height: 100% !important;
+		width: 100% !important;
+		display: flex !important;
+		flex-direction: column !important;
+		min-height: 0 !important;
+		overflow: hidden;
+		flex: 1 !important; // 子应用内容根元素需要占据完整高度
+	}
+
+	// 关键：确保 qiankun 包装器（[data-qiankun]）占据完整高度
+	[data-qiankun] {
+		flex: 1 !important;
+		display: flex !important;
+		flex-direction: column !important;
+		min-height: 0 !important;
+		height: 100% !important;
+		width: 100% !important;
+		// 确保 position 不会影响高度计算
+		position: relative !important;
+		// 确保 box-sizing 正确
+		box-sizing: border-box !important;
+	}
+
+	// 关键：确保子应用的 #app 元素占据完整高度
+	// 使用多个选择器确保覆盖所有情况
+	// 添加更具体的选择器，确保覆盖所有可能的 DOM 结构
+	#app,
+	[data-qiankun] #app,
+	[id^="__qiankun_microapp_wrapper"] #app,
+	> [data-qiankun] > #app,
+	> [id^="__qiankun_microapp_wrapper"] > #app,
+	[data-qiankun] > #app,
+	[id^="__qiankun_microapp_wrapper"] > #app {
+		flex: 1 !important;
+		display: flex !important;
+		flex-direction: column !important;
+		min-height: 0 !important;
+		height: 100% !important;
+		width: 100% !important;
+		box-sizing: border-box !important;
+		// 确保 position 不会影响高度计算
+		position: relative !important;
+		// 确保 overflow 不会影响高度
+		overflow: hidden !important;
+	}
+
+	// 确保子应用内部的 router-view 也能正确渲染
+	> * :deep(> router-view),
+	#app :deep(> router-view),
+	[data-qiankun] #app :deep(> router-view) {
+		flex: 1 !important;
+		display: flex !important;
+		flex-direction: column !important;
+		min-height: 0 !important;
+		height: 100% !important;
+		width: 100% !important;
+	}
+
+	// 确保 router-view 渲染的组件正确显示
+	> * :deep(> router-view > *),
+	#app :deep(> router-view > *),
+	[data-qiankun] #app :deep(> router-view > *) {
+		flex: 1 !important;
+		display: flex !important;
+		flex-direction: column !important;
+		min-height: 0 !important;
+		height: 100% !important;
+		width: 100% !important;
+	}
+}
+
+// 确保 btc-table-group 和 btc-views-group 能正确继承父容器高度
+.btc-table-group,
+.btc-views-tabs-group,
+.btc-views-group {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	overflow: hidden;
+}
+
+// =========================
+// 内容挂载容器样式（统一管理主应用和子应用的显示/隐藏）
+// =========================
+.content-mount {
+	width: 100%;
+	height: 100%;
+	position: relative;
+
+	&--main-app {
+		display: block;
+	}
+
+	&--sub-app {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&--loading {
+		display: flex;
+		flex-direction: column;
+	}
+
+	&--hidden {
+		display: none !important;
+	}
+}
+
+// 关键：确保同时存在多个 content-mount 容器时，隐藏的容器不占用空间
+// 这可以防止在生产环境中由于竞态条件导致两个容器同时存在时，第一个容器占用空间
+.app-layout__content {
+	// 关键：主应用容器需要是 flex 容器，才能正确占据 app-layout__content 的空间
+	.content-mount--main-app {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		height: 100%;
+		min-height: 0;
+		position: relative;
+	}
+
+	// 关键修复：如果子应用容器（#subapp-viewport）存在，隐藏所有主应用容器
+	// 使用通用兄弟选择器（最兼容的方案）
+	// 注意：CSS 无法选择前面的兄弟元素，所以我们需要确保主应用容器为空时不占用空间
+	#subapp-viewport {
+		// 如果子应用容器存在，隐藏后面的主应用容器（虽然不应该存在）
+		& ~ .content-mount--main-app {
+			display: none !important;
+			height: 0 !important;
+			width: 0 !important;
+			overflow: hidden !important;
+			position: absolute !important;
+			visibility: hidden !important;
+		}
+	}
+
+	// 关键修复：如果主应用容器为空（只有注释），不占用空间
+	// 这可以防止在生产环境中由于竞态条件导致两个容器同时存在时，第一个容器占用空间
+	> .content-mount--main-app:empty,
+	> .content-mount--main-app:only-child:empty {
+		display: none !important;
+		height: 0 !important;
+		width: 0 !important;
+		overflow: hidden !important;
+		position: absolute !important;
+		visibility: hidden !important;
+	}
+
+	// 关键修复：如果主应用容器后面有子应用容器，隐藏主应用容器
+	// 使用相邻兄弟选择器（最兼容的方案）
+	// 注意：CSS 无法直接选择前面的兄弟元素，所以这个规则只是标记
+	// 实际隐藏逻辑通过 JavaScript (v-if) 处理
+	// > .content-mount--main-app + #subapp-viewport {
+	// 	// 前面的主应用容器应该被隐藏（通过 JavaScript 或确保 v-if 正确）
+	// }
+}
+
+
+// 禁用滚动条的覆盖类（允许特殊页面禁用滚动条）
+.page-no-scroll {
+	overflow-y: hidden !important;
+	overflow-x: hidden !important;
+}
+
+// =========================
+// Theme Brand Red Body Background
+// =========================
+body.theme-brand-red {
+	background-color: var(--btc-surface-page);
+}
+
+
+// =========================
+// el-scrollbar 通用样式（仅负责滚动条美化，填充满父容器）
+// =========================
+// 当业务容器复用 .container 核心样式时，内部的 el-scrollbar 只需要填充满父容器
+// 注意：这个样式适用于业务容器内部的 el-scrollbar，不适用于直接应用 .container 类的 el-scrollbar
+// 注意：在全局 SCSS 中不能使用 :deep()，直接使用选择器即可
+.el-scrollbar {
+	width: 100%;
+	height: 100%;
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+
+	.el-scrollbar__wrap {
+		overflow-x: auto !important; // 允许水平滚动，让 el-table 自己处理水平滚动条
+		overflow-y: auto !important;
+		flex: 1 !important;
+		min-height: 0 !important;
+		height: 100% !important;
+	}
+
+	.el-scrollbar__view {
+		width: 100% !important;
+		height: auto !important;
+		min-height: 100% !important;
+		display: flex !important;
+		flex-direction: column !important;
+	}
+
+	// el-scrollbar 滚动条样式定制（参考 btc-container 的实现）
+	.el-scrollbar__bar {
+		&.is-vertical {
+			right: 0;
+			width: var(--btc-spacing-1-5);
+
+			.el-scrollbar__thumb {
+				background-color: color-mix(in srgb, var(--el-text-color-primary) 20%, transparent);
+				border-radius: var(--btc-spacing-1);
+				opacity: 0; // 默认完全透明
+				transition: opacity 0.3s ease-in-out;
+			}
+		}
+	}
+
+	// 悬停或滚动时显示滚动条
+	&:hover .el-scrollbar__bar.is-vertical .el-scrollbar__thumb,
+	&.is-scrolling .el-scrollbar__bar.is-vertical .el-scrollbar__thumb {
+		opacity: 1;
+	}
+
+	// 暗色模式滚动条
+	@media (prefers-color-scheme: dark) {
+		.el-scrollbar__bar.is-vertical .el-scrollbar__thumb {
+			background-color: color-mix(in srgb, var(--el-text-color-primary) 28%, transparent);
+		}
+	}
+
+	// 响应式设计：确保在连续变化的尺寸下也能正确响应
+	// 移动端优化（<= 768px）
+	@media only screen and (max-width: 768px) {
+		// 移动端保持相同的布局逻辑，但可能需要调整滚动条宽度
+		.el-scrollbar__bar.is-vertical {
+			width: var(--btc-spacing-1); // 移动端使用更窄的滚动条
+		}
+	}
+}
+
+// =========================
+// 策略监控图表容器样式（公共样式）
+// =========================
+// 说明：
+// - 用于所有应用的 home 页面中的图表展示
+// - 统一管理图表容器的高度、布局和卡片间距
+.strategy-charts {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+	overflow: hidden;
+
+	:deep(.btc-chart-gallery) {
+		height: 100%;
+		min-height: 0;
+	}
+
+	:deep(.btc-container) {
+		height: 100%;
+		min-height: 0;
+	}
+
+	:deep(.chart-item) {
+		min-height: 300px;
+	}
+
+	// 设置图表卡片之间的垂直间距
+	// 针对 btc-chart-gallery 中的 el-col（使用 ElRow 和 ElCol 布局）
+	// 注意：ElRow 的 gutter 属性只设置水平间距，需要手动设置垂直间距
+	:deep(.btc-chart-gallery__container .el-col),
+	:deep(.btc-chart-demo .el-col) {
+		margin-bottom: var(--btc-spacing-2-5);
+	}
+	
+	// 针对 btc-container 中的子元素（使用 CSS Grid 布局，gap 属性已经处理了间距）
+	// 这里不需要额外设置，因为 btc-container 的 gap 属性已经处理了垂直间距
+}

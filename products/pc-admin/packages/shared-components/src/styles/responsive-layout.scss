@@ -1,0 +1,143 @@
+// ==================== 全局响应式布局样式 ====================
+// 这些样式与 useGlobalBreakpoints composable 配合使用
+// 布局类由 composable 动态添加到 document.documentElement
+// 
+// 布局类说明：
+// - .col-mobile: 手机端 (< 768px)
+// - .col-tablet: 平板端 (768px - 1024px)
+// - .col-desktop: 桌面端 (> 1024px)
+
+// ==================== 基础布局类 ====================
+// 这些类由 useGlobalBreakpoints 自动添加到 html 元素上
+// 主要用于 CSS 选择器，根据不同的设备尺寸应用不同的样式
+
+// 手机端样式（< 768px）
+.col-mobile {
+  // 可以在这里添加全局的手机端样式
+  // 例如：字体大小、间距等
+}
+
+// 平板端样式（768px - 1024px）
+.col-tablet {
+  // 可以在这里添加全局的平板端样式
+}
+
+// 桌面端样式（> 1024px）
+.col-desktop {
+  // 可以在这里添加全局的桌面端样式
+}
+
+// ==================== 响应式工具类 ====================
+
+// 显示/隐藏工具类
+.col-mobile {
+  // 手机端显示，其他隐藏
+  .show-mobile {
+    display: block !important;
+  }
+  .show-tablet,
+  .show-desktop {
+    display: none !important;
+  }
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+.col-tablet {
+  // 平板端显示，其他隐藏
+  .show-tablet {
+    display: block !important;
+  }
+  .show-mobile,
+  .show-desktop {
+    display: none !important;
+  }
+  .hide-tablet {
+    display: none !important;
+  }
+}
+
+.col-desktop {
+  // 桌面端显示，其他隐藏
+  .show-desktop {
+    display: block !important;
+  }
+  .show-mobile,
+  .show-tablet {
+    display: none !important;
+  }
+  .hide-desktop {
+    display: none !important;
+  }
+}
+
+// Flex 布局工具类
+.col-mobile {
+  .flex-mobile-column {
+    flex-direction: column !important;
+  }
+  .flex-mobile-row {
+    flex-direction: row !important;
+  }
+}
+
+.col-tablet {
+  .flex-tablet-column {
+    flex-direction: column !important;
+  }
+  .flex-tablet-row {
+    flex-direction: row !important;
+  }
+}
+
+.col-desktop {
+  .flex-desktop-column {
+    flex-direction: column !important;
+  }
+  .flex-desktop-row {
+    flex-direction: row !important;
+  }
+}
+
+// 间距工具类（可选，根据实际需求使用）
+// 示例：在不同设备上使用不同的间距
+.col-mobile {
+  .spacing-mobile {
+    // 手机端间距
+    gap: 8px;
+    padding: 8px;
+  }
+}
+
+.col-tablet {
+  .spacing-tablet {
+    // 平板端间距
+    gap: 12px;
+    padding: 12px;
+  }
+}
+
+.col-desktop {
+  .spacing-desktop {
+    // 桌面端间距
+    gap: 16px;
+    padding: 16px;
+  }
+}
+
+// ==================== 使用示例 ====================
+// 
+// 1. 在组件中使用布局类选择器：
+//    .col-mobile .my-component { ... }
+//    .col-tablet .my-component { ... }
+//    .col-desktop .my-component { ... }
+//
+// 2. 在组件中使用工具类：
+//    <div class="show-mobile">只在手机端显示</div>
+//    <div class="show-desktop">只在桌面端显示</div>
+//
+// 3. 结合使用：
+//    .col-mobile .my-component { ... }
+//    .col-desktop .my-component { ... }
+

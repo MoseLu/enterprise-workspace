@@ -1,0 +1,105 @@
+// 连接线组样式
+.connection-group {
+  // connection-group 现在设置 cursor，用于连接线的光标显示
+  // 但保持 pointer-events: none，让事件穿透，只有 path 元素可以捕获事件
+  pointer-events: none;
+
+  .connection-path {
+    // stroke 和 stroke-width 由组件动态绑定，不在这里设置
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    // 只有直接点击到线条本身才触发事件，而不是整个 stroke 区域
+    // 这样可以避免线条附近的空白区域也被识别为点击连接线，从而阻止背景框选
+    pointer-events: visibleStroke;
+    
+    // cursor 样式现在直接在 path 元素上通过内联样式设置，确保优先级最高
+
+    &:hover {
+      opacity: 0.8;
+    }
+    
+    // 光标样式现在由 JavaScript 在 mousemove 事件中动态设置
+    // 不再使用 CSS 类选择器设置光标，因为需要根据鼠标所在的线段动态切换
+    // &.connection-horizontal {
+    //   cursor: col-resize !important;
+    // }
+    // 
+    // &.connection-vertical {
+    //   cursor: row-resize !important;
+    // }
+
+    // 当连接线选中时，在手柄附近区域减小事件响应范围，避免与手柄冲突
+    .connection-group.selected & {
+      // 保持 visibleStroke，但在手柄区域会被手柄的 pointer-events: auto 覆盖
+    }
+
+    &.success {
+      // 成功状态样式
+    }
+
+    &.danger {
+      // 危险状态样式
+    }
+  }
+
+  // 选中状态的连接线样式（不改变线宽，只添加高亮效果）
+  &.selected {
+    .connection-path {
+      // 保持原始线宽，只添加高亮效果
+      filter: drop-shadow(0 0 4px rgba(64, 158, 255, 0.6));
+    }
+  }
+}
+
+// 临时连接线组样式
+.temp-connection-group {
+  .temp-connection-line {
+    stroke: var(--el-color-primary);
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 4, 4;
+    animation: dash 1s linear infinite;
+  }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -8;
+  }
+}
+
+// 连接线箭头标记 - draw.io 风格
+.connection-marker {
+  fill: var(--el-text-color-primary);
+}
+
+// 连接线手柄样式
+.connection-handles-overlay {
+  pointer-events: none; // 父层不拦截事件
+
+  // 手柄组：确保手柄区域完全覆盖，避免闪烁
+  g,
+  circle {
+    pointer-events: auto; // 手柄本身可交互
+    // 确保手柄在最上层显示
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
+    // 防止鼠标事件穿透到手柄下方的连接线（避免闪烁）
+    cursor: pointer;
+    
+    // 移除 transform scale，避免位置闪烁
+    // 只通过阴影变化来提示 hover 状态，不使用 transform
+    &:hover {
+      filter: drop-shadow(0 0 4px rgba(64, 158, 255, 0.8));
+    }
+  }
+
+  // 所有手柄都使用 row-resize 光标（双箭头横线）
+  g,
+  circle {
+    cursor: row-resize;
+  }
+}
+

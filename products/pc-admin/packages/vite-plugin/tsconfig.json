@@ -1,0 +1,24 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "lib": ["ES2020", "DOM"],
+    "baseUrl": "./",
+    "paths": {
+      "@configs": ["../shared-core/src/configs"],
+      "@configs/*": ["../shared-core/src/configs/*"],
+      "@btc/shared-utils": ["../shared-core/src/utils", "../shared-core/dist/utils"],
+      "@btc/shared-utils/*": ["../shared-core/src/utils/*", "../shared-core/dist/utils/*"]
+    },
+    "outDir": "dist",
+    "rootDir": "src",
+    "declaration": true,
+    "declarationMap": false,
+    "emitDeclarationOnly": false
+  },
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules"],
+  "references": [
+    { "path": "../shared-core" }
+  ]
+}

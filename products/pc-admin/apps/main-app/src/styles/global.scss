@@ -1,0 +1,130 @@
+// 使用 @use ... as * 确保样式被正确导入并应用到全局（兼容 @use 模块化）
+@use '@btc/shared-components/styles/index.scss' as *;
+
+// Global styles for main app
+
+// 自定义 CSS 变量（与 cool-admin 保持一致）
+:root {
+  --bg-color: var(--el-fill-color-lighter);
+  
+  // 嵌套卡片配色变量（方案一：极简通透风）
+  --overview-card-parent-bg: #f9fafb; // 父级app-card背景
+  --overview-card-child-bg: #ffffff; // 子级menu-card背景
+  --overview-menu-item-bg: transparent; // 二级菜单项默认背景
+  --overview-hover-bg: #f3f4f6; // 通用hover背景
+  --overview-active-bg: #e8f3ff; // 选中激活背景（关联品牌主色浅版）
+  --overview-border-light: #e5e7eb; // 通用轻边框
+}
+
+// 暗黑模式适配（基于#0a0a0a深色基底）
+html.dark {
+  // 基础色
+  --overview-bg-base: #0a0a0a; // 最外层容器/页面基底
+  --overview-card-parent-bg: #141414; // 父级app-card背景（比基底亮一点）
+  --overview-card-child-bg: #1e1e1e; // 子级menu-card背景（比父级亮一点）
+  --overview-menu-item-bg: transparent; // 二级菜单项默认背景
+  --overview-border-light: #262626; // 通用轻边框（低对比度）
+  --overview-hover-bg: #242424; // 通用hover背景
+  --overview-active-bg: #1a2e5c; // 选中激活背景（主色#165dff的深灰版）
+  --overview-active-text: #165dff; // 选中文字主色
+  --overview-text-primary: #e5e5e5; // 主要文字色（保证可读性）
+  --overview-text-secondary: #a3a3a3; // 次要文字色
+}
+
+// Reset default styles
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#app {
+  height: 100%;
+}
+
+// Custom scrollbar (align with cool-admin)
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  opacity: 1;
+}
+
+// Firefox scrollbar
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+// 概览页面暗黑模式适配（基于#0a0a0a深色基底）
+html.dark {
+  // 资源卡片区域
+  .overview__resource {
+    background: var(--overview-bg-base, #0a0a0a);
+    color: var(--overview-text-primary, #e5e5e5);
+  }
+
+  // 应用卡片（父级卡片）
+  .overview__app-card {
+    &:hover {
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); // 暗黑模式内缩式阴影
+    }
+  }
+
+  // 应用标题
+  .overview__app-title {
+    color: var(--overview-text-primary, #e5e5e5);
+
+    &:hover {
+      color: var(--el-color-primary);
+    }
+  }
+
+  // 应用图标
+  .overview__app-icon {
+    color: var(--overview-text-secondary, #a3a3a3);
+  }
+
+  // 一级菜单子卡片
+  .overview__menu-card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); // 暗黑模式内缩式阴影，提层不刺眼
+  }
+
+  // 一级菜单标题
+  .overview__menu-card-title {
+    color: var(--overview-text-primary, #e5e5e5);
+
+    &:hover {
+      color: var(--el-color-primary);
+    }
+  }
+
+  // 二级菜单项
+  .overview__sub-menu-item {
+    color: var(--overview-text-secondary, #a3a3a3);
+
+    &:hover {
+      color: var(--el-color-primary);
+    }
+  }
+}
+

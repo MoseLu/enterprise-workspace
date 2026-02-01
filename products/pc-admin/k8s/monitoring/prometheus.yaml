@@ -1,0 +1,153 @@
+# Prometheus 监控配置示例
+
+apiVersion: v1
+kind: ServiceMonitor
+metadata:
+  name: btc-shopflow-monitor
+  namespace: btc-shopflow
+  labels:
+    app: btc-shopflow
+spec:
+  selector:
+    matchLabels:
+      component: frontend
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+
+---
+# Grafana Dashboard ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: btc-shopflow-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  btc-shopflow.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "BTC ShopFlow 监控面板",
+        "tags": ["btc-shopflow"],
+        "style": "dark",
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "应用状态",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "up{job=\"btc-shopflow\"}",
+                "legendFormat": "{{instance}}"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "thresholds"
+                },
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "green", "value": 1}
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": 2,
+            "title": "CPU 使用率",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(container_cpu_usage_seconds_total{namespace=\"btc-shopflow\"}[5m]) * 100",
+                "legendFormat": "{{pod}}"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "内存使用率",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "container_memory_usage_bytes{namespace=\"btc-shopflow\"} / container_spec_memory_limit_bytes * 100",
+                "legendFormat": "{{pod}}"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "网络流量",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(container_network_receive_bytes_total{namespace=\"btc-shopflow\"}[5m])",
+                "legendFormat": "接收 - {{pod}}"
+              },
+              {
+                "expr": "rate(container_network_transmit_bytes_total{namespace=\"btc-shopflow\"}[5m])",
+                "legendFormat": "发送 - {{pod}}"
+              }
+            ]
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "refresh": "30s"
+      }
+    }
+
+---
+# 告警规则
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: btc-shopflow-alerts
+  namespace: btc-shopflow
+spec:
+  groups:
+  - name: btc-shopflow.rules
+    rules:
+    - alert: BtcShopflowAppDown
+      expr: up{job="btc-shopflow"} == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "BTC ShopFlow 应用 {{ $labels.instance }} 已下线"
+        description: "应用 {{ $labels.instance }} 已经下线超过 1 分钟"
+
+    - alert: BtcShopflowHighCPU
+      expr: rate(container_cpu_usage_seconds_total{namespace="btc-shopflow"}[5m]) * 100 > 80
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "BTC ShopFlow 应用 CPU 使用率过高"
+        description: "Pod {{ $labels.pod }} CPU 使用率已超过 80% 持续 5 分钟"
+
+    - alert: BtcShopflowHighMemory
+      expr: container_memory_usage_bytes{namespace="btc-shopflow"} / container_spec_memory_limit_bytes * 100 > 90
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "BTC ShopFlow 应用内存使用率过高"
+        description: "Pod {{ $labels.pod }} 内存使用率已超过 90% 持续 5 分钟"
+
+    - alert: BtcShopflowPodCrashLooping
+      expr: rate(kube_pod_container_status_restarts_total{namespace="btc-shopflow"}[15m]) > 0
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "BTC ShopFlow Pod 频繁重启"
+        description: "Pod {{ $labels.pod }} 在过去 15 分钟内重启了 {{ $value }} 次"

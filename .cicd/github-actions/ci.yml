@@ -1,0 +1,167 @@
+# ========================================
+# GitHub Actions CI 通用工作流配置文件
+# 用于企业级项目的持续集成
+# ========================================
+
+name: CI Workflow
+
+# 触发条件：
+# - 主分支和开发分支的 push 操作
+# - 所有分支的 pull request
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+# 环境变量配置
+env:
+  # 项目名称（根据实际情况修改）
+  PROJECT_NAME: enterprise-workspace
+  # Node.js 版本
+  NODE_VERSION: '18'
+  # Python 版本
+  PYTHON_VERSION: '3.11'
+  # 工作目录
+  WORKING_DIRECTORY: .
+
+# 作业定义
+jobs:
+  # 代码质量检查作业
+  lint:
+    name: 代码质量检查
+    runs-on: ubuntu-latest
+    steps:
+      # 检出代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      # 设置 Node.js 环境
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      # 安装依赖
+      - name: 安装依赖
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci
+
+      # 代码格式化检查
+      - name: 检查代码格式
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run lint:check
+
+      # 代码静态分析
+      - name: 静态代码分析
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run lint:eslint
+
+      # 类型检查（TypeScript）
+      - name: TypeScript 类型检查
+        if: exists('tsconfig.json')
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run type-check
+
+  # 单元测试作业
+  unit-test:
+    name: 单元测试
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      # 检出代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      # 设置 Node.js 环境
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      # 安装依赖
+      - name: 安装依赖
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci
+
+      # 运行单元测试
+      - name: 执行单元测试
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run test:unit
+
+      # 上传测试覆盖率报告
+      - name: 上传覆盖率报告
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+
+  # 构建作业
+  build:
+    name: 项目构建
+    runs-on: ubuntu-latest
+    needs: unit-test
+    steps:
+      # 检出代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      # 设置 Node.js 环境
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      # 安装依赖
+      - name: 安装依赖
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci
+
+      # 构建项目
+      - name: 构建项目
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm run build
+
+      # 上传构建产物
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: dist/
+          retention-days: 7
+
+  # 安全扫描作业
+  security-scan:
+    name: 安全扫描
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      # 检出代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      # 依赖安全扫描
+      - name: 依赖安全扫描
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:javascript"
+          queries: security-extended
+
+      # Docker 镜像安全扫描（如需要）
+      - name: Docker 安全扫描
+        if: exists('Dockerfile')
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      # 上传安全扫描结果
+      - name: 上传安全扫描结果
+        uses: github/codeql-action/upload@v2
+        with:
+          sarif_file: 'trivy-results.sarif'

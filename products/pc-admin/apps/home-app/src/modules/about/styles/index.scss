@@ -1,0 +1,395 @@
+// 关于我们页面样式
+@use '@/styles/geometric-background.scss' as *;
+
+.about-page {
+  background-color: #ffffff;
+  height: 100%; // 填充父容器（main.main）的高度，不是视口高度
+  position: relative;
+  overflow: hidden;
+
+  // 右下角奖项区域（已废弃，QA标志现在直接作为背景元素）
+  .award-section {
+    display: none; // 隐藏整个区域，QA标志现在独立存在
+  }
+
+  // 主内容区
+  .main-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%; // 填充父容器（about-page）的高度
+    overflow: hidden;
+
+    // 内容区域：自动使用内接矩形区域（由GeometricBackground组件提供）
+    // 注意：这个容器会被GeometricBackground组件自动定位到内接矩形区域
+    // 使用 flex 布局实现垂直和水平居中
+    :deep(.geometric-content-area) {
+      display: flex;
+      align-items: center; // 垂直居中
+      justify-content: center; // 水平居中
+    }
+
+    .content-wrapper {
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      max-height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+      gap: 30px;
+      padding: 40px;
+      box-sizing: border-box;
+      overflow: auto;
+      
+      // 确保内容在内接矩形内正确显示
+      &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      &::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        
+        &:hover {
+          background: rgba(0, 0, 0, 0.3);
+        }
+      }
+    }
+  }
+
+  // 左侧内容区
+  .content-left {
+    position: relative;
+    z-index: 11;
+    padding-right: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%; // 确保高度填满
+  }
+
+  // 右侧内容区
+  .content-right {
+    position: relative;
+    z-index: 11;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%; // 确保高度填满
+
+    .brand-banner {
+      align-self: flex-start; // 横幅居于左上角
+      text-align: left; // 文本左对齐
+      border-radius: 4px; // 恢复圆角
+      padding: 12px 24px; // 减少高度，比文本略大
+
+      .company-name-en {
+        text-align: left; // 文本左对齐
+        font-size: 20px; // 减小字号，与文本大小相近
+        margin: 0 0 4px 0; // 减小间距
+      }
+
+      .company-slogan {
+        text-align: left; // 文本左对齐
+        font-size: 14px; // 减小字号，与文本大小相近
+        margin: 0; // 移除底部间距
+      }
+    }
+  }
+
+  // 品牌横幅（红色背景，使用品牌红 #D81E06）
+  .brand-banner {
+    background-color: #d81e06;
+    padding: 24px 32px;
+    border-radius: 4px;
+
+    .company-name-en {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 30px; // 增大字号
+      font-weight: bold; // 加粗
+      color: #ffffff;
+      margin: 0 0 8px 0;
+      letter-spacing: 0.5px;
+      text-align: center; // 水平居中
+    }
+
+    .company-slogan {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 26px; // 增大字号
+      font-weight: bold; // 加粗
+      color: #ffffff;
+      margin: 0 0 12px 0;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-align: center; // 水平居中
+    }
+
+    .company-name-cn {
+      font-family: 'Microsoft YaHei', '微软雅黑', 'PingFang SC', 'Hiragino Sans GB',
+        sans-serif;
+      font-size: 24px; // 增大字号
+      font-weight: bold; // 加粗
+      color: #ffffff; // 白色文本
+      margin: 0;
+      text-align: center; // 水平居中
+    }
+  }
+
+  // 内容卡片容器 - 父级div，有外框线
+  .content-card {
+    border: 2px solid rgba(0, 0, 0, 0.2); // 外边框线
+    border-radius: 4px; // 圆角，和横幅边框一样
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    flex: 1; // 使用flex: 1确保两个卡片高度一致
+    height: 100%; // 确保高度填满
+    overflow: hidden; // 防止内容溢出
+  }
+
+  // 文本块 - 子级div，无外框线
+  .text-block {
+    background-color: transparent; // 透明背景
+    padding: 40px;
+    border: none; // 无外框线
+    display: flex;
+    flex-direction: column;
+    flex: 1; // 使用flex: 1确保两个卡片高度一致
+
+    &.text-cn {
+      p {
+        font-family: 'Microsoft YaHei', '微软雅黑', 'PingFang SC', 'Hiragino Sans GB',
+          sans-serif;
+        font-size: 18px; // 增大字号
+        line-height: 1.6;
+        color: #d81e06; // 改为红色
+        margin: 0 0 1em 0; // 段落间距
+        text-indent: 2em; // 首行缩进
+      }
+    }
+
+    &.text-en {
+      p {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 16px; // 增大字号
+        line-height: 1.5;
+        color: #d81e06; // 改为红色
+        margin: 0 0 1em 0; // 段落间距
+        text-align: left; // 左对齐
+        text-indent: 2em; // 首行缩进
+      }
+    }
+  }
+
+  // 响应式设计
+  // 大屏幕设备（1920px+）
+  @media (min-width: 1920px) {
+    .main-content {
+      .content-wrapper {
+        max-width: 1400px;
+      }
+    }
+  }
+
+  // 中等屏幕设备（1024px - 1919px）
+  @media (max-width: 1919px) and (min-width: 1024px) {
+    .main-content {
+      .content-wrapper {
+        max-width: 1200px;
+        gap: 30px;
+        padding: 0;
+      }
+    }
+  }
+
+  // 平板设备（768px - 1023px）
+  @media (max-width: 1023px) and (min-width: 768px) {
+    .main-content {
+      .content-wrapper {
+        gap: 30px;
+        padding: 0;
+      }
+
+      .content-left {
+        padding-right: 15px;
+      }
+
+      .content-right {
+        padding-left: 15px;
+      }
+    }
+
+    .brand-banner {
+      padding: 20px 24px;
+
+      .company-name-en {
+        font-size: 24px;
+      }
+
+      .company-slogan {
+        font-size: 14px;
+      }
+
+      .company-name-cn {
+        font-size: 16px;
+      }
+    }
+
+    .text-block {
+      padding: 30px 24px;
+
+      &.text-cn p {
+        font-size: 16px;
+      }
+
+      &.text-en p {
+        font-size: 14px;
+      }
+    }
+  }
+
+  // 移动设备（最大768px）
+  @media (max-width: 767px) {
+    .main-content {
+      padding: 40px 0;
+
+      .content-wrapper {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 0;
+      }
+
+      .content-left,
+      .content-right {
+        padding: 0;
+      }
+    }
+
+    .content-card {
+      border-width: 1px;
+    }
+
+    .brand-banner {
+      padding: 16px 20px;
+
+      .company-name-en {
+        font-size: 20px;
+      }
+
+      .company-slogan {
+        font-size: 12px;
+      }
+
+      .company-name-cn {
+        font-size: 14px;
+      }
+    }
+
+    .text-block {
+      padding: 24px 20px;
+
+      &.text-cn p {
+        font-size: 14px;
+        text-indent: 1.5em;
+      }
+
+      &.text-en p {
+        font-size: 13px;
+        text-indent: 1.5em;
+      }
+    }
+  }
+
+  // 小屏幕移动设备（最大480px）
+  @media (max-width: 480px) {
+    .main-content {
+      padding: 30px 0;
+
+      .content-wrapper {
+        padding: 0;
+        gap: 24px;
+      }
+    }
+
+    .brand-banner {
+      padding: 12px 16px;
+
+      .company-name-en {
+        font-size: 18px;
+      }
+
+      .company-slogan {
+        font-size: 11px;
+      }
+
+      .company-name-cn {
+        font-size: 13px;
+      }
+    }
+
+    .text-block {
+      padding: 20px 16px;
+
+      &.text-cn p {
+        font-size: 13px;
+        text-indent: 1em;
+        line-height: 1.5;
+      }
+
+      &.text-en p {
+        font-size: 12px;
+        text-indent: 1em;
+        line-height: 1.4;
+      }
+    }
+  }
+
+  // 超小屏幕设备（最大375px）
+  @media (max-width: 375px) {
+    .main-content {
+      padding: 24px 0;
+
+      .content-wrapper {
+        padding: 0 10px;
+        gap: 20px;
+      }
+    }
+
+    .brand-banner {
+      padding: 10px 14px;
+
+      .company-name-en {
+        font-size: 16px;
+      }
+
+      .company-slogan {
+        font-size: 10px;
+      }
+
+      .company-name-cn {
+        font-size: 12px;
+      }
+    }
+
+    .text-block {
+      padding: 18px 14px;
+
+      &.text-cn p {
+        font-size: 12px;
+        text-indent: 0.8em;
+      }
+
+      &.text-en p {
+        font-size: 11px;
+        text-indent: 0.8em;
+      }
+    }
+  }
+}

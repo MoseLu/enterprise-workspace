@@ -1,0 +1,689 @@
+// 引入 layout mixin 以复用 .container 核心样式
+@use '../../../../styles/layout' as *;
+
+.btc-filter-list {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--el-bg-color);
+  padding: 10px; // 四边间距一致
+  width: 100%;
+  height: 100%;
+  min-width: 0; // 允许 flex 子元素收缩
+  min-height: 0; // 允许 flex 子元素收缩
+  max-height: 100%; // 关键：限制最大高度，防止被内容撑开
+  box-sizing: border-box;
+  // 注意：移除 overflow: hidden，滚动由 .container 统一处理（通过 el-scrollbar）
+  // overflow: hidden; // 移除，由 .container 统一处理滚动
+  
+  // 尺寸选项
+  // 注意：宽度完全由父容器（btc-splitter-panel）通过 flex-basis 控制
+  // 尺寸类只用于样式调整（如字体大小等），不设置宽度，避免干扰父容器的过渡动画
+  &.is-size-small {
+    // small 尺寸下优化布局，确保功能正常
+    .btc-filter-list__category-title {
+      font-size: 13px; // 稍微缩小字体
+      gap: 8px; // 减小间距
+    }
+
+    .btc-filter-list__category-count {
+      font-size: 11px; // 缩小计数文字
+    }
+  }
+
+  // 当禁用换行时（折叠状态），保持内容宽度不变，避免布局变化
+  // 参考 cl-view-group：折叠时内容完全不变，只是被 overflow: hidden 隐藏
+  // 注意：只在折叠时生效（通过 CSS 变量），展开时不影响尺寸类的宽度设置
+  &.is-no-wrap {
+    // 使用 position: relative 确保宽度生效，同时允许父容器的 overflow: hidden 隐藏超出部分
+    position: relative;
+    
+    // 关键修复：使用 CSS 变量的 fallback 机制
+    // 如果变量不存在（展开过程中），使用 unset 让宽度由父容器控制，避免宽度骤变
+    // 这样在展开过程中，即使 is-no-wrap 类还在，也不会因为变量不存在而导致宽度变成 undefined
+    width: var(--btc-filter-list-collapsed-width, unset) !important;
+    
+    // 注意：宽度完全由父容器控制，这里只在折叠状态（CSS 变量存在）时设置宽度
+    // 尺寸类不再设置固定宽度，避免干扰父容器的过渡动画
+    
+    // 参考 cl-view-group 的 .scope：使用固定宽度，确保布局不变
+    // 同样使用 fallback，避免变量不存在时宽度变成 undefined
+    min-width: var(--btc-filter-list-collapsed-width, unset) !important;
+    max-width: var(--btc-filter-list-collapsed-width, unset) !important;
+    
+    // 移除允许收缩的设置，确保宽度固定
+    // 注意：如果变量不存在，flex-shrink 仍然设置为 0，但宽度会由父容器控制
+    flex-shrink: 0 !important;
+    
+    // 确保容器也保持固定宽度
+    .btc-filter-list__container {
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+    }
+  }
+
+  &__header {
+    flex-shrink: 0;
+    border-bottom: none;
+    background-color: var(--el-bg-color);
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  &__tags-wrapper {
+    flex-shrink: 0;
+    margin-bottom: 10px;
+  }
+
+  &__search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0;
+    width: 100%;
+    min-width: 0; // 允许 flex 子元素收缩
+    box-sizing: border-box;
+  }
+
+  &__search {
+    flex: 1;
+    margin-bottom: 0;
+    min-width: 0; // 允许 flex 子元素收缩，防止超出容器
+    overflow: hidden; // 防止内容溢出
+  }
+
+  &__settings-btn {
+    // 使用 btc-comm__icon 样式，只需要覆盖特定属性
+    // 移除旋转动画，保持简洁
+    transition: all 0.2s ease-in-out;
+
+    // 移除额外的背景色（btc-comm__icon 已经处理了背景）
+    // hover 和 active 状态由 btc-comm__icon 统一处理
+  }
+
+  // 下拉菜单样式（与国际化切换样式一致）
+  :deep(.el-dropdown-menu) {
+    .el-dropdown-menu__item {
+      padding: 0;
+    }
+  }
+
+  // 尺寸选择项样式（与国际化切换样式一致）
+  &__size-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px; // 文本和点之间的间距
+    padding: 4px 0;
+
+    &-label {
+      font-size: 14px;
+    }
+
+    &-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--el-color-primary);
+      flex-shrink: 0;
+    }
+
+    // 选中状态的样式（与国际化切换样式一致）
+    &.is-active {
+      .btc-filter-list__size-item-label {
+        color: var(--el-color-primary);
+        font-weight: 500;
+      }
+
+      .btc-filter-list__size-item-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--el-color-primary);
+      }
+    }
+
+    // hover 状态
+    &:hover {
+      .btc-filter-list__size-item-label {
+        color: var(--el-color-primary);
+      }
+    }
+  }
+
+  // el-scrollbar 容器样式（父级容器，滚动条显示在底部）
+  &__tags-scrollbar {
+    border: 1px solid var(--el-border-color-light);
+    border-radius: var(--el-border-radius-base);
+    margin-bottom: 0;
+    box-sizing: border-box;
+    background-color: var(--el-bg-color);
+
+    // 提升内部滚动 wrap 的样式优先级
+    :deep(.el-scrollbar__wrap) {
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      padding-bottom: 0 !important;
+      margin-bottom: 0 !important;
+      // 明确 wrap 宽度为 100%，子元素超出则触发水平滚动
+      width: 100% !important;
+    }
+
+    :deep(.el-scrollbar__view) {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      // 让视图区域宽度自适应内容（max-content）
+      width: max-content !important;
+      min-width: 100% !important;
+    }
+
+    :deep(.el-scrollbar__bar) {
+      // 滚动条覆盖在内容上，不占空间
+      &.is-horizontal {
+        bottom: 0;
+        height: 6px; // 滚动条高度
+        z-index: 1; // 确保滚动条在内容之上
+
+        .el-scrollbar__thumb {
+          background-color: var(--el-border-color);
+          border-radius: 3px;
+
+          &:hover {
+            background-color: var(--el-border-color-dark);
+          }
+        }
+      }
+
+      // 隐藏垂直滚动条
+      &.is-vertical {
+        display: none;
+      }
+    }
+  }
+
+  &__tags {
+    display: flex;
+    flex-direction: column; // 改为纵向布局，每排一个分类
+    gap: 6px; // 行间距
+    border: 1px solid var(--el-border-color-light); // 添加边框
+    border-radius: var(--el-border-radius-base);
+    padding: 5px 5px 0 5px; // 上左右5px，底部0px（因为标签行内容容器已有padding-bottom: 5px）
+    margin-bottom: 0;
+    // 高度由 JavaScript 动态计算（根据分类数量）
+    // 计算公式：高度 = 标签行数 * 24px + (行数 - 1) * 6px + 10px（上下内边距）+ 2px（上下边框）
+    // 每个分类占一行
+    box-sizing: border-box;
+    background-color: var(--el-bg-color);
+
+    // 滚动状态下（被 scrollbar 包裹）直接修改样式
+    &.tags-scrollable {
+      border: none; // 滚动状态下，边框由 scrollbar 容器提供
+      border-radius: 0;
+      width: max-content !important;
+      min-width: 100% !important;
+    }
+  }
+
+  // 标签行样式
+  &__tag-row {
+    min-height: 24px; // 标签高度
+    width: 100%; // 确保行元素占满容器宽度
+    box-sizing: border-box;
+    flex-shrink: 0; // 不允许收缩
+    border-bottom: 1px solid var(--el-border-color-lighter); // 添加分隔线
+
+    // 最后一行不需要分隔线
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  // 标签行内容容器（承载所有标签）
+  &__tag-row-content {
+    display: flex; // 使用 flex 布局
+    align-items: center;
+    gap: 6px; // 标签之间的间距
+    flex-wrap: nowrap; // 不允许换行，确保标签在一行显示
+    width: 100%; // 占满行宽度
+    overflow: hidden; // 折叠状态下隐藏溢出内容
+    padding-bottom: 5px; // 标签内容和底部分隔线之间的间距
+
+    // 在滚动状态下，只有处于滚动状态的行才使用 max-content，其他行保持 100%
+    // 这样只有展开的行会超出容器宽度，触发父级容器的水平滚动
+    .btc-filter-list__tags-scrollbar & {
+      // 默认保持 100% 宽度，避免未展开的行也超出容器
+      width: 100%;
+      min-width: 100%;
+      overflow: visible; // 滚动状态下允许溢出
+
+      // 只有处于滚动状态的行才使用 max-content
+      .btc-filter-list__tag-row[data-scrolling="true"] & {
+        width: max-content; // 内容宽度自适应，可以超出父容器
+        min-width: 100%; // 最小宽度为父容器宽度
+
+        :deep(.el-tag) {
+          flex: 0 0 auto !important; // 强制不占据剩余空间，不允许收缩或扩展
+          min-width: auto !important; // 使用标签的自然宽度
+          flex-shrink: 0 !important; // 不允许收缩
+          flex-grow: 0 !important; // 不允许扩展
+          width: auto !important; // 使用标签的自然宽度
+        }
+      }
+    }
+  }
+
+  // 分类提示标签（固定，不可关闭）
+  &__category-tag {
+    flex-shrink: 0; // 不允许收缩
+    white-space: nowrap; // 不换行
+  }
+
+  // 折叠标签
+  &__collapse-tag {
+    cursor: pointer; // 可点击
+    white-space: nowrap; // 不换行
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  // 收起按钮（展开状态下显示，取代分类标签位置）
+  &__collapse-btn {
+    cursor: pointer; // 可点击
+    flex-shrink: 0; // 不允许收缩，与分类标签保持一致
+    display: inline-flex; // 确保正确显示
+    align-items: center; // 垂直居中
+    justify-content: center; // 水平居中
+    width: 24px; // 圆形图标大小，与标签高度一致
+    height: 24px;
+    border-radius: 50%; // 圆形
+    font-size: 14px; // 图标大小
+    transition: background-color 0.2s, border-color 0.2s; // 过渡效果
+    background-color: var(--el-fill-color-lighter); // 默认背景色
+    border: 1px solid; // 描边，颜色通过具体类型设置
+
+    &:hover {
+      background-color: var(--el-fill-color-light); // 悬停时背景色加深
+    }
+
+    // 根据标签类型设置颜色（包括图标颜色和描边颜色）
+    &--primary {
+      color: var(--el-color-primary);
+      border-color: var(--el-color-primary);
+    }
+    &--success {
+      color: var(--el-color-success);
+      border-color: var(--el-color-success);
+    }
+    &--warning {
+      color: var(--el-color-warning);
+      border-color: var(--el-color-warning);
+    }
+    &--danger {
+      color: var(--el-color-danger);
+      border-color: var(--el-color-danger);
+    }
+    &--info {
+      color: var(--el-color-info);
+      border-color: var(--el-color-info);
+    }
+    &--purple {
+      color: var(--el-color-purple);
+      border-color: var(--el-color-purple);
+    }
+    &--pink {
+      color: var(--el-color-pink);
+      border-color: var(--el-color-pink);
+    }
+    &--cyan {
+      color: var(--el-color-cyan);
+      border-color: var(--el-color-cyan);
+    }
+    &--teal {
+      color: var(--el-color-teal);
+      border-color: var(--el-color-teal);
+    }
+    &--indigo {
+      color: var(--el-color-indigo);
+      border-color: var(--el-color-indigo);
+    }
+    &--orange {
+      color: var(--el-color-orange);
+      border-color: var(--el-color-orange);
+    }
+    &--brown {
+      color: var(--el-color-brown);
+      border-color: var(--el-color-brown);
+    }
+    &--gray {
+      color: var(--el-color-gray);
+      border-color: var(--el-color-gray);
+    }
+    &--lime {
+      color: var(--el-color-lime);
+      border-color: var(--el-color-lime);
+    }
+    &--olive {
+      color: var(--el-color-olive);
+      border-color: var(--el-color-olive);
+    }
+    &--navy {
+      color: var(--el-color-navy);
+      border-color: var(--el-color-navy);
+    }
+    &--maroon {
+      color: var(--el-color-maroon);
+      border-color: var(--el-color-maroon);
+    }
+  }
+
+  // 溢出标签项
+  &__overflow-tag-item {
+    white-space: nowrap; // 不换行
+    flex-shrink: 0; // 不允许收缩
+    flex-grow: 0; // 不允许扩展
+  }
+
+  // 隐藏的标签（溢出标签在折叠状态下隐藏）
+  &__tag-hidden {
+    display: none !important;
+  }
+
+  // 最后一个标签占据剩余宽度
+  &__tag-last {
+    flex: 1; // 占据剩余空间
+    min-width: 0; // 允许收缩到最小
+    max-width: 100%; // 不超过容器宽度
+  }
+
+  // 确保所有标签都不换行
+  &__tag-row :deep(.el-tag) {
+    white-space: nowrap; // 标签内容不换行
+
+    // 除了最后一个标签，其他标签不允许收缩
+    &:not(.btc-filter-list__tag-last) {
+      flex-shrink: 0;
+      flex-grow: 0; // 不允许扩展
+    }
+  }
+
+  &__overflow-tag {
+    flex-shrink: 0;
+  }
+
+  &__overflow-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  &__overflow-tag-item {
+    margin: 0;
+  }
+
+  &__container {
+    // 容器样式（自适应 + 高度约束 + 滚动基础）
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    min-width: 0; // 允许在固定宽度下正常收缩
+    position: relative;
+    box-sizing: border-box;
+    flex: 1; // 占据剩余空间（参考 cool-admin-vue-7.x 的 .data 容器）
+    // 注意：滚动由内部的 el-scrollbar 处理，这里只负责布局约束
+    
+    // 在折叠状态下（is-no-wrap），确保容器宽度固定，避免内容被压缩
+    .btc-filter-list.is-no-wrap & {
+      width: 100%;
+      min-width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  &__category-title {
+    display: flex !important; // 提高优先级，确保样式生效
+    align-items: center !important; // 垂直居中对齐
+    gap: 12px; // 统一水平间距：文本、计数之间的间距
+    font-weight: 500;
+    flex: 1;
+    padding: 0; // 移除 padding，使用父容器 header 的 padding
+    min-height: 32px; // 确保有足够的高度来容纳复选框和文本
+    margin: 0; // 移除 margin，使用父容器的 gap 统一控制间距
+    width: 100%; // 确保占满宽度
+    // 设置最小宽度，防止在折叠状态下被压缩到0，导致展开时布局骤变
+    // 使用较小的值（约等于一个字符宽度），确保过渡平滑
+    min-width: 1px;
+    // 防止文本换行，保持单行显示
+    white-space: nowrap;
+
+    // 分类名称文本
+    .btc-filter-list__category-name {
+      display: inline-block !important;
+      vertical-align: middle !important;
+      line-height: 1.5 !important;
+      height: auto;
+      margin: 0 !important;
+      padding: 0 !important;
+      font-size: inherit;
+      flex: 1; // 占据剩余空间
+      // 设置最小宽度，防止在过渡过程中被压缩到0
+      // 使用较小的值，确保过渡平滑，不影响父容器的宽度过渡
+      min-width: 1px;
+      // 允许文本溢出时显示省略号，而不是完全消失
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  &__category-checkbox {
+    flex-shrink: 0 !important;
+    margin: 0 !important; // 移除所有 margin，使用 gap 统一控制间距
+    padding: 0 !important; // 移除所有 padding
+    cursor: pointer; // 明确显示可点击
+    display: inline-flex !important;
+    align-items: center !important; // 确保复选框本身也垂直居中
+    vertical-align: middle !important; // 垂直对齐
+    line-height: 1 !important; // 重置行高，避免影响对齐
+    height: auto; // 自适应高度，与文本 span 保持一致
+
+    // 隐藏 el-checkbox 的默认 label（因为我们使用自定义的 span）
+    :deep(.el-checkbox__label) {
+      display: none;
+      padding: 0;
+      width: 0;
+      height: 0;
+    }
+
+    // 调整 checkbox input 的对齐
+    :deep(.el-checkbox__input) {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      line-height: 1;
+      height: auto;
+      margin: 0; // 移除所有 margin
+      padding: 0; // 移除所有 padding
+
+      .el-checkbox__inner {
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+        // 全选框默认状态：使用更亮的边框，比选项框更明显
+        border-color: var(--el-color-primary-light-4) !important;
+        background-color: var(--el-bg-color) !important;
+        border-width: 1.5px !important; // 稍微加粗边框，更明显
+        vertical-align: middle; // 确保复选框本身垂直居中
+        display: inline-block; // 确保正确对齐
+        margin: 0; // 移除所有 margin
+        // 全选框稍微大一点，更明显
+        width: 16px !important;
+        height: 16px !important;
+
+        &:hover {
+          border-color: var(--el-color-primary-light-2) !important;
+          background-color: var(--el-fill-color-lighter) !important;
+        }
+      }
+    }
+
+    // 选中状态：使用更亮的主题色填充
+    :deep(.el-checkbox__input.is-checked) {
+      .el-checkbox__inner {
+        border-color: var(--el-color-primary-light-2) !important;
+        background-color: var(--el-color-primary-light-2) !important;
+        color: var(--el-color-white) !important;
+        border-width: 1.5px !important; // 保持加粗边框
+
+        // 确保对勾图标清晰可见（白色对勾）
+        &::after {
+          border-color: var(--el-color-white) !important;
+          border-width: 2px 2px 0 0 !important; // 稍微加粗对勾，更明显
+        }
+
+        &:hover {
+          border-color: var(--el-color-primary) !important;
+          background-color: var(--el-color-primary) !important;
+        }
+      }
+    }
+
+    // 半选状态：使用更亮的主题色
+    :deep(.el-checkbox__input.is-indeterminate) {
+      .el-checkbox__inner {
+        border-color: var(--el-color-primary-light-2) !important;
+        background-color: var(--el-color-primary-light-2) !important;
+        border-width: 1.5px !important; // 保持加粗边框
+
+        &::after {
+          border-color: var(--el-color-white) !important;
+          border-width: 2px 0 0 0 !important; // 稍微加粗横线，更明显
+        }
+
+        &:hover {
+          border-color: var(--el-color-primary) !important;
+          background-color: var(--el-color-primary) !important;
+        }
+      }
+    }
+  }
+
+  &__category-count {
+    color: var(--el-text-color-secondary);
+    font-size: 12px;
+    font-weight: normal;
+    margin-left: auto !important; // 靠右对齐，使用 !important 确保生效
+    margin-right: 0 !important; // 移除右边距
+    margin-top: 0 !important; // 移除上边距
+    margin-bottom: 0 !important; // 移除下边距
+    flex-shrink: 0; // 不收缩，确保始终显示
+  }
+
+  &__options {
+    padding: 0; // 移除上下内边距，减少与标题的间距
+    // 注意：不需要 padding-left，因为全选框和选项框都在 content-inner 内部
+    // content-inner 的 padding-left 会统一控制左侧对齐
+    // 确保选项容器可以正常显示，不被压缩
+    min-width: 0; // 允许在固定宽度下正常收缩
+    width: 100%; // 确保占满容器宽度
+
+    // 让 checkbox-group 使用 flex 布局，实现水平排列
+    :deep(.el-checkbox-group) {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px; // 统一控制水平和垂直间距
+      // 确保选项组可以正常显示
+      min-width: 0;
+      width: 100%;
+    }
+  }
+
+  &__option {
+    // 使用 flex 布局时，选项会自动水平排列，无需设置 display: block
+    // margin 由父容器的 gap 统一控制，无需单独设置
+
+    // 内容区选项框样式：使用较淡的主题色，与全选框区分
+    // 选项框使用标准大小和较淡的颜色，视觉权重较低
+    :deep(.el-checkbox__input) {
+      .el-checkbox__inner {
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+        // 选项框使用标准边框颜色，比全选框更淡
+        border-color: var(--el-border-color) !important;
+        background-color: var(--el-bg-color) !important;
+        // 选项框使用标准大小（14px），比全选框（16px）小
+        width: 14px !important;
+        height: 14px !important;
+        border-width: 1px !important; // 标准边框宽度，比全选框细
+
+        &:hover {
+          border-color: var(--el-color-primary-light-5) !important;
+        }
+      }
+    }
+
+    // 选中状态：使用较淡的主题色，与全选框区分
+    :deep(.el-checkbox__input.is-checked) {
+      .el-checkbox__inner {
+        border-color: var(--el-color-primary-light-4) !important;
+        background-color: var(--el-color-primary-light-4) !important;
+        color: var(--el-color-white) !important;
+        border-width: 1px !important; // 保持标准边框宽度
+
+        // 确保选中图标（对勾）是白色，清晰可见
+        &::after {
+          border-color: var(--el-color-white) !important;
+          border-width: 1.5px 1.5px 0 0 !important; // 标准对勾宽度
+        }
+
+        &:hover {
+          border-color: var(--el-color-primary-light-3) !important;
+          background-color: var(--el-color-primary-light-3) !important;
+        }
+      }
+    }
+  }
+}
+
+// btc-collapse 组件样式（不再需要 :deep()）
+// 注意：btc-collapse-item 的样式在 CollapseItem 组件内部定义
+// 这里只保留 btc-filter-list 特定的样式覆盖
+
+.btc-filter-list__collapse-item {
+  // 允许 checkbox 可以点击（已经有 @click.stop 阻止冒泡）
+  .btc-filter-list__category-checkbox {
+    pointer-events: auto;
+  }
+}
+
+// 在折叠状态下（is-no-wrap），确保所有 collapse-item 保持固定宽度，避免被压缩
+.btc-filter-list.is-no-wrap {
+  :deep(.btc-collapse-item) {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    
+    // 确保头部也保持固定宽度
+    .btc-collapse-item__header {
+      width: 100%;
+      min-width: 100%;
+      max-width: 100%;
+    }
+    
+    // 确保标题区域也保持固定宽度
+    .btc-collapse-item__title {
+      width: 100%;
+      min-width: 100%;
+      max-width: 100%;
+    }
+  }
+}

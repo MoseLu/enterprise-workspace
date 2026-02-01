@@ -1,0 +1,18 @@
+﻿{
+  "access.resources.title": "资源列表",
+  "access.actions.title": "行为列表",
+  "access.permissions.title": "权限列表",
+  "access.role.title": "角色列表",
+  "access.roles.title": "角色列表",
+  "access.policies.title": "策略列表",
+  "access.perm_compose.title": "权限组合",
+  "menu.access": "权限管理",
+  "menu.access.resources": "资源列表",
+  "menu.access.actions": "行为列表",
+  "menu.access.permissions": "权限列表",
+  "menu.access.roles": "角色列表",
+  "menu.access.policies": "策略列表",
+  "menu.access.perm_compose": "权限组合",
+  "menu.access.role_assign": "角色分配",
+  "menu.access.role_permission_bind": "权限绑定"
+}

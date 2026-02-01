@@ -1,0 +1,277 @@
+name: Test Deployment
+
+on:
+  workflow_call:
+    inputs:
+      apps:
+        required: false
+        type: string
+        description: "要测试的应用列表（逗号分隔），留空则测试所有应用"
+      timeout:
+        required: false
+        type: number
+        description: "请求超时时间（毫秒）"
+        default: 30000
+      base_url:
+        required: false
+        type: string
+        description: "基础URL（留空使用默认 https://）"
+      max_retries:
+        required: false
+        type: number
+        description: "最大重试次数"
+        default: 3
+      retry_delay:
+        required: false
+        type: number
+        description: "重试延迟（秒）"
+        default: 300
+  workflow_dispatch:
+    inputs:
+      apps:
+        required: false
+        type: string
+        description: "要测试的应用列表（逗号分隔），留空则测试所有应用"
+      timeout:
+        required: false
+        type: number
+        description: "请求超时时间（毫秒）"
+        default: 30000
+      base_url:
+        required: false
+        type: string
+        description: "基础URL（留空使用默认 https://）"
+      max_retries:
+        required: false
+        type: number
+        description: "最大重试次数"
+        default: 3
+      retry_delay:
+        required: false
+        type: number
+        description: "重试延迟（秒）"
+        default: 300
+  repository_dispatch:
+    types: [test-deployment]
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  test:
+    name: Test Deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Load deploy config
+        id: load-config
+        run: |
+          if [ ! -f "deploy.config.json" ]; then
+            echo "⚠️ deploy.config.json 不存在，使用示例配置"
+            cp deploy.config.example.json deploy.config.json
+          fi
+          echo "✅ 部署配置已加载"
+
+      - name: Run deployment test
+        id: test
+        run: |
+          echo "🚀 开始部署测试..."
+          
+          # 构建测试命令
+          TEST_CMD="node scripts/test-deployment.mjs"
+          
+          # 添加应用参数
+          if [ -n "${{ inputs.apps }}" ]; then
+            APPS="${{ inputs.apps }}"
+            # 检查是单个应用还是多个应用
+            if [[ "$APPS" == *","* ]]; then
+              TEST_CMD="$TEST_CMD --apps $APPS"
+            else
+              TEST_CMD="$TEST_CMD --app $APPS"
+            fi
+          else
+            TEST_CMD="$TEST_CMD --all"
+          fi
+          
+          # 添加超时参数
+          if [ -n "${{ inputs.timeout }}" ]; then
+            TEST_CMD="$TEST_CMD --timeout ${{ inputs.timeout }}"
+          fi
+          
+          # 添加基础URL参数
+          if [ -n "${{ inputs.base_url }}" ]; then
+            TEST_CMD="$TEST_CMD --base-url ${{ inputs.base_url }}"
+          fi
+          
+          # 设置输出目录
+          TEST_CMD="$TEST_CMD --output test-results"
+          
+          echo "执行命令: $TEST_CMD"
+          
+          # 执行测试（最多重试指定次数）
+          MAX_RETRIES=${{ inputs.max_retries || 3 }}
+          RETRY_DELAY=${{ inputs.retry_delay || 300 }}
+          RETRY_COUNT=0
+          TEST_SUCCESS=false
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "第 $((RETRY_COUNT + 1)) 次测试尝试"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            
+            if $TEST_CMD; then
+              TEST_SUCCESS=true
+              echo "✅ 测试通过！"
+              break
+            else
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "❌ 测试失败，将在 ${RETRY_DELAY} 秒后重试..."
+                echo "剩余重试次数: $((MAX_RETRIES - RETRY_COUNT))"
+                sleep $RETRY_DELAY
+              else
+                echo "❌ 测试失败，已达到最大重试次数"
+              fi
+            fi
+          done
+          
+          # 设置输出
+          if [ "$TEST_SUCCESS" = true ]; then
+            echo "test_success=true" >> $GITHUB_OUTPUT
+            echo "test_result=passed" >> $GITHUB_OUTPUT
+          else
+            echo "test_success=false" >> $GITHUB_OUTPUT
+            echo "test_result=failed" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Analyze test results
+        if: always()
+        run: |
+          echo "📊 分析测试结果..."
+          
+          if [ -d "test-results" ]; then
+            echo "测试结果目录:"
+            ls -la test-results/
+            
+            # 查找最新的测试结果JSON文件
+            LATEST_RESULT=$(ls -t test-results/test-results-*.json 2>/dev/null | head -1)
+            if [ -n "$LATEST_RESULT" ]; then
+              echo ""
+              echo "最新的测试结果文件: $LATEST_RESULT"
+              echo ""
+              echo "测试结果摘要:"
+              cat "$LATEST_RESULT" | jq -r '
+                "总计: \(.summary.total)",
+                "通过: \(.summary.passed) ✅",
+                "失败: \(.summary.failed) ❌",
+                "耗时: \(.summary.duration)ms"
+              ' || echo "无法解析测试结果"
+              
+              # 如果有失败的应用，列出详细信息
+              FAILED_APPS=$(cat "$LATEST_RESULT" | jq -r '.apps | to_entries | map(select(.value.success == false)) | .[].key' 2>/dev/null || echo "")
+              if [ -n "$FAILED_APPS" ]; then
+                echo ""
+                echo "失败的应用:"
+                echo "$FAILED_APPS" | while read app; do
+                  echo "  - $app"
+                  cat "$LATEST_RESULT" | jq -r ".apps[\"$app\"].errors[]?.message // .apps[\"$app\"].errors[]?.error // \"无详细信息\"" 2>/dev/null | head -3 | sed 's/^/    /'
+                done
+              fi
+            fi
+          else
+            echo "⚠️ 未找到测试结果目录"
+          fi
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-test-results
+          path: test-results/
+          retention-days: 30
+
+      - name: Comment test results
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            const resultsDir = 'test-results';
+            if (!fs.existsSync(resultsDir)) {
+              return;
+            }
+            
+            // 查找最新的测试结果
+            const files = fs.readdirSync(resultsDir)
+              .filter(f => f.startsWith('test-results-') && f.endsWith('.json'))
+              .sort()
+              .reverse();
+            
+            if (files.length === 0) {
+              return;
+            }
+            
+            const latestResult = JSON.parse(
+              fs.readFileSync(path.join(resultsDir, files[0]), 'utf-8')
+            );
+            
+            const summary = latestResult.summary;
+            const passRate = summary.total > 0 
+              ? Math.round((summary.passed / summary.total) * 100) 
+              : 0;
+            
+            const emoji = summary.failed === 0 ? '✅' : '❌';
+            const status = summary.failed === 0 ? '通过' : '失败';
+            
+            let comment = `## ${emoji} 部署测试 ${status}\n\n`;
+            comment += `- **总计**: ${summary.total}\n`;
+            comment += `- **通过**: ${summary.passed} ✅\n`;
+            comment += `- **失败**: ${summary.failed} ❌\n`;
+            comment += `- **通过率**: ${passRate}%\n`;
+            comment += `- **耗时**: ${(summary.duration / 1000).toFixed(2)} 秒\n\n`;
+            
+            if (summary.failed > 0) {
+              comment += `### 失败的应用\n\n`;
+              for (const [appName, result] of Object.entries(latestResult.apps)) {
+                if (!result.success) {
+                  comment += `- **${appName}**: ${result.errors?.length || 0} 个错误\n`;
+                }
+              }
+            }
+            
+            comment += `\n[查看详细报告](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})\n`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Fail if tests failed
+        if: steps.test.outputs.test_success == 'false'
+        run: |
+          echo "❌ 部署测试失败"
+          exit 1
+

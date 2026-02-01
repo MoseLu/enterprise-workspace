@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "skipLibCheck": true,
+    "paths": {
+      "@configs": ["./src/configs"],
+      "@configs/*": ["./src/configs/*"],
+      "@btc/shared-components": ["../shared-components/dist"],
+      "@btc/shared-components/*": ["../shared-components/dist/*"],
+      "@btc/auth-shared": ["../../auth/shared"],
+      "@btc/auth-shared/*": ["../../auth/shared/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
+

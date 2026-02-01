@@ -1,0 +1,295 @@
+{
+  "app": {
+    "id": "logistics",
+    "basePath": "/logistics",
+    "nameKey": "menu.overview",
+    "app-name": "domain.type.logistics"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "labelKey": "menu.overview",
+      "tab": {
+        "enabled": false
+      },
+      "breadcrumbs": []
+    },
+    {
+      "path": "/procurement",
+      "labelKey": "menu.procurement",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.procurement"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.procurement", "icon": "ShoppingCart" }
+      ]
+    },
+    {
+      "path": "/procurement/auxiliary",
+      "labelKey": "menu.procurement.auxiliary",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.procurement.auxiliary"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.procurement", "icon": "ShoppingCart" },
+        { "labelKey": "menu.procurement.auxiliary", "icon": "Collection" }
+      ]
+    },
+    {
+      "path": "/procurement/packaging",
+      "labelKey": "menu.procurement.packaging",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.procurement.packaging"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.procurement", "icon": "ShoppingCart" },
+        { "labelKey": "menu.procurement.packaging", "icon": "CollectionTag" }
+      ]
+    },
+    {
+      "path": "/procurement/supplier",
+      "labelKey": "menu.procurement.supplier",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.procurement.supplier"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.procurement", "icon": "ShoppingCart" },
+        { "labelKey": "menu.procurement.supplier", "icon": "User" }
+      ]
+    },
+    {
+      "path": "/warehouse",
+      "labelKey": "menu.warehouse",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.warehouse"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.warehouse", "icon": "FolderOpened" }
+      ]
+    },
+    {
+      "path": "/warehouse/material",
+      "labelKey": "menu.warehouse.material",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.warehouse.material"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.warehouse", "icon": "FolderOpened" },
+        { "labelKey": "menu.warehouse.material", "icon": "List" }
+      ]
+    },
+    {
+      "path": "/customs",
+      "labelKey": "menu.customs_module",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.customs_module"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.customs_module", "icon": "MapLocation" }
+      ]
+    },
+    {
+      "path": "/inventory",
+      "labelKey": "menu.inventory_management",
+      "tab": {
+        "enabled": false
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.inventory_management", "icon": "Odometer" }
+      ]
+    },
+    {
+      "path": "/inventory/storage-location",
+            "labelKey": "menu.inventory_management.storage_location",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.inventory_management.storage_location"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.inventory_management", "icon": "Odometer" },
+        { "labelKey": "menu.inventory_management.storage_location", "icon": "Location" }
+      ]
+    },
+    {
+      "path": "/inventory/info",
+      "labelKey": "menu.inventory_management.info",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.inventory_management.info"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.inventory_management", "icon": "Odometer" },
+        { "labelKey": "menu.inventory_management.info", "icon": "Document" }
+      ]
+    },
+    {
+      "path": "/inventory/detail",
+      "labelKey": "menu.inventory_management.detail",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.inventory_management.detail"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.inventory_management", "icon": "Odometer" },
+        { "labelKey": "menu.inventory_management.detail", "icon": "Histogram" }
+      ]
+    },
+    {
+      "path": "/inventory/result",
+      "labelKey": "menu.inventory_management.result",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.inventory_management.result"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.inventory_management", "icon": "Odometer" },
+        { "labelKey": "menu.inventory_management.result", "icon": "List" }
+      ]
+    }
+  ],
+  "menus": [
+    {
+      "index": "/procurement",
+      "labelKey": "menu.procurement",
+      "icon": "svg:cart",
+      "children": [
+        { "index": "/procurement/auxiliary", "labelKey": "menu.procurement.auxiliary" },
+        { "index": "/procurement/packaging", "labelKey": "menu.procurement.packaging" },
+        { "index": "/procurement/supplier", "labelKey": "menu.procurement.supplier" }
+      ]
+    },
+    {
+      "index": "/warehouse",
+      "labelKey": "menu.warehouse",
+      "icon": "svg:folder",
+      "children": [
+        { "index": "/warehouse/material", "labelKey": "menu.warehouse.material" }
+      ]
+    },
+    {
+      "index": "/customs",
+      "labelKey": "menu.customs_module",
+      "icon": "svg:map"
+    },
+    {
+      "index": "/inventory",
+      "labelKey": "menu.inventory_management",
+      "icon": "Setting",
+      "children": [
+        { "index": "/inventory/storage-location", "labelKey": "menu.inventory_management.storage_location" },
+        { "index": "/inventory/info", "labelKey": "menu.inventory_management.info" },
+        { "index": "/inventory/detail", "labelKey": "menu.inventory_management.detail" },
+        { "index": "/inventory/result", "labelKey": "menu.inventory_management.result" }
+      ]
+    }
+  ],
+  "menuConfig": {
+    "module": [
+      {
+        "id": "logistics-procurement",
+        "title": "采购模块",
+        "labelKey": "menu.procurement",
+        "icon": "svg:cart",
+        "sort": 1,
+        "showInOverview": true,
+        "mountTo": "business-modules",
+        "children": [
+          {
+            "id": "logistics-procurement-auxiliary",
+            "title": "辅料管理",
+            "labelKey": "menu.procurement.auxiliary",
+            "path": "/procurement/auxiliary",
+            "sort": 1,
+            "showInOverview": true
+          },
+          {
+            "id": "logistics-procurement-packaging",
+            "title": "包材管理",
+            "labelKey": "menu.procurement.packaging",
+            "path": "/procurement/packaging",
+            "sort": 2,
+            "showInOverview": true
+          },
+          {
+            "id": "logistics-procurement-supplier",
+            "title": "供应商管理",
+            "labelKey": "menu.procurement.supplier",
+            "path": "/procurement/supplier",
+            "sort": 3,
+            "showInOverview": true
+          }
+        ]
+      },
+      {
+        "id": "logistics-warehouse",
+        "title": "仓储模块",
+        "labelKey": "menu.warehouse",
+        "icon": "svg:folder",
+        "sort": 2,
+        "showInOverview": true,
+        "mountTo": "business-modules",
+        "children": [
+          {
+            "id": "logistics-warehouse-material",
+            "title": "物料管理",
+            "labelKey": "menu.warehouse.material",
+            "path": "/warehouse/material",
+            "sort": 1,
+            "showInOverview": true
+          }
+        ]
+      },
+      {
+        "id": "logistics-inventory",
+        "title": "库存管理",
+        "labelKey": "menu.inventory_management",
+        "icon": "Setting",
+        "sort": 3,
+        "showInOverview": true,
+        "mountTo": "business-modules",
+        "children": [
+          {
+            "id": "logistics-inventory-storage-location",
+            "title": "库位管理",
+            "labelKey": "menu.inventory_management.storage_location",
+            "path": "/inventory/storage-location",
+            "sort": 1,
+            "showInOverview": true
+          },
+          {
+            "id": "logistics-inventory-info",
+            "title": "库存信息",
+            "labelKey": "menu.inventory_management.info",
+            "path": "/inventory/info",
+            "sort": 2,
+            "showInOverview": true
+          },
+          {
+            "id": "logistics-inventory-detail",
+            "title": "库存明细",
+            "labelKey": "menu.inventory_management.detail",
+            "path": "/inventory/detail",
+            "sort": 3,
+            "showInOverview": true
+          },
+          {
+            "id": "logistics-inventory-result",
+            "title": "盘点结果",
+            "labelKey": "menu.inventory_management.result",
+            "path": "/inventory/result",
+            "sort": 4,
+            "showInOverview": true
+          }
+        ]
+      }
+    ]
+  }
+}
+

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG 图形（八瓣花·三点定圆·OP1P3等八点组）</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        svg {
+            border: 1px solid #ccc;
+            background-color: #fff;
+            width: 500px;
+            height: 1200px;
+        }
+        .guide-line {
+            stroke: #999;
+            stroke-width: 1;
+            stroke-dasharray: 4, 2;
+        }
+        .point-label {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            fill: #222;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+        .shape-label {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            fill: #0066cc;
+            font-weight: bold;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+        .petal-circle {
+            fill: none;
+            stroke-width: 2;
+            opacity: 0.8;
+            /* 每个圆单独设置颜色，虚线区分主圆 */
+            stroke-dasharray: 4, 2;
+        }
+    </style>
+</head>
+<body>
+    <svg viewBox="0 0 500 1200">
+        <g transform="translate(250, 150)">
+            <!-- J1主体圆：r=90，圆心(0,0)，作为八瓣花外边界（8等分基准） -->
+            <circle cx="0" cy="0" r="90" fill="#f0f8ff" stroke="#333" stroke-width="2"/>
+            
+            <!-- 8等分辅助线：连接圆心(0,0)与圆周8个等分点，明确点位置 -->
+            <line x1="0" y1="0" x2="90" y2="0" class="guide-line" />   <!-- O→P1（0°） -->
+            <line x1="0" y1="0" x2="63.64" y2="-63.64" class="guide-line" /> <!-- O→P2（45°） -->
+            <line x1="0" y1="0" x2="0" y2="-90" class="guide-line" /> <!-- O→P3（90°） -->
+            <line x1="0" y1="0" x2="-63.64" y2="-63.64" class="guide-line" /> <!-- O→P4（135°） -->
+            <line x1="0" y1="0" x2="-90" y2="0" class="guide-line" />  <!-- O→P5（180°） -->
+            <line x1="0" y1="0" x2="-63.64" y2="63.64" class="guide-line" /> <!-- O→P6（225°） -->
+            <line x1="0" y1="0" x2="0" y2="90" class="guide-line" />  <!-- O→P7（270°） -->
+            <line x1="0" y1="0" x2="63.64" y2="63.64" class="guide-line" /> <!-- O→P8（315°） -->
+            
+            <!-- 核心：8个分别经过指定三点的圆（OP1P3、OP2P4……OP8P2） -->
+            <!-- 三点定圆计算说明：半径≈63.64（45√2），圆心对称分布，精准经过指定三点 -->
+            <!-- 1. 圆1：经过O(0,0)、P1(90,0)、P3(0,-90) → 圆心(45,-45)，半径≈63.64 -->
+            <circle cx="45" cy="-45" r="63.64" class="petal-circle" stroke="#d32f2f" />
+            <!-- 2. 圆2：经过O(0,0)、P2(63.64,-63.64)、P4(-63.64,-63.64) → 圆心(0,-63.64)，半径≈63.64 -->
+            <circle cx="0" cy="-63.64" r="63.64" class="petal-circle" stroke="#7b1fa2" />
+            <!-- 3. 圆3：经过O(0,0)、P3(0,-90)、P5(-90,0) → 圆心(-45,-45)，半径≈63.64 -->
+            <circle cx="-45" cy="-45" r="63.64" class="petal-circle" stroke="#c2185b" />
+            <!-- 4. 圆4：经过O(0,0)、P4(-63.64,-63.64)、P6(-63.64,63.64) → 圆心(-63.64,0)，半径≈63.64 -->
+            <circle cx="-63.64" cy="0" r="63.64" class="petal-circle" stroke="#1976d2" />
+            <!-- 5. 圆5：经过O(0,0)、P5(-90,0)、P7(0,90) → 圆心(-45,45)，半径≈63.64 -->
+            <circle cx="-45" cy="45" r="63.64" class="petal-circle" stroke="#f57c00" />
+            <!-- 6. 圆6：经过O(0,0)、P6(-63.64,63.64)、P8(63.64,63.64) → 圆心(0,63.64)，半径≈63.64 -->
+            <circle cx="0" cy="63.64" r="63.64" class="petal-circle" stroke="#263238" />
+            <!-- 7. 圆7：经过O(0,0)、P7(0,90)、P1(90,0) → 圆心(45,45)，半径≈63.64 -->
+            <circle cx="45" cy="45" r="63.64" class="petal-circle" stroke="#388e3c" />
+            <!-- 8. 圆8：经过O(0,0)、P8(63.64,63.64)、P2(63.64,-63.64) → 圆心(63.64,0)，半径≈63.64 -->
+            <circle cx="63.64" cy="0" r="63.64" class="petal-circle" stroke="#00796b" />
+            
+            <!-- 标注：8个圆周等分点（P1~P8）+ 主圆心（O） -->
+            <text x="0" y="0" class="point-label" transform="translate(0, -27)">O（主圆心）</text>
+            <text x="90" y="0" class="point-label" transform="translate(18, 0)">P1（0°）</text>
+            <text x="63.64" y="-63.64" class="point-label" transform="translate(18, -18)">P2（45°）</text>
+            <text x="0" y="-90" class="point-label" transform="translate(0, -18)">P3（90°）</text>
+            <text x="-63.64" y="-63.64" class="point-label" transform="translate(-18, -18)">P4（135°）</text>
+            <text x="-90" y="0" class="point-label" transform="translate(-18, 0)">P5（180°）</text>
+            <text x="-63.64" y="63.64" class="point-label" transform="translate(-18, 18)">P6（225°）</text>
+            <text x="0" y="90" class="point-label" transform="translate(0, 18)">P7（270°）</text>
+            <text x="63.64" y="63.64" class="point-label" transform="translate(18, 18)">P8（315°）</text>
+            
+            <text x="0" y="0" class="shape-label" transform="translate(0, 144)">J1（八瓣花·三点定圆·OP1P3等八点组）</text>
+        </g>
+
+        <!-- K2、L3保留不变，保持布局统一 -->
+        <g transform="translate(250, 500)">
+            <rect x="-90" y="-90" width="180" height="180" fill="#f5a623" stroke="#333" stroke-width="2"/>
+            <line x1="-90" y1="0" x2="90" y2="0" class="guide-line" />
+            <line x1="0" y1="-90" x2="0" y2="90" class="guide-line" />
+            <line x1="-90" y1="-90" x2="90" y2="90" class="guide-line" />
+            <line x1="90" y1="-90" x2="-90" y2="90" class="guide-line" />
+            <circle cx="-90" cy="0" r="90" fill="none" stroke-width="2" stroke-dasharray="6, 3" stroke="#7b1fa2" />
+            <text x="0" y="0" class="point-label" transform="translate(0, -27)">A2</text>
+            <text x="-90" y="0" class="point-label" transform="translate(-18, 0)">B2</text>
+            <text x="90" y="0" class="point-label" transform="translate(18, 0)">C2</text>
+            <text x="0" y="-90" class="point-label" transform="translate(0, -18)">D2</text>
+            <text x="0" y="90" class="point-label" transform="translate(0, 18)">E2</text>
+            <text x="-90" y="-90" class="point-label" transform="translate(-18, -18)">F2</text>
+            <text x="90" y="90" class="point-label" transform="translate(18, 18)">G2</text>
+            <text x="90" y="-90" class="point-label" transform="translate(18, -18)">H2</text>
+            <text x="-90" y="90" class="point-label" transform="translate(-18, 18)">I2</text>
+            <text x="0" y="0" class="shape-label" transform="translate(0, 144)">K2（上方正方形）</text>
+        </g>
+
+        <g transform="translate(250, 850)">
+            <rect x="-180" y="-90" width="360" height="180" fill="#7ed321" stroke="#333" stroke-width="2"/>
+            <line x1="-180" y1="0" x2="180" y2="0" class="guide-line" />
+            <line x1="0" y1="-90" x2="0" y2="90" class="guide-line" />
+            <line x1="-180" y1="-90" x2="180" y2="90" class="guide-line" />
+            <line x1="180" y1="-90" x2="-180" y2="90" class="guide-line" />
+            <circle cx="-180" cy="0" r="90" fill="none" stroke-width="2" stroke-dasharray="6, 3" stroke="#00796b" />
+            <text x="0" y="0" class="point-label" transform="translate(0, -27)">A3</text>
+            <text x="-180" y="0" class="point-label" transform="translate(-18, 0)">B3</text>
+            <text x="180" y="0" class="point-label" transform="translate(18, 0)">C3</text>
+            <text x="0" y="-90" class="point-label" transform="translate(0, -18)">D3</text>
+            <text x="0" y="90" class="point-label" transform="translate(0, 18)">E3</text>
+            <text x="-180" y="-90" class="point-label" transform="translate(-18, -18)">F3</text>
+            <text x="180" y="90" class="point-label" transform="translate(18, 18)">G3</text>
+            <text x="180" y="-90" class="point-label" transform="translate(18, -18)">H3</text>
+            <text x="-180" y="90" class="point-label" transform="translate(-18, 18)">I3</text>
+            <text x="0" y="0" class="shape-label" transform="translate(0, 144)">L3（上方矩形）</text>
+        </g>
+    </svg>
+</body>
+</html>

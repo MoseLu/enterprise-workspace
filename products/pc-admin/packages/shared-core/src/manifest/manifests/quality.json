@@ -1,0 +1,53 @@
+{
+  "app": {
+    "id": "quality",
+    "basePath": "/quality",
+    "nameKey": "menu.quality.overview",
+    "app-name": "domain.type.quality"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "labelKey": "menu.quality.overview",
+      "tab": {
+        "enabled": false
+      },
+      "breadcrumbs": []
+    },
+    {
+      "path": "/inspection",
+      "labelKey": "menu.quality.inspection",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.quality.inspection"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.quality.inspection", "icon": "Check" }
+      ]
+    },
+    {
+      "path": "/reports",
+      "labelKey": "menu.quality.reports",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.quality.reports"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.quality.reports", "icon": "Document" }
+      ]
+    },
+    {
+      "path": "/defects",
+      "labelKey": "menu.quality.defects",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.quality.defects"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.quality.defects", "icon": "Warning" }
+      ]
+    }
+  ],
+  "menus": []
+}
+

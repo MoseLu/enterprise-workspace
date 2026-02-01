@@ -1,0 +1,481 @@
+// 导入共享组件样式（必须在文件开头，确保优先级）
+// 使用 @use ... as * 确保样式被正确导入并应用到全局（兼容 @use 模块化）
+@use '@btc/shared-components/styles/index.scss' as *;
+
+// Global styles for monitor app
+
+// 自定义 CSS 变量（与 cool-admin 保持一致）
+:root {
+  --bg-color: var(--el-fill-color-lighter);
+}
+
+// Element Plus 样式重写（参考 cool-admin-vue）
+.el-input-number {
+  width: 100%;
+
+  &__decrease,
+  &__increase {
+    border: 0 !important;
+    background-color: transparent;
+  }
+}
+
+// 确保 body 和 html 有正确的背景色
+html,
+body {
+  background-color: var(--el-bg-color-page, #ffffff);
+  color: var(--el-text-color-primary, #303133);
+}
+
+// 暗色模式下的背景色
+// 注意：body 应该使用较浅的深色背景 #141414，实现双重背景效果
+html.dark,
+html.dark body {
+  background-color: var(--el-bg-color-page, #141414);
+  color: var(--el-text-color-primary, #e5eaf3);
+}
+
+// Reset default styles
+body {
+  margin: 0;
+  line-height: inherit;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  overflow: hidden;
+}
+
+// 暗色模式下的 AppLayout 样式覆盖
+// 注意：不要覆盖 app-layout 的背景色，让它使用 --bg-color（双层背景效果）
+// app-layout__content 应该使用 --el-bg-color（内容区域背景）
+// 双层背景：外层（app-layout）使用 --bg-color，内层（app-layout__content）使用 --el-bg-color
+html.dark,
+.dark {
+  // app-layout 背景色由组件自身控制（使用 --bg-color），这里不需要覆盖
+  // .app-layout {
+  //   background-color: var(--el-bg-color-page, #0a0a0a);
+  // }
+
+  // app-layout__content 背景色也由组件自身控制（使用 --el-bg-color），这里不需要覆盖
+  // &__content {
+  //   background-color: var(--el-bg-color-page, #0a0a0a);
+  // }
+}
+
+// 删除全局样式：这些样式会影响所有应用，导致菜单无法显示
+// 布局样式应该由 layout-app 或共享组件统一处理，而不是在子应用中定义
+// 如果运维应用独立运行时需要特殊样式，应该使用更精确的选择器（如添加特定的 class 或 data 属性）
+
+*,
+:before,
+:after {
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb;
+}
+
+// 自定义圆角 CSS 变量
+:root {
+  --custom-radius: 0.25rem;
+}
+
+// Custom scrollbar (align with cool-admin)
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+// 色弱模式样式
+.color-weak {
+  filter: invert(80%);
+  -webkit-filter: invert(80%);
+}
+
+// 彻底覆盖浏览器自动填充背景样式
+// 确保自动填充时输入框保持透明背景，不改变原来的样式
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: inherit !important;
+  transition: background-color 9999s ease-out 0s !important;
+}
+
+// View Transition 动画在 theme.scss 中定义
+
+// 盒子样式 - 边框模式（浅色模式增强对比度）
+[data-box-mode='border-mode'] {
+  // Element Plus 卡片
+  .el-card,
+  .btc-card {
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    box-shadow: none !important;
+  }
+
+  // 页面内容区域
+  .page-content {
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    box-shadow: none !important;
+  }
+
+  // 侧边栏
+  .app-layout__sidebar {
+    border-right: 1px solid var(--el-border-color-extra-light) !important;
+  }
+}
+
+// 盒子样式 - 阴影模式（浅色模式增强阴影和边框对比度）
+[data-box-mode='shadow-mode'] {
+  // Element Plus 卡片
+  .el-card,
+  .btc-card {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  }
+
+  // 页面内容区域
+  .page-content {
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  }
+
+  // 侧边栏
+  .app-layout__sidebar {
+    border-right: 1px solid var(--el-border-color-extra-light) !important;
+    box-shadow: 2px 0 8px 0px rgba(0, 0, 0, 0.04) !important;
+  }
+}
+
+// 深色主题下的样式修复（参考 cool-admin）
+// 使用 html.dark 确保选择器优先级足够高，能够覆盖 scoped 样式
+html.dark {
+  // 面包屑样式（使用 :deep 确保能够穿透 scoped 样式）
+  :deep(.app-breadcrumb) {
+    .breadcrumb-item {
+      border-color: var(--el-border-color) !important;
+      background-color: var(--el-bg-color) !important;
+    }
+
+    .el-breadcrumb__item:last-child {
+      .breadcrumb-item {
+        background-color: var(--el-color-primary-light-9) !important;
+        border-color: var(--el-color-primary-light-5) !important;
+      }
+    }
+  }
+
+  // 标签页样式（使用 :deep 确保能够穿透 scoped 样式）
+  :deep(.app-process) {
+    .app-process__item {
+      border-color: var(--el-border-color) !important;
+      background-color: var(--el-bg-color) !important;
+
+      &:hover:not(.active) {
+        background-color: var(--el-fill-color-light) !important;
+      }
+
+      &.active {
+        background-color: var(--el-color-primary) !important;
+        border-color: var(--el-color-primary) !important;
+        color: #fff !important;
+
+        .close {
+          color: #fff !important;
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.3) !important;
+          }
+        }
+      }
+
+      .close {
+        color: var(--el-text-color-regular) !important;
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+      }
+    }
+  }
+
+  // 按钮边框样式
+  .btc-comm__icon {
+    border-color: var(--el-border-color) !important;
+    background-color: var(--el-bg-color) !important;
+
+    &:hover {
+      background-color: var(--el-fill-color-light) !important;
+      border-color: var(--el-color-primary) !important;
+    }
+  }
+
+  // 深色模式下的盒子样式 - 边框模式
+  &[data-box-mode='border-mode'] {
+    .el-card,
+    .btc-card,
+    .page-content {
+      border-color: var(--el-border-color) !important;
+    }
+
+    .app-layout__sidebar {
+      border-right-color: var(--el-border-color-extra-light) !important;
+    }
+  }
+
+  // 深色模式下的盒子样式 - 阴影模式
+  &[data-box-mode='shadow-mode'] {
+    .el-card,
+    .btc-card,
+    .page-content {
+      box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.3) !important;
+      border-color: var(--el-border-color) !important;
+    }
+
+    .app-layout__sidebar {
+      border-right-color: var(--el-border-color-extra-light) !important;
+      box-shadow: 2px 0 8px 0px rgba(0, 0, 0, 0.2) !important;
+    }
+  }
+}
+
+// 稳定滚动容器，减少布局抖动（仅影响开发体验，不改变视觉）
+// 移除 scrollbar-gutter，确保 body 占据完整宽度，与浏览器控制台宽度一致
+// :root {
+//   scrollbar-gutter: stable both-edges;
+// }
+
+// Element Plus 内部滚动容器，使用原生滚动并稳定滚动槽
+// 注意：对于表格，水平滚动由 el-table 自己处理，所以这里允许水平滚动
+:deep(.el-scrollbar__wrap) {
+  overflow-y: scroll !important; // 始终保留滚动条空间，避免出现/消失导致重排
+  overflow-x: auto !important; // 允许水平滚动，让 el-table 自己处理水平滚动条
+  // 移除 scrollbar-gutter，按用户要求取消滚动条预留
+}
+
+// 布局内容容器使用原生滚动（内部表格自身处理滚动）
+// 注意：不要在这里设置 overflow，应该在布局组件中统一管理
+// .app-layout__content {
+//   overflow-y: scroll;
+//   overflow-x: hidden;
+// }
+
+// 设置抽屉模态框样式（参考 art-design-pro）
+.user-preferences-modal {
+  background: transparent !important;
+
+  // 使用 :deep() 确保样式能够穿透 Element Plus 的样式封装
+  :deep(.el-drawer) {
+    // 覆盖 Element Plus 的 CSS 变量（提高不透明度，确保看不到下方内容）
+    --el-drawer-bg-color: rgba(255, 255, 255, 1) !important;
+
+    // 背景滤镜效果（提高不透明度，确保看不到下方内容）
+    background: rgba(255, 255, 255, 1) !important;
+    background-color: rgba(255, 255, 255, 1) !important;
+    background-image: none !important; // 移除可能存在的背景图片
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1) !important;
+
+    // 完整的 backdrop-filter（对齐 art-design-pro 的 mixin，增强模糊效果）
+    --tw-backdrop-blur: blur(30px);
+    -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness)
+      var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate)
+      var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate)
+      var(--tw-backdrop-sepia);
+    backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast)
+      var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert)
+      var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+
+    // 确保抽屉内容区域也有不透明背景（而不是透明）
+    .el-drawer__body {
+      background-color: rgba(255, 255, 255, 1) !important;
+      background: rgba(255, 255, 255, 1) !important;
+      // 保持默认 padding 或使用合适的间距
+    }
+  }
+
+  // 去除滚动条（与 art-design-pro 保持一致）
+  // 允许内容滚动（overflow: auto），但隐藏滚动条显示
+  :deep(.el-drawer__body) {
+    // 火狐浏览器 - 隐藏滚动条但保持滚动功能
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important; // IE 和 Edge
+
+    // Webkit 浏览器（Chrome, Safari, Edge）- 隐藏滚动条但保持滚动功能
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none !important;
+    }
+
+    &::-webkit-scrollbar-track {
+      display: none !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      display: none !important;
+    }
+  }
+
+  // 直接选择器作为备用
+  .el-drawer__body {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none !important;
+    }
+  }
+}
+
+// 使用更高优先级的选择器确保覆盖（添加 html 前缀增加特异性）
+html .user-preferences-modal {
+  :deep(.el-drawer__body) {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none !important;
+    }
+  }
+
+  .el-drawer__body {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      display: none !important;
+    }
+  }
+}
+
+// 暗黑模式适配（使用 html.dark 确保优先级，与项目保持一致）
+html.dark {
+  .user-preferences-modal {
+    :deep(.el-drawer) {
+      // 覆盖 Element Plus 的 CSS 变量（提高不透明度）
+      --el-drawer-bg-color: rgba(0, 0, 0, 1) !important;
+
+      background: rgba(0, 0, 0, 1) !important;
+      background-color: rgba(0, 0, 0, 1) !important;
+      background-image: none !important;
+
+      .el-drawer__body {
+        background-color: rgba(0, 0, 0, 1) !important;
+        background: rgba(0, 0, 0, 1) !important;
+      }
+    }
+
+    :deep(.el-drawer__body) {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+
+      &::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0 !important;
+        display: none !important;
+      }
+    }
+
+    .el-drawer__body {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+
+      &::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0 !important;
+        display: none !important;
+      }
+    }
+  }
+}
+
+// 文档模式：隐藏左侧边栏、tabbar、顶栏部分元素，只保留汉堡菜单和搜索框
+body.docs-mode {
+  // 侧边栏宽度收缩为 0（保留过渡动画）
+  .app-layout__sidebar {
+    width: 0 !important;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  // Tabbar：使用 v-show 隐藏，但需要移除占据的空间
+  .app-process {
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+
+  // 内容区域：保持四周间距（与其他应用一致），但内部 padding 为 0
+  .app-layout__content {
+    padding: 0 !important;
+    margin: 10px !important; // 保持四周间距，与主应用和子应用一致
+    border-radius: 6px;
+  }
+
+  // 顶栏元素优化：只保留汉堡菜单和搜索框
+  .topbar__brand {
+    width: 64px !important; // 只保留汉堡菜单的宽度
+    border-right: none !important; // 移除分隔线
+
+    .topbar__logo-content {
+      display: none !important; // 隐藏 Logo 和标题
+    }
+  }
+
+  .topbar__left {
+    padding-left: 10px; // 与汉堡菜单保持间距
+
+    // 隐藏折叠按钮（第一个图标）
+    .btc-comm__icon:first-child {
+      display: none !important;
+    }
+  }
+}
+
+// 瞬间切换模式：禁用所有过渡动画（用于已缓存的文档切换）
+body.docs-mode-instant {
+  .app-layout__sidebar,
+  .app-layout__main {
+    transition: none !important;
+  }
+}
+

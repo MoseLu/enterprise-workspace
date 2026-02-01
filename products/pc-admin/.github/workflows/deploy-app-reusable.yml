@@ -1,0 +1,459 @@
+name: Deploy App (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        required: true
+        type: string
+      app_port:
+        required: true
+        type: string
+      container_name:
+        required: true
+        type: string
+      image_tag:
+        required: false
+        type: string
+        description: "Docker image tag (defaults to SHA or latest)"
+    secrets:
+      SERVER_HOST:
+        required: false
+      SERVER_USER:
+        required: false
+      SERVER_KEY:
+        required: false
+      SERVER_PORT:
+        required: false
+      SERVER_PAT:
+        required: false
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  deploy-app:
+    name: Deploy ${{ inputs.app_name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Detect deployment info
+        id: detect-deploy
+        run: |
+          APP_NAME="${{ inputs.app_name }}"
+          ENVIRONMENT="production"
+          
+          # 获取镜像标签（优先级：输入 > client_payload > SHA > latest）
+          if [ -n "${{ inputs.image_tag }}" ]; then
+            # 使用传入的镜像标签
+            IMAGE_TAG="${{ inputs.image_tag }}"
+          elif [ -n "${{ github.event.client_payload.image_tag }}" ]; then
+            # 从 client_payload 提取标签（去掉 registry 前缀）
+            FULL_TAG="${{ github.event.client_payload.image_tag }}"
+            IMAGE_TAG=$(echo "$FULL_TAG" | sed 's|.*:||' || echo "")
+          elif [ -n "${{ github.event.client_payload.github_sha }}" ]; then
+            # 使用 client_payload 中的 github_sha
+            IMAGE_TAG="${{ github.event.client_payload.github_sha }}"
+          else
+            # 使用当前 commit SHA 的前7位
+            GITHUB_SHA="${{ github.sha }}"
+            IMAGE_TAG="${GITHUB_SHA:0:7}"
+          fi
+          
+          # 如果标签为空或太短，使用 latest
+          if [ -z "$IMAGE_TAG" ] || [ ${#IMAGE_TAG} -lt 7 ]; then
+            IMAGE_TAG="latest"
+          fi
+          
+          echo "environment=$ENVIRONMENT" >> $GITHUB_OUTPUT
+          echo "app_name=$APP_NAME" >> $GITHUB_OUTPUT
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+          
+          echo "✅ 检测到部署请求:"
+          echo "   App: $APP_NAME"
+          echo "   Image Tag: $IMAGE_TAG"
+          echo "   Environment: $ENVIRONMENT"
+        
+      - name: Deploy application
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER || 'root' }}
+          key: ${{ secrets.SERVER_KEY }}
+          port: ${{ secrets.SERVER_PORT || '22' }}
+          timeout: 1800s
+          command_timeout: 20m
+          script: |
+            set -e
+            
+            APP_NAME="${{ inputs.app_name }}"
+            IMAGE_TAG="${{ steps.detect-deploy.outputs.image_tag }}"
+            PORT="${{ inputs.app_port }}"
+            CONTAINER_NAME="${{ inputs.container_name }}"
+            
+            REPO_LOWER="bellisgit/btc-shopflow-monorepo"
+            REGISTRY="ghcr.io"
+            IMAGE_NAME="$REGISTRY/$REPO_LOWER/$APP_NAME"
+            
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "🚀 Starting BTC ShopFlow Deployment"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "App: $APP_NAME"
+            echo "Image: $IMAGE_NAME:$IMAGE_TAG"
+            echo "Port: $PORT"
+            echo ""
+            
+            # 登录到 GHCR（带超时和重试机制）
+            echo "🔐 Logging into container registry..."
+            mkdir -p /tmp/.docker
+            export DOCKER_CONFIG=/tmp/.docker
+            
+            # 使用 GitHub Token 登录（从环境变量或 secrets）
+            if [ -n "${{ secrets.SERVER_PAT }}" ]; then
+              TOKEN="${{ secrets.SERVER_PAT }}"
+            else
+              # 使用系统自动提供的 github.token（不需要作为 secret 传递）
+              TOKEN="${{ github.token }}"
+            fi
+            
+            # Docker 登录函数（带超时和重试）
+            docker_login_with_timeout() {
+              local registry=$1
+              local username=$2
+              local token=$3
+              local timeout_seconds=${4:-30}  # 默认30秒超时
+              local max_retries=${5:-3}  # 默认重试3次
+              local retry_count=0
+              
+              while [ $retry_count -lt $max_retries ]; do
+                retry_count=$((retry_count + 1))
+                echo "🔄 尝试登录到 $registry (第 $retry_count/$max_retries 次)..."
+                
+                START_TIME=$(date +%s)
+                
+                # 使用 timeout 命令限制登录时间
+                if echo "$token" | timeout $timeout_seconds docker login "$registry" -u "$username" --password-stdin 2>&1; then
+                  ELAPSED=$(($(date +%s) - START_TIME))
+                  echo "✅ 登录成功 (耗时: ${ELAPSED} 秒)"
+                  return 0
+                else
+                  EXIT_CODE=$?
+                  ELAPSED=$(($(date +%s) - START_TIME))
+                  
+                  if [ $EXIT_CODE -eq 124 ]; then
+                    echo "⏱️  登录超时 (${timeout_seconds} 秒)"
+                  else
+                    echo "❌ 登录失败 (退出码: $EXIT_CODE, 耗时: ${ELAPSED} 秒)"
+                  fi
+                  
+                  if [ $retry_count -lt $max_retries ]; then
+                    echo "⏳ 等待 3 秒后重试..."
+                    sleep 3
+                  fi
+                fi
+              done
+              
+              return 1
+            }
+            
+            # 执行登录（30秒超时，重试3次）
+            if ! docker_login_with_timeout "$REGISTRY" "${{ github.actor }}" "$TOKEN" 30 3; then
+              echo "[ERROR] 无法登录到 $REGISTRY"
+              echo "[ERROR] 请检查网络连接和 Token 权限"
+              exit 1
+            fi
+            
+            # 从 GHCR 拉取镜像（带超时和重试机制）
+            echo "📥 Pulling Docker image from $REGISTRY..."
+            
+            # 配置 Docker 客户端超时和重试设置
+            echo "⚙️  配置 Docker 客户端..."
+            mkdir -p /etc/docker
+            # 配置 Docker daemon 的超时设置（如果可能）
+            if [ -f /etc/docker/daemon.json ]; then
+              echo "⚠️  Docker daemon.json 已存在，跳过配置"
+            else
+              echo "📝 创建 Docker daemon 配置文件（可选）..."
+              printf '%s\n' '{' '  "max-concurrent-downloads": 3,' '  "max-concurrent-uploads": 5,' '  "registry-mirrors": []' '}' > /tmp/docker-daemon.json
+              # 只有在是 root 用户且可以修改时才应用
+              if [ "$(id -u)" -eq 0 ] && command -v systemctl >/dev/null 2>&1; then
+                cp /tmp/docker-daemon.json /etc/docker/daemon.json 2>/dev/null || true
+              fi
+            fi
+            
+            # 配置 Docker 客户端
+            mkdir -p ~/.docker
+            printf '%s\n' '{' '  "max-concurrent-downloads": 3,' '  "max-concurrent-uploads": 5' '}' > ~/.docker/config.json
+            
+            # 配置环境变量以优化 Docker 拉取
+            export DOCKER_CLI_EXPERIMENTAL=enabled
+            
+            # 清理 Docker 网络缓存（可能有助于解决网络问题）
+            echo "🧹 清理 Docker 网络缓存..."
+            docker network prune -f 2>/dev/null || true
+            
+            # 检查网络连接
+            timeout 15 curl -sSf -m 10 https://ghcr.io >/dev/null 2>&1 || echo "⚠️  网络连接测试失败，继续尝试拉取..."
+            
+            # 拉取镜像的函数（带超时和重试，支持进度显示）
+            pull_image_with_timeout() {
+              local image=$1
+              local timeout_seconds=${2:-300}  # 默认5分钟超时（缩短超时时间）
+              local max_retries=${3:-3}  # 默认重试3次
+              local retry_count=0
+              
+              while [ $retry_count -lt $max_retries ]; do
+                retry_count=$((retry_count + 1))
+                echo "🔄 尝试拉取镜像 (第 $retry_count/$max_retries 次): $image"
+                echo "⏱️  超时设置: ${timeout_seconds} 秒"
+                
+                START_TIME=$(date +%s)
+                
+                # 在后台运行进度监控
+                (
+                  while true; do
+                    sleep 30
+                    ELAPSED=$(($(date +%s) - START_TIME))
+                    echo "💓 下载进行中... (已耗时: ${ELAPSED}秒)"
+                  done
+                ) &
+                PROGRESS_PID=$!
+                
+                # 使用 timeout 命令限制拉取时间
+                if timeout $timeout_seconds docker pull "$image" 2>&1; then
+                  kill $PROGRESS_PID 2>/dev/null || true
+                  wait $PROGRESS_PID 2>/dev/null || true
+                  ELAPSED=$(($(date +%s) - START_TIME))
+                  echo "✅ 镜像拉取成功 (耗时: ${ELAPSED} 秒)"
+                  return 0
+                else
+                  kill $PROGRESS_PID 2>/dev/null || true
+                  wait $PROGRESS_PID 2>/dev/null || true
+                  EXIT_CODE=$?
+                  ELAPSED=$(($(date +%s) - START_TIME))
+                  
+                  if [ $EXIT_CODE -eq 124 ]; then
+                    echo "⏱️  拉取超时 (${timeout_seconds} 秒)"
+                  else
+                    echo "❌ 拉取失败 (退出码: $EXIT_CODE, 耗时: ${ELAPSED} 秒)"
+                  fi
+                  
+                  if [ $retry_count -lt $max_retries ]; then
+                    echo "⏳ 等待 10 秒后重试..."
+                    sleep 10
+                  fi
+                fi
+              done
+              
+              return 1
+            }
+            
+            # 检查镜像是否已存在（避免不必要的拉取）
+            echo "🔍 检查镜像是否已存在..."
+            if docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "^${IMAGE_NAME}:${IMAGE_TAG}$"; then
+              echo "✅ 镜像已存在本地: $IMAGE_NAME:$IMAGE_TAG"
+              echo "🔄 验证镜像完整性..."
+              if docker inspect "$IMAGE_NAME:$IMAGE_TAG" >/dev/null 2>&1; then
+                echo "✅ 镜像验证通过，跳过拉取"
+              else
+                echo "⚠️  镜像损坏，重新拉取..."
+                docker rmi "$IMAGE_NAME:$IMAGE_TAG" 2>/dev/null || true
+                if ! pull_image_with_timeout "$IMAGE_NAME:$IMAGE_TAG" 300 3; then
+                  echo "⚠️  无法拉取 $IMAGE_NAME:$IMAGE_TAG，尝试 latest 标签..."
+                  IMAGE_TAG="latest"
+                  if ! pull_image_with_timeout "$IMAGE_NAME:$IMAGE_TAG" 300 3; then
+                    echo "[ERROR] 无法从 $REGISTRY 拉取镜像 (标签: $IMAGE_TAG, latest)"
+                    exit 1
+                  fi
+                fi
+              fi
+            else
+              # 尝试拉取指定标签的镜像
+              if ! pull_image_with_timeout "$IMAGE_NAME:$IMAGE_TAG" 300 3; then
+                echo "⚠️  无法拉取 $IMAGE_NAME:$IMAGE_TAG，尝试 latest 标签..."
+                  if ! pull_image_with_timeout "$IMAGE_NAME:latest" 300 3; then
+                    echo "[ERROR] 无法从 $REGISTRY 拉取镜像 (标签: $IMAGE_TAG, latest)"
+                    exit 1
+                  fi
+                IMAGE_TAG="latest"
+              fi
+            fi
+            
+            # 标记为本地镜像
+            docker tag "$IMAGE_NAME:$IMAGE_TAG" "btc-shopflow/$APP_NAME:latest" 2>/dev/null || true
+            echo "✅ Image pulled and tagged successfully"
+            
+            echo "🔄 Updating container..."
+            
+            # 停止并删除现有容器
+            echo "📋 清理现有容器: $CONTAINER_NAME"
+            docker stop "$CONTAINER_NAME" 2>/dev/null || true
+            docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
+            # 通过 filter 查找并删除同名容器
+            docker ps -a --filter "name=^${CONTAINER_NAME}$" --format "{{.ID}}" 2>/dev/null | xargs -r docker rm -f 2>/dev/null || true
+            
+            # 检查并停止占用端口的容器
+            echo "🔍 检查端口 $PORT 占用情况..."
+            PORT_CONTAINERS=$(docker ps --format "{{.Names}}\t{{.Ports}}" | grep ":$PORT->" | awk '{print $1}' || true)
+            if [ -n "$PORT_CONTAINERS" ]; then
+              echo "⚠️  发现占用端口 $PORT 的容器:"
+              echo "$PORT_CONTAINERS"
+              echo "$PORT_CONTAINERS" | while read -r container; do
+                if [ -n "$container" ] && [ "$container" != "$CONTAINER_NAME" ]; then
+                  echo "🛑 停止容器: $container"
+                  docker stop "$container" 2>/dev/null || true
+                  docker rm -f "$container" 2>/dev/null || true
+                fi
+              done
+            fi
+            
+            # 使用应用特定的 compose 文件名，避免影响其他应用
+            COMPOSE_FILE="docker-compose.${APP_NAME}.yml"
+            
+            # 只清理当前应用的 compose 配置（如果存在）
+            if [ -f "$COMPOSE_FILE" ]; then
+              echo "🧹 清理当前应用的 docker-compose 服务..."
+              # 检测 docker-compose 命令（支持新旧版本）
+              if command -v docker-compose >/dev/null 2>&1; then
+                docker-compose -f "$COMPOSE_FILE" down 2>/dev/null || true
+              elif docker compose version >/dev/null 2>&1; then
+                docker compose -f "$COMPOSE_FILE" down 2>/dev/null || true
+              fi
+            fi
+            
+            # 再次确认容器已被删除
+            REMAINING=$(docker ps -a --filter "name=^${CONTAINER_NAME}$" --format "{{.ID}}" 2>/dev/null | wc -l || echo "0")
+            if [ "$REMAINING" -gt 0 ]; then
+              docker ps -a --filter "name=^${CONTAINER_NAME}$" --format "{{.ID}}" 2>/dev/null | xargs -r docker rm -f 2>/dev/null || true
+            fi
+            
+            # 等待端口释放（使用 Docker 命令检查）
+            echo "⏳ 等待端口 $PORT 释放..."
+            for i in {1..10}; do
+              ACTIVE_CONTAINERS=$(docker ps --format "{{.Names}}\t{{.Ports}}" | grep ":$PORT->" | wc -l || echo "0")
+              if [ "$ACTIVE_CONTAINERS" = "0" ]; then
+                echo "✅ 端口 $PORT 已释放"
+                break
+              fi
+              echo "   等待中... ($i/10)"
+              sleep 1
+            done
+            
+            # 检查并创建网络（如果不存在）
+            echo "🌐 检查 Docker 网络..."
+            if ! docker network inspect btc-network >/dev/null 2>&1; then
+              echo "📦 创建 Docker 网络: btc-network"
+              docker network create btc-network || true
+            else
+              echo "✅ Docker 网络已存在: btc-network"
+            fi
+            
+            # 验证镜像是否存在
+            echo "🔍 验证镜像是否存在..."
+            if ! docker images | grep -q "btc-shopflow/$APP_NAME.*latest"; then
+              echo "[ERROR] 镜像不存在: btc-shopflow/$APP_NAME:latest"
+              echo "[ERROR] 可用镜像列表:"
+              docker images | grep "btc-shopflow/$APP_NAME" || echo "  (无)"
+              exit 1
+            fi
+            echo "✅ 镜像验证通过: btc-shopflow/$APP_NAME:latest"
+            
+            # 使用应用特定的 compose 文件名，避免覆盖其他应用的配置
+            # 使用 printf 逐行写入，避免 YAML 解析问题
+            {
+              echo "version: '3.8'"
+              echo "services:"
+              echo "  $APP_NAME:"
+              echo "    image: btc-shopflow/$APP_NAME:latest"
+              echo "    container_name: $CONTAINER_NAME"
+              echo "    ports:"
+              echo "      - \"$PORT:80\""
+              echo "    restart: unless-stopped"
+              echo "    networks:"
+              echo "      - btc-network"
+              echo "networks:"
+              echo "  btc-network:"
+              echo "    external: true"
+            } > "$COMPOSE_FILE"
+            
+            echo "📋 Docker Compose 配置:"
+            cat "$COMPOSE_FILE"
+            echo ""
+            
+            # 检测 docker-compose 命令（支持新旧版本）
+            DOCKER_COMPOSE_CMD=""
+            if command -v docker-compose >/dev/null 2>&1; then
+              DOCKER_COMPOSE_CMD="docker-compose"
+              echo "✅ 使用 docker-compose 命令"
+            elif docker compose version >/dev/null 2>&1; then
+              DOCKER_COMPOSE_CMD="docker compose"
+              echo "✅ 使用 docker compose 命令"
+            else
+              echo "[ERROR] 未找到 docker-compose 或 docker compose 命令"
+              exit 1
+            fi
+            
+            echo "🚀 启动新容器..."
+            if ! $DOCKER_COMPOSE_CMD -f "$COMPOSE_FILE" up -d; then
+              echo "[ERROR] 容器启动失败"
+              echo "[ERROR] 检查 docker-compose 配置..."
+              cat "$COMPOSE_FILE"
+              echo "[ERROR] 检查容器日志..."
+              $DOCKER_COMPOSE_CMD -f "$COMPOSE_FILE" logs 2>&1 || true
+              echo "[ERROR] 检查镜像..."
+              docker images | grep "btc-shopflow/$APP_NAME" || echo "  (无相关镜像)"
+              echo "[ERROR] 检查网络..."
+              docker network ls | grep btc-network || echo "  (网络不存在)"
+              exit 1
+            fi
+            
+            sleep 5
+            
+            echo "📋 Container status:"
+            docker ps --filter "name=$CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+            
+            # 验证容器是否正在运行（带超时机制和多种查找方法）
+            echo "🔍 验证容器状态（最多等待30秒）..."
+            CONTAINER_STATUS=""
+            CONTAINER_ID=""
+            MAX_WAIT=30  # 增加到30秒
+            WAIT_INTERVAL=2  # 每次检查间隔2秒
+            ELAPSED=0
+            
+            # 验证容器是否正在运行
+            while [ $ELAPSED -lt $MAX_WAIT ]; do
+              CONTAINER_ID=$(docker ps --filter "name=^${CONTAINER_NAME}$" --format "{{.ID}}" 2>/dev/null | head -1 || echo "")
+              if [ -n "$CONTAINER_ID" ]; then
+                CONTAINER_STATUS=$(docker ps --filter "id=$CONTAINER_ID" --format "{{.Status}}" 2>/dev/null || echo "")
+                if [ -n "$CONTAINER_STATUS" ]; then
+                  echo "✅ 容器正在运行: $CONTAINER_STATUS"
+                  break
+                fi
+              fi
+              ELAPSED=$((ELAPSED + WAIT_INTERVAL))
+              if [ $ELAPSED -lt $MAX_WAIT ]; then
+                echo "   等待容器启动... (${ELAPSED}/${MAX_WAIT}秒)"
+                sleep $WAIT_INTERVAL
+              fi
+            done
+            
+            # 如果超时仍未找到容器，报告错误并退出
+            if [ -z "$CONTAINER_ID" ]; then
+              echo "[ERROR] 容器验证超时（${MAX_WAIT}秒）！容器未运行！"
+              docker ps -a --filter "name=$CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}\t{{.ID}}" || true
+              $DOCKER_COMPOSE_CMD -f "$COMPOSE_FILE" logs --tail=20 2>&1 || true
+              exit 1
+            fi
+            
+            echo ""
+            echo "🧹 Cleaning up unused images..."
+            docker image prune -f || true
+            
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "✅ Deployment completed!"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

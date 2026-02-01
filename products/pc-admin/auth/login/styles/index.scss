@@ -1,0 +1,11 @@
+// 登录页面样式入口文件
+// 导入所有子组件样式
+
+@use '../main/styles.scss';
+@use '../password-form/styles.scss';
+@use '../sms-form/styles.scss';
+@use '../qr-form/styles.scss';
+@use '../header/styles.scss';
+@use '../tabs/styles.scss';
+@use '../footer/styles.scss';
+@use '../controls/qr-toggle-btn.scss';

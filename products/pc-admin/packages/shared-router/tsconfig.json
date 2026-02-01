@@ -1,0 +1,19 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist",
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@btc/shared-core": ["../shared-core/src", "../shared-core/dist"],
+      "@btc/shared-core/*": ["../shared-core/src/*", "../shared-core/dist/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    { "path": "../shared-core" }
+  ]
+}
+

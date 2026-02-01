@@ -1,0 +1,45 @@
+// ==================== 菜单相关样式 ====================
+
+// 深色菜单风格下的顶栏样式（补充样式，确保顶栏 logo 文字颜色正确）
+.topbar.is-dark-menu {
+	.topbar__logo-content {
+		.topbar__logo-text {
+			color: #BABBBD !important;
+		}
+	}
+
+	// 品牌区域底部分隔线（logo 区域和搜索区域之间）与顶栏底部分隔线保持一致
+	.topbar__brand {
+		border-bottom-color: var(--el-border-color) !important;
+	}
+
+	// Logo 内容区域背景色（深色菜单风格，与菜单背景一致）
+	.topbar__brand .topbar__logo-content {
+		// 深色系统主题下，使用 #0a0a0a 与内容区域一致
+		html.dark & {
+			background-color: #0a0a0a !important;
+		}
+
+		// 浅色系统主题下，使用深色菜单背景色
+		html:not(.dark) & {
+			background-color: #0a0a0a !important;
+		}
+	}
+}
+
+// =========================
+// Sidebar Menu（避免右侧双边框）
+// =========================
+// 侧边栏容器本身已经有 border-right 作为分割线（.app-layout__sidebar）
+// Element Plus 的 el-menu 默认也会带 border-right，二者叠加会看起来像"多了一条右侧边框线"
+.app-layout__sidebar {
+	.el-menu {
+		border-right: none !important;
+	}
+	.el-menu--vertical {
+		border-right: none !important;
+	}
+	.sidebar__menu {
+		border-right: none !important;
+	}
+}

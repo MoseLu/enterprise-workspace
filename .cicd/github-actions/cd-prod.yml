@@ -1,0 +1,279 @@
+# ========================================
+# GitHub Actions CD 生产环境部署工作流
+# 用于将代码部署到生产环境
+# ========================================
+
+name: CD - Production Environment
+
+# 触发条件：
+# - 主分支的代码合并（需要手动审批）
+# - 手动触发部署（需要手动审批）
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    description: 手动触发生产环境部署
+    inputs:
+      commit_sha:
+        description: '指定部署的提交 SHA（留空则使用最新提交）'
+        required: false
+        default: ''
+      release_version:
+        description: '发布版本号（如 v1.0.0）'
+        required: false
+        default: ''
+
+# 环境变量配置
+env:
+  # 环境名称
+  ENV_NAME: prod
+  # 环境标识
+  ENVIRONMENT: production
+  # 部署目标
+  DEPLOY_TARGET: prod-server
+  # 项目名称
+  PROJECT_NAME: enterprise-workspace
+  # 容器镜像仓库地址
+  REGISTRY: ghcr.io
+  # 镜像仓库命名空间
+  NAMESPACE: enterprise-workspace
+
+# 作业定义
+jobs:
+  # 预部署检查
+  pre-deployment-check:
+    name: 预部署检查
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://prod.example.com
+    steps:
+      # 检出代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit_sha || github.ref }}
+
+      # 验证版本标签
+      - name: 验证版本标签
+        if: github.event.inputs.release_version != ''
+        run: |
+          if git tag | grep -q "^${{ github.event.inputs.release_version }}$"; then
+            echo "版本标签已存在"
+          else
+            echo "错误：版本标签不存在"
+            exit 1
+          fi
+
+      # 获取变更日志
+      - name: 生成变更日志
+        id: changelog
+        run: |
+          CHANGELOG=$(git log --oneline --since="1 week ago" | head -20)
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          $CHANGELOG
+          EOF
+
+      # 输出部署信息
+      - name: 显示部署信息
+        run: |
+          echo "======================================="
+          echo "生产环境部署信息"
+          echo "======================================="
+          echo "项目: ${{ env.PROJECT_NAME }}"
+          echo "环境: 生产环境"
+          echo "提交: ${{ github.sha }}"
+          echo "分支: ${{ github.ref_name }}"
+          echo "部署人: ${{ github.actor }}"
+          echo "======================================="
+
+  # 部署到生产环境
+  deploy-to-production:
+    name: 部署到生产环境
+    runs-on: ubuntu-latest
+    needs: pre-deployment-check
+    environment:
+      name: production-approval
+      url: https://prod.example.com
+    steps:
+      # 检出代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit_sha || github.ref }}
+
+      # 设置 Docker Buildx
+      - name: 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 登录容器仓库
+      - name: 登录容器仓库
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      # 构建并推送 Docker 镜像
+      - name: 构建 Docker 镜像
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.NAMESPACE }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.NAMESPACE }}:prod-latest
+            ${{ env.REGISTRY }}/${{ env.NAMESPACE }}:${{ github.event.inputs.release_version || 'latest' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # 配置 Kubernetes 集群访问
+      - name: 配置 Kubernetes 集群
+        uses: azure/k8s-set-context@v4
+        with:
+          kubeconfig: ${{ secrets.KUBECONFIG_PROD }}
+
+      # 执行数据库迁移（如需要）
+      - name: 执行数据库迁移
+        run: |
+          kubectl exec -it deployment/app --namespace=${{ env.ENVIRONMENT }} -- npm run db:migrate
+
+      # 部署到 Kubernetes 集群（滚动更新）
+      - name: 滚动更新部署
+        uses: azure/k8s-deploy@v5
+        with:
+          manifests: |
+            k8s/prod/namespace.yaml
+            k8s/prod/deployment.yaml
+            k8s/prod/service.yaml
+            k8s/prod/hpa.yaml
+          images: |
+            ${{ env.REGISTRY }}/${{ env.NAMESPACE }}:${{ github.sha }}
+          pull-images: true
+          kubectl-version: latest
+          strategy: rolling
+
+      # 等待滚动更新完成
+      - name: 等待滚动更新完成
+        run: |
+          kubectl rollout status deployment/app --namespace=${{ env.ENVIRONMENT }} --timeout=600s
+
+      # 验证部署状态
+      - name: 验证 Pod 状态
+        run: |
+          kubectl get pods --namespace=${{ env.ENVIRONMENT }}
+          kubectl get svc --namespace=${{ env.ENVIRONMENT }}
+
+      # 执行健康检查
+      - name: 健康检查
+        run: |
+          MAX_RETRIES=30
+          RETRY_INTERVAL=10
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "健康检查尝试 $i/$MAX_RETRIES"
+            if curl -f https://prod.example.com/health; then
+              echo "健康检查通过"
+              exit 0
+            fi
+            if [ $i -eq $MAX_RETRIES ]; then
+              echo "健康检查失败"
+              exit 1
+            fi
+            sleep $RETRY_INTERVAL
+          done
+
+      # 回滚准备（如果部署失败）
+      - name: 准备回滚脚本
+        if: failure()
+        run: |
+          echo "部署失败，准备回滚..."
+          kubectl rollout undo deployment/app --namespace=${{ env.ENVIRONMENT }}
+
+  # 部署后验证
+  post-deployment-verification:
+    name: 部署后验证
+    runs-on: ubuntu-latest
+    needs: deploy-to-production
+    steps:
+      # 监控服务状态
+      - name: 监控服务指标
+        run: |
+          echo "检查服务健康状态..."
+          kubectl get endpoints --namespace=${{ env.ENVIRONMENT }}
+
+      # 验证 API 功能
+      - name: API 端点验证
+        run: |
+          echo "验证关键 API 端点..."
+          curl -f https://prod.example.com/api/health
+          curl -f https://prod.example.com/api/version
+
+      # 生成部署报告
+      - name: 生成部署报告
+        run: |
+          echo "# 生产环境部署报告" > deployment-report.md
+          echo "日期: $(date)" >> deployment-report.md
+          echo "提交: ${{ github.sha }}" >> deployment-report.md
+          echo "部署人: ${{ github.actor }}" >> deployment-report.md
+          echo "状态: 成功" >> deployment-report.md
+          cat deployment-report.md
+
+      # 发送部署完成通知
+      - name: 发送部署完成通知
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "🚀 生产环境部署完成",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🎉 *生产环境部署成功*\n\n*项目*: ${{ env.PROJECT_NAME }}\n*环境*: 生产环境\n*提交*: ${{ github.sha }}\n*部署人*: ${{ github.actor }}\n\n✅ 所有服务运行正常"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # 回滚作业（手动触发）
+  rollback:
+    name: 回滚到上一版本
+    runs-on: ubuntu-latest
+    environment:
+      name: production-rollback
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Kubernetes 集群
+        uses: azure/k8s-set-context@v4
+        with:
+          kubeconfig: ${{ secrets.KUBECONFIG_PROD }}
+
+      - name: 回滚到上一版本
+        run: |
+          echo "执行回滚..."
+          kubectl rollout undo deployment/app --namespace=production
+          kubectl rollout status deployment/app --namespace=production --timeout=600s
+
+      - name: 发送回滚通知
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "⚠️ 生产环境回滚通知",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🔄 *生产环境已回滚*\n\n*项目*: ${{ env.PROJECT_NAME }}\n*回滚人*: ${{ github.actor }}\n*时间*: $(date)"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

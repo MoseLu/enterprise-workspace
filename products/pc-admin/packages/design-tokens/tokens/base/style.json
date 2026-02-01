@@ -1,0 +1,155 @@
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "style": {
+    "minimal": {
+      "surface": {
+        "page": {
+          "value": "var(--el-bg-color-page)",
+          "type": "color",
+          "description": "极简风格：页面背景"
+        },
+        "card": {
+          "value": "var(--el-bg-color)",
+          "type": "color",
+          "description": "极简风格：卡片背景"
+        },
+        "panel": {
+          "value": "var(--el-bg-color)",
+          "type": "color",
+          "description": "极简风格：面板背景"
+        }
+      },
+      "border": {
+        "base": {
+          "value": "var(--el-border-color)",
+          "type": "color",
+          "description": "极简风格：基础边框"
+        },
+        "muted": {
+          "value": "var(--el-border-color-light)",
+          "type": "color",
+          "description": "极简风格：弱边框"
+        }
+      },
+      "shadow": {
+        "card": {
+          "value": "0 1px 2px rgba(0, 0, 0, 0.06)",
+          "type": "shadow",
+          "description": "极简风格：卡片阴影"
+        },
+        "panel": {
+          "value": "0 2px 6px rgba(0, 0, 0, 0.08)",
+          "type": "shadow",
+          "description": "极简风格：面板阴影"
+        }
+      },
+      "effect": {
+        "blur": {
+          "value": "0px",
+          "type": "size",
+          "description": "极简风格：玻璃模糊"
+        }
+      }
+    },
+    "glass": {
+      "surface": {
+        "page": {
+          "value": "color-mix(in srgb, var(--el-bg-color-page) 85%, transparent)",
+          "type": "color",
+          "description": "玻璃风格：页面背景"
+        },
+        "card": {
+          "value": "color-mix(in srgb, var(--el-bg-color) 70%, transparent)",
+          "type": "color",
+          "description": "玻璃风格：卡片背景"
+        },
+        "panel": {
+          "value": "color-mix(in srgb, var(--el-bg-color) 60%, transparent)",
+          "type": "color",
+          "description": "玻璃风格：面板背景"
+        }
+      },
+      "border": {
+        "base": {
+          "value": "color-mix(in srgb, var(--el-border-color) 40%, transparent)",
+          "type": "color",
+          "description": "玻璃风格：基础边框"
+        },
+        "muted": {
+          "value": "color-mix(in srgb, var(--el-border-color-light) 35%, transparent)",
+          "type": "color",
+          "description": "玻璃风格：弱边框"
+        }
+      },
+      "shadow": {
+        "card": {
+          "value": "0 8px 24px rgba(0, 0, 0, 0.18)",
+          "type": "shadow",
+          "description": "玻璃风格：卡片阴影"
+        },
+        "panel": {
+          "value": "0 12px 32px rgba(0, 0, 0, 0.22)",
+          "type": "shadow",
+          "description": "玻璃风格：面板阴影"
+        }
+      },
+      "effect": {
+        "blur": {
+          "value": "20px",
+          "type": "size",
+          "description": "玻璃风格：玻璃模糊"
+        }
+      }
+    },
+    "cyber": {
+      "surface": {
+        "page": {
+          "value": "#0b1020",
+          "type": "color",
+          "description": "赛博风格：页面背景"
+        },
+        "card": {
+          "value": "rgba(16, 24, 48, 0.92)",
+          "type": "color",
+          "description": "赛博风格：卡片背景"
+        },
+        "panel": {
+          "value": "rgba(12, 18, 36, 0.96)",
+          "type": "color",
+          "description": "赛博风格：面板背景"
+        }
+      },
+      "border": {
+        "base": {
+          "value": "rgba(56, 240, 255, 0.35)",
+          "type": "color",
+          "description": "赛博风格：基础边框"
+        },
+        "muted": {
+          "value": "rgba(56, 240, 255, 0.18)",
+          "type": "color",
+          "description": "赛博风格：弱边框"
+        }
+      },
+      "shadow": {
+        "card": {
+          "value": "0 0 16px rgba(56, 240, 255, 0.25)",
+          "type": "shadow",
+          "description": "赛博风格：卡片阴影"
+        },
+        "panel": {
+          "value": "0 0 24px rgba(56, 240, 255, 0.3)",
+          "type": "shadow",
+          "description": "赛博风格：面板阴影"
+        }
+      },
+      "effect": {
+        "blur": {
+          "value": "6px",
+          "type": "size",
+          "description": "赛博风格：玻璃模糊"
+        }
+      }
+    }
+  }
+}

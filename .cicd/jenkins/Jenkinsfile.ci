@@ -1,0 +1,335 @@
+// ========================================
+// Jenkins CI 流水线配置文件
+// 用于企业级项目的持续集成
+// ========================================
+
+// 流水线代理配置
+pipeline {
+    agent any
+    
+    // 流水线参数配置
+    parameters {
+        // Node.js 版本选择
+        choice(
+            name: 'NODE_VERSION',
+            choices: ['18', '20', '22'],
+            description: '选择 Node.js 版本'
+        )
+        // 是否跳过测试
+        booleanParam(
+            name: 'SKIP_TESTS',
+            defaultValue: false,
+            description: '是否跳过测试'
+        )
+        // 是否跳过代码检查
+        booleanParam(
+            name: 'SKIP_LINT',
+            defaultValue: false,
+            description: '是否跳过代码检查'
+        )
+    }
+    
+    // 流水线环境变量
+    environment {
+        // 项目名称
+        PROJECT_NAME = 'enterprise-workspace'
+        // 工作目录
+        WORKSPACE_DIR = "${WORKSPACE}"
+        // 构建ID
+        BUILD_NUMBER = "${BUILD_NUMBER}"
+        // 构建标签
+        BUILD_TAG = "build-${BUILD_NUMBER}"
+        // NPM 缓存目录
+        NPM_CACHE_DIR = "${WORKSPACE}/.npm"
+        // 构建输出目录
+        OUTPUT_DIR = 'dist'
+    }
+    
+    // 流水线触发器
+    triggers {
+        // GitHub 钩子触发
+        githubPush()
+        // 定时触发：每天凌晨2点执行
+        cron('H 2 * * *')
+    }
+    
+    // 流水线选项
+    options {
+        // 禁用并发构建
+        disableConcurrentBuilds()
+        // 构建超时：30分钟
+        timeout(time: 30, unit: 'MINUTES')
+        // 保持构建天数
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        // 跳过默认 checkout
+        skipDefaultCheckout()
+    }
+    
+    // 流水线阶段定义
+    stages {
+        // 阶段一：检出代码
+        stage('检出代码') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段一：检出代码'
+                    echo '======================================'
+                }
+                
+                // 检出代码
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/example/enterprise-workspace.git',
+                        credentialsId: 'github-credentials'
+                    ]]
+                ])
+                
+                // 显示代码信息
+                script {
+                    echo "Git Commit: ${env.GIT_COMMIT}"
+                    echo "Git Branch: ${env.GIT_BRANCH}"
+                    echo "Build Number: ${env.BUILD_NUMBER}"
+                }
+            }
+        }
+        
+        // 阶段二：设置构建环境
+        stage('设置构建环境') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段二：设置构建环境'
+                    echo '======================================'
+                }
+                
+                // 安装 Node.js
+                nodejs(nodeJSInstallationName: 'Node.js ${params.NODE_VERSION}') {
+                    script {
+                        echo "Node.js 版本: ${params.NODE_VERSION}"
+                        echo "Node.js 路径: ${env.NODE_PATH}"
+                    }
+                }
+                
+                // 安装依赖
+                sh 'npm ci'
+                
+                // 验证安装
+                sh 'npm --version'
+                sh 'node --version'
+            }
+        }
+        
+        // 阶段三：代码质量检查
+        stage('代码质量检查') {
+            when {
+                expression { return !params.SKIP_LINT }
+            }
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段三：代码质量检查'
+                    echo '======================================'
+                }
+                
+                // 代码格式化检查
+                sh 'npm run lint:check || true'
+                
+                // ESLint 检查
+                sh 'npm run lint:eslint || true'
+                
+                // TypeScript 类型检查
+                sh 'npm run type-check || true'
+                
+                // 提交代码风格检查结果
+                recordIssues(
+                    tools: [eslint()],
+                    qualityGates: [[threshold: 1, type: 'NEW', unstable: true]]
+                )
+            }
+        }
+        
+        // 阶段四：单元测试
+        stage('单元测试') {
+            when {
+                expression { return !params.SKIP_TESTS }
+            }
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段四：单元测试'
+                    echo '======================================'
+                }
+                
+                // 执行单元测试
+                sh 'npm run test:unit'
+                
+                // 收集测试报告
+                junit 'test-results/**/*.xml'
+                
+                // 收集代码覆盖率报告
+                publishHTML([
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'coverage',
+                    reportFiles: 'index.html',
+                    reportName: 'Coverage Report'
+                ])
+                
+                // 质量门禁
+                script {
+                    def coverage = readFile('coverage/coverage-summary.json')
+                    echo "代码覆盖率: ${coverage}"
+                }
+            }
+        }
+        
+        // 阶段五：构建项目
+        stage('构建项目') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段五：构建项目'
+                    echo '======================================'
+                }
+                
+                // 执行构建
+                sh 'npm run build'
+                
+                // 验证构建产物
+                script {
+                    def buildDir = "${OUTPUT_DIR}"
+                    if (fileExists(buildDir)) {
+                        echo "构建产物目录: ${buildDir}"
+                        sh "ls -la ${buildDir}"
+                    } else {
+                        error '构建产物目录不存在'
+                    }
+                }
+                
+                // 归档构建产物
+                archiveArtifacts(
+                    artifacts: 'dist/**/*',
+                    fingerprint: true,
+                    allowEmptyArchive: true
+                )
+                
+                // 上传构建产物到制品库
+                script {
+                    def buildInfo = """
+                        项目: ${PROJECT_NAME}
+                        构建号: ${BUILD_NUMBER}
+                        Git提交: ${GIT_COMMIT}
+                        构建时间: ${currentBuild.startTimeInMillis}
+                    """
+                    echo buildInfo
+                }
+            }
+        }
+        
+        // 阶段六：安全扫描
+        stage('安全扫描') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段六：安全扫描'
+                    echo '======================================'
+                }
+                
+                // 依赖漏洞扫描
+                dependencyCheckScanner(
+                    pattern: '**/package-lock.json',
+                    htmlReports: true,
+                    xmlReports: true
+                )
+                
+                // 代码安全扫描
+                checkstyle([
+                    pattern: '**/eslint-report.json',
+                    canComputeNew: true,
+                    defaultEncoding: 'UTF-8',
+                    healthy: 100,
+                    unHealthy: 0
+                ])
+            }
+        }
+        
+        // 阶段七：生成构建报告
+        stage('生成构建报告') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段七：生成构建报告'
+                    echo '======================================'
+                }
+                
+                // 生成构建摘要
+                echo "构建完成"
+                echo "项目: ${PROJECT_NAME}"
+                echo "构建号: ${BUILD_NUMBER}"
+                echo "状态: ${currentBuild.result}"
+            }
+        }
+    }
+    
+    // 流水线后置处理
+    post {
+        // 成功时执行
+        success {
+            script {
+                echo '======================================'
+                echo '✅ 构建成功！'
+                echo '======================================'
+                
+                // 发送构建成功通知
+                slackSend(
+                    channel: '#devops-notifications',
+                    color: 'good',
+                    message: "✅ 构建成功: ${PROJECT_NAME} #${BUILD_NUMBER}\n<${env.BUILD_URL}|查看构建>"
+                )
+            }
+        }
+        
+        // 失败时执行
+        failure {
+            script {
+                echo '======================================'
+                echo '❌ 构建失败！'
+                echo '======================================'
+                
+                // 发送构建失败通知
+                slackSend(
+                    channel: '#devops-notifications',
+                    color: 'danger',
+                    message: "❌ 构建失败: ${PROJECT_NAME} #${BUILD_NUMBER}\n<${env.BUILD_URL}|查看构建>"
+                )
+            }
+        }
+        
+        // 总是执行
+        always {
+            script {
+                echo '======================================'
+                echo '后置处理'
+                echo '======================================'
+                
+                // 清理工作空间
+                cleanWs(
+                    cleanWhenAborted: true,
+                    cleanWhenFailure: true,
+                    cleanWhenNotBuilt: true,
+                    cleanWhenSuccess: true,
+                    cleanWhenUnstable: true,
+                    deleteDirs: true
+                )
+            }
+        }
+        
+        // 不稳定时执行
+        unstable {
+            echo '构建状态：不稳定'
+        }
+    }
+}

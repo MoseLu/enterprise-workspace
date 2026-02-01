@@ -1,0 +1,9 @@
+// 注册页面样式入口文件
+// 导入所有子组件样式
+
+@use '../main/styles.scss';
+@use '../tenant-selector/styles.scss';
+// 注意：以下样式文件对应的目录已被删除，因为组件已移动到 components 目录下
+// @import '../inert-registration/styles.scss';
+// @import '../uk-head-registration/styles.scss';
+// @import '../supplier-registration/styles.scss';

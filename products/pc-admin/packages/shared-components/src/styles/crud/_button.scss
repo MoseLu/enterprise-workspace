@@ -1,0 +1,251 @@
+// ==================== CRUD 按钮样式 ====================
+
+.btc-crud-btn {
+	--btc-crud-btn-color: var(--el-text-color-primary);
+
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+
+	&__icon {
+		display: none;
+		font-size: 16px;
+		line-height: 1;
+	}
+
+	&__text {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+	}
+
+	&__count {
+		color: var(--el-text-color-secondary);
+	}
+
+	&__badge {
+		display: none;
+		align-items: center;
+		justify-content: center;
+		min-width: 18px;
+		height: 18px;
+		padding: 0 6px;
+		border-radius: 9px;
+		background-color: var(--el-color-danger-light-9);
+		color: var(--el-color-danger);
+		font-size: 12px;
+		font-weight: 600;
+		line-height: 1;
+		margin-left: 6px;
+	}
+
+	&.btc-crud-op-btn {
+		gap: 4px;
+
+		.btc-crud-btn__icon {
+			font-size: 14px;
+		}
+
+		.btc-crud-btn__text {
+			display: inline;
+			align-items: unset;
+			gap: 0;
+		}
+	}
+
+	&.is-disabled {
+		cursor: not-allowed;
+		opacity: 0.45;
+		pointer-events: none;
+	}
+
+	&--with-icon {
+		.btc-crud-btn__icon {
+			display: inline-flex;
+			font-size: 18px;
+			margin-right: 4px;
+		}
+	}
+
+	&.el-button--primary {
+		--btc-crud-btn-color: var(--el-color-primary);
+	}
+
+	&.el-button--success {
+		--btc-crud-btn-color: var(--el-color-success);
+	}
+
+	&.el-button--warning {
+		--btc-crud-btn-color: var(--el-color-warning);
+	}
+
+	&.el-button--danger {
+		--btc-crud-btn-color: var(--el-color-danger);
+	}
+
+	&.el-button--info {
+		--btc-crud-btn-color: var(--el-color-info);
+	}
+
+	&.el-button--default {
+		--btc-crud-btn-color: var(--el-text-color-primary);
+	}
+}
+
+[data-button-style='default'] {
+	.btc-crud-btn__icon {
+		display: none !important;
+	}
+
+	.btc-crud-action-icon {
+		display: none;
+	}
+
+	.btc-crud-btn--with-icon {
+		.btc-crud-btn__icon {
+			display: inline-flex !important;
+			margin-right: 4px;
+		}
+	}
+}
+
+[data-button-style='minimal'] {
+	.btc-crud .btc-table-button {
+		width: 32px;
+		height: 32px;
+		border-radius: 6px;
+		--btc-crud-icon-color: var(--el-color-primary);
+		background-color: color-mix(in srgb, var(--btc-crud-icon-color) 6%, transparent);
+		border: 1px solid color-mix(in srgb, var(--btc-crud-icon-color) 35%, transparent);
+		transition: all 0.2s ease-in-out;
+
+		.btc-svg {
+			color: var(--btc-crud-icon-color);
+		}
+
+		&:hover,
+		&:focus-visible {
+			border-color: var(--btc-crud-icon-color);
+			background-color: color-mix(in srgb, var(--btc-crud-icon-color) 12%, transparent);
+			box-shadow: none;
+			outline: none;
+		}
+
+		&.is-disabled {
+			border-color: color-mix(in srgb, var(--el-border-color) 80%, transparent);
+			background-color: color-mix(in srgb, var(--el-border-color) 10%, transparent);
+		}
+
+		&.is-primary {
+			--btc-crud-icon-color: var(--el-color-primary);
+		}
+
+		&.is-success {
+			--btc-crud-icon-color: var(--el-color-success);
+		}
+
+		&.is-warning {
+			--btc-crud-icon-color: var(--el-color-warning);
+		}
+
+		&.is-danger {
+			--btc-crud-icon-color: var(--el-color-danger);
+		}
+
+		&.is-info {
+			--btc-crud-icon-color: var(--el-color-info);
+		}
+
+		&.is-default {
+			--btc-crud-icon-color: var(--el-text-color-primary);
+		}
+	}
+
+	.btc-crud-btn {
+		gap: 4px;
+		min-width: 32px;
+		padding: 0 10px;
+		justify-content: center;
+		background-color: color-mix(in srgb, var(--btc-crud-btn-color) 6%, transparent);
+		border-width: 1px;
+		border-style: solid;
+		border-color: color-mix(in srgb, var(--btc-crud-btn-color) 35%, transparent);
+		height: 32px;
+	}
+
+	.btc-crud-btn.el-button {
+		display: inline-flex;
+		align-items: center;
+		gap: 0;
+		padding: 0 10px;
+		height: 32px;
+		color: var(--btc-crud-btn-color);
+
+		&.is-text {
+			padding: 0 6px;
+			border-width: 0;
+			background-color: transparent !important;
+			color: var(--btc-crud-btn-color);
+		}
+
+		&--primary,
+		&--success,
+		&--warning,
+		&--danger,
+		&--info,
+		&--default {
+			border-color: color-mix(in srgb, var(--btc-crud-btn-color) 35%, transparent);
+			color: var(--btc-crud-btn-color);
+			background-color: color-mix(in srgb, var(--btc-crud-btn-color) 6%, transparent);
+		}
+
+		&:hover,
+		&:focus-visible {
+			background-color: color-mix(in srgb, var(--btc-crud-btn-color) 12%, transparent) !important;
+			border-color: var(--btc-crud-btn-color) !important;
+			box-shadow: none !important;
+			outline: none !important;
+		}
+
+		&--primary:hover,
+		&--primary:focus-visible,
+		&--success:hover,
+		&--success:focus-visible,
+		&--warning:hover,
+		&--warning:focus-visible,
+		&--danger:hover,
+		&--danger:focus-visible,
+		&--info:hover,
+		&--info:focus-visible,
+		&--default:hover,
+		&--default:focus-visible {
+			background-color: color-mix(in srgb, var(--btc-crud-btn-color) 12%, transparent) !important;
+			border-color: var(--btc-crud-btn-color) !important;
+		}
+	}
+
+	.btc-crud-btn__icon {
+		display: inline-flex;
+		margin-right: 0;
+		color: var(--btc-crud-btn-color);
+	}
+
+	.btc-crud-btn--with-icon {
+		.btc-crud-btn__icon {
+			margin-right: 0;
+		}
+	}
+
+	.btc-crud-btn__text {
+		display: none;
+	}
+
+	.btc-crud-btn__badge {
+		display: inline-flex;
+		margin-left: 4px;
+	}
+}
+
+[data-button-style='minimal'] .btc-table-toolbar__icon-btn .btc-table-button.is-default {
+	--btc-crud-icon-color: var(--el-color-primary);
+}

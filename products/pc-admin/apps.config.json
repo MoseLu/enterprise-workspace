@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "description": "BTC ShopFlow Monorepo 应用配置",
+  "apps": [
+    {
+      "id": "main",
+      "name": "main-app",
+      "displayName": "主应用",
+      "category": "core",
+      "packageName": "main-app"
+    },
+    {
+      "id": "system",
+      "name": "system-app",
+      "displayName": "系统应用",
+      "category": "business",
+      "packageName": "system-app"
+    },
+    {
+      "id": "admin",
+      "name": "admin-app",
+      "displayName": "管理应用",
+      "category": "business",
+      "packageName": "admin-app"
+    },
+    {
+      "id": "logistics",
+      "name": "logistics-app",
+      "displayName": "物流应用",
+      "category": "business",
+      "packageName": "logistics-app"
+    },
+    {
+      "id": "finance",
+      "name": "finance-app",
+      "displayName": "财务应用",
+      "category": "business",
+      "packageName": "finance-app"
+    },
+    {
+      "id": "engineering",
+      "name": "engineering-app",
+      "displayName": "工程应用",
+      "category": "business",
+      "packageName": "engineering-app"
+    },
+    {
+      "id": "quality",
+      "name": "quality-app",
+      "displayName": "品质应用",
+      "category": "business",
+      "packageName": "quality-app"
+    },
+    {
+      "id": "production",
+      "name": "production-app",
+      "displayName": "生产应用",
+      "category": "business",
+      "packageName": "production-app"
+    },
+    {
+      "id": "operations",
+      "name": "operations-app",
+      "displayName": "运维应用",
+      "category": "business",
+      "packageName": "operations-app"
+    },
+    {
+      "id": "layout",
+      "name": "layout-app",
+      "displayName": "布局应用",
+      "category": "core",
+      "packageName": "layout-app"
+    },
+    {
+      "id": "docs",
+      "name": "docs-app",
+      "displayName": "文档站点",
+      "category": "tool",
+      "packageName": "docs-app"
+    },
+    {
+      "id": "home",
+      "name": "home-app",
+      "displayName": "公司首页",
+      "category": "public",
+      "packageName": "home-app"
+    }
+  ],
+  "categories": {
+    "core": {
+      "name": "核心应用",
+      "description": "系统核心功能应用"
+    },
+    "business": {
+      "name": "业务应用",
+      "description": "业务功能应用"
+    },
+    "tool": {
+      "name": "工具应用",
+      "description": "开发和工具类应用"
+    }
+  },
+  "defaultDevApps": [
+    "admin",
+    "logistics",
+    "system",
+    "finance",
+    "engineering",
+    "quality",
+    "production",
+    "docs",
+    "operations",
+    "home"
+  ]
+}

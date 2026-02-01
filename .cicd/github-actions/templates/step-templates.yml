@@ -1,0 +1,58 @@
+# ========================================
+# GitHub Actions 步骤模板
+# 常用步骤集合，可被其他工作流复用
+# ========================================
+
+# 检出代码步骤
+steps:
+  - checkout:
+      name: 检出代码
+      uses: actions/checkout@v4
+
+# 设置 Node.js 环境步骤
+steps:
+  - setup-node:
+      name: 设置 Node.js 环境
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+# 设置 Python 环境步骤
+steps:
+  - setup-python:
+      name: 设置 Python 环境
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+# 安装依赖步骤
+steps:
+  - install-deps:
+      name: 安装依赖
+      run: npm ci
+
+# 运行测试步骤
+steps:
+  - run-tests:
+      name: 运行测试
+      run: npm test
+
+# 上传构建产物步骤
+steps:
+  - upload-artifact:
+      name: 上传构建产物
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: dist/
+
+# 下载构建产物步骤
+steps:
+  - download-artifact:
+      name: 下载构建产物
+      uses: actions/download-artifact@v3
+      with:
+        name: build
+        path: dist/

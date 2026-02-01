@@ -1,0 +1,49 @@
+// 基础样式
+.identity-verify {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0;
+  max-width: 800px; // 限制最大宽度，内容居中
+  margin: 0 auto; // 水平居中
+  min-height: 0; // 允许 flex 子元素收缩
+  overflow: hidden; // 防止内容溢出影响高度
+
+  // 关闭按钮（绝对定位在整个 dialog body 的右上角）
+  &__close-icon {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 18px;
+    color: var(--el-text-color-regular);
+    cursor: pointer;
+    transition: color 0.2s;
+    z-index: 10;
+
+    &:hover {
+      color: var(--el-color-primary);
+    }
+  }
+
+  // 内容Content区域（左右分栏）
+  &__content {
+    flex: 1;
+    min-height: 0; // 允许 flex 子元素收缩
+    display: flex;
+    overflow: hidden;
+
+    // Content右侧：验证表单
+    &-right {
+      flex: 1;
+      padding: 20px 16px;
+      overflow: hidden; // 禁用滚动，由内部控制
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      min-width: 0;
+      min-height: 0; // 允许 flex 子元素收缩
+      height: 100%; // 固定高度为父容器100%
+    }
+  }
+}
+

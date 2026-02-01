@@ -1,0 +1,132 @@
+// BtcMessage 组件样式
+// 基于 Element Plus 消息样式扩展的 BtcMessage，自带自定义徽章
+
+.btc-message-wrapper .el-message {
+  display: flex !important;
+  align-items: center !important;
+  padding: 15px 19px !important;
+  border-radius: 4px !important;
+  box-shadow: var(--el-box-shadow) !important;
+  background-color: var(--el-bg-color) !important;
+  border: 1px solid var(--el-border-color) !important;
+  min-width: 300px !important;
+  max-width: 500px !important;
+  word-break: break-all !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  color: var(--el-text-color-primary) !important;
+
+  &--success {
+    background-color: var(--el-color-success-light-9) !important;
+    border-color: var(--el-color-success-light-7) !important;
+    color: var(--el-color-success) !important;
+  }
+
+  &--warning {
+    background-color: var(--el-color-warning-light-9) !important;
+    border-color: var(--el-color-warning-light-7) !important;
+    color: var(--el-color-warning) !important;
+  }
+
+  &--error {
+    background-color: var(--el-color-error-light-9) !important;
+    border-color: var(--el-color-error-light-7) !important;
+    color: var(--el-color-error) !important;
+  }
+
+  &--info {
+    background-color: var(--el-color-info-light-9) !important;
+    border-color: var(--el-color-info-light-7) !important;
+    color: var(--el-color-info) !important;
+  }
+}
+
+// 自定义消息徽章样式
+.btc-message-badge-container {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  z-index: 9999;
+  pointer-events: none;
+
+  .btc-message-badge {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--el-color-primary);
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffd700;
+    padding: 0;
+    line-height: 18px;
+    text-align: center;
+    min-width: 18px;
+    box-sizing: border-box;
+  }
+}
+
+// 徽章定位样式
+.btc-message-wrapper {
+  position: relative !important;
+  display: inline-block !important;
+
+  :deep(.el-badge__content) {
+    position: absolute !important;
+    top: -8px !important;
+    right: -8px !important;
+    transform: translate(50%, -50%) !important;
+    width: 18px !important;
+    height: 18px !important;
+    padding: 0 !important;
+    border-radius: 9px !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    border: none !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    transition: all 0.2s ease-in-out !important;
+    opacity: 1 !important;
+    z-index: 9999 !important;
+    pointer-events: none !important;
+  }
+}
+
+// 主题适配
+:root {
+  --btc-message-badge-success: #67c23a;
+  --btc-message-badge-warning: #e6a23c;
+  --btc-message-badge-info: #909399;
+  --btc-message-badge-error: #f56c6c;
+}
+
+// 暗色主题适配
+[data-theme="dark"] {
+  .btc-message-badge-container {
+    .btc-message-badge {
+      border-color: #ffd700;
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .btc-message-badge-container {
+    .btc-message-badge {
+      width: 16px;
+      height: 16px;
+      font-size: 11px;
+      line-height: 16px;
+      min-width: 16px;
+    }
+  }
+}

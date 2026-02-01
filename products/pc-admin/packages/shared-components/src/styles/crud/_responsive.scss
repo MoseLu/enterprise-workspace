@@ -1,0 +1,14 @@
+// ==================== CRUD 响应式样式 ====================
+
+@media only screen and (max-width: 768px) {
+	.el-table {
+		&__body {
+			&-wrapper {
+				&::-webkit-scrollbar {
+					height: 6px;
+					width: 6px;
+				}
+			}
+		}
+	}
+}

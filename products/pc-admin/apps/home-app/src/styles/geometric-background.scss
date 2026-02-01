@@ -1,0 +1,428 @@
+// 公共几何背景样式（三个堆叠角和qa-icon）
+// 用于关于我们、新闻动态、服务条款、帮助中心等页面
+
+// 几何块容器
+.geometric-blocks {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  width: 800px;
+  height: 400px;
+
+  .triangle {
+    position: absolute;
+  }
+}
+
+// QA标志固定在右下角，略微偏左
+.queen-logo {
+  position: fixed; // 固定定位，不随页面尺寸变化
+  z-index: 0; // z-index低于三角形，确保不遮挡背景
+  pointer-events: none;
+  width: 160px;
+  height: 160px;
+  // 固定在右下角，三角形宽度28vw，QA图片在三角形左边缘左侧10px处（向右移动）
+  // 使用 max() 确保不会超出视口左侧，min() 确保不会超出视口右侧
+  right: max(10px, min(calc(28vw + 10px), calc(100vw - 170px))); // 确保不超出视口，留出 160px 宽度 + 10px 边距
+  bottom: max(10px, min(120px, calc(100vh - 170px))); // 确保不超出视口，留出 160px 高度 + 10px 边距
+  background-image: url('@/assets/logo/qa-logo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+// 左上角区域：三层三角形堆叠
+.top-left {
+  top: 0;
+  left: 0;
+
+  .triangle {
+    width: 800px;
+    height: 400px;
+    top: 0;
+    left: 0;
+  }
+
+  .layer-1 {
+    background: #efa19b;
+    height: 20vh;
+    width: 40vw;
+    top: 0;
+    left: 0;
+    clip-path: polygon(0 100%, 0 0, 100% 0);
+    z-index: 1;
+  }
+
+  .layer-2 {
+    background: #da291c;
+    height: 17vh;
+    width: 40vw;
+    top: 0;
+    left: 0;
+    clip-path: polygon(0 100%, 0 0, 100% 0);
+    z-index: 2;
+  }
+
+  .layer-3 {
+    background: #404040;
+    height: 75vh;
+    width: 8vw;
+    top: 0;
+    left: 0;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+    z-index: 3;
+  }
+}
+
+// 右上角区域：三层三角形堆叠
+.top-right {
+  top: 0;
+  right: 0;
+  height: 70vh;
+
+  .triangle {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .layer-1 {
+    background: #e15147;
+    height: 70vh;
+    width: 16vw;
+    top: 0;
+    right: 0;
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+    z-index: 1;
+  }
+
+  .layer-2 {
+    background: #da291c;
+    height: 70vh;
+    width: 13vw;
+    top: 0;
+    right: 0;
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+    z-index: 2;
+  }
+
+  .layer-3 {
+    background: #404040;
+    height: 70vh;
+    width: 7vw;
+    top: 0;
+    right: 0;
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+    z-index: 3;
+  }
+}
+
+// 右下角区域：两层三角形堆叠
+.bottom-right {
+  bottom: 0;
+  right: 0;
+  height: 30vh;
+
+  .triangle {
+    position: absolute;
+    bottom: 0; // 相对于.bottom-right容器，从底部开始
+    right: 0;
+  }
+
+  .layer-1 {
+    background: #efa19b;
+    height: 30vh;
+    width: 28vw;
+    bottom: 0;
+    right: 0;
+    clip-path: polygon(100% 100%, 100% 0, 0 100%);
+    z-index: 1;
+  }
+
+  .layer-2 {
+    background: #da291c;
+    height: 30vh;
+    width: 26vw;
+    bottom: 0;
+    right: 0;
+    clip-path: polygon(100% 100%, 100% 0, 0 100%);
+    z-index: 2;
+  }
+}
+
+// 响应式设计
+// 中等屏幕设备（1024px - 1919px）
+@media (max-width: 1919px) and (min-width: 1024px) {
+  // 几何背景元素按比例缩放
+  .top-left {
+    .layer-1 {
+      width: min(40vw, 600px);
+      height: min(20vh, 200px);
+    }
+    .layer-2 {
+      width: min(40vw, 600px);
+      height: min(17vh, 170px);
+    }
+    .layer-3 {
+      width: min(8vw, 120px);
+      height: min(75vh, 600px);
+    }
+  }
+
+  .top-right {
+    .layer-1 {
+      width: min(16vw, 240px);
+      height: min(70vh, 560px);
+    }
+    .layer-2 {
+      width: min(13vw, 195px);
+      height: min(70vh, 560px);
+    }
+    .layer-3 {
+      width: min(7vw, 105px);
+      height: min(70vh, 560px);
+    }
+  }
+
+  .bottom-right {
+    .layer-1 {
+      width: min(28vw, 420px);
+      height: min(30vh, 240px);
+    }
+    .layer-2 {
+      width: min(26vw, 390px);
+      height: min(30vh, 240px);
+    }
+  }
+
+  .queen-logo {
+    position: fixed; // 固定定位
+    width: min(160px, 12vw);
+    height: min(160px, 12vw);
+    right: calc(min(28vw, 420px) + 10px); // 向右移动了10px
+    bottom: 120px; // 向下移动了40px
+  }
+}
+
+// 平板设备（768px - 1023px）
+@media (max-width: 1023px) and (min-width: 768px) {
+  // 几何背景元素缩小
+  .top-left {
+    .layer-1 {
+      width: 35vw;
+      height: 18vh;
+    }
+    .layer-2 {
+      width: 35vw;
+      height: 15vh;
+    }
+    .layer-3 {
+      width: 6vw;
+      height: 60vh;
+    }
+  }
+
+  .top-right {
+    height: 60vh;
+    .layer-1 {
+      width: 14vw;
+      height: 60vh;
+    }
+    .layer-2 {
+      width: 11vw;
+      height: 60vh;
+    }
+    .layer-3 {
+      width: 6vw;
+      height: 60vh;
+    }
+  }
+
+  .bottom-right {
+    top: 60vh;
+    height: 40vh;
+    .layer-1 {
+      width: 25vw;
+      height: 40vh;
+    }
+    .layer-2 {
+      width: 23vw;
+      height: 40vh;
+    }
+  }
+
+  .queen-logo {
+    position: fixed; // 固定定位
+    width: 120px;
+    height: 120px;
+    right: calc(25vw + 5px); // 向右移动了10px
+    bottom: 80px; // 向下移动了20px
+  }
+}
+
+// 移动设备（最大768px）
+@media (max-width: 767px) {
+  // 几何背景元素在移动端缩小或隐藏部分元素
+  .top-left {
+    .layer-1 {
+      width: 30vw;
+      height: 15vh;
+    }
+    .layer-2 {
+      width: 30vw;
+      height: 12vh;
+    }
+    .layer-3 {
+      width: 5vw;
+      height: 50vh;
+    }
+  }
+
+  .top-right {
+    height: 50vh;
+    .layer-1 {
+      width: 12vw;
+      height: 50vh;
+    }
+    .layer-2 {
+      width: 10vw;
+      height: 50vh;
+    }
+    .layer-3 {
+      width: 5vw;
+      height: 50vh;
+    }
+  }
+
+  .bottom-right {
+    top: 50vh;
+    height: 50vh;
+    .layer-1 {
+      width: 22vw;
+      height: 50vh;
+    }
+    .layer-2 {
+      width: 20vw;
+      height: 50vh;
+    }
+  }
+
+  .queen-logo {
+    position: fixed; // 固定定位
+    width: 80px;
+    height: 80px;
+    right: calc(22vw + 0px); // 向右移动了10px
+    bottom: 40px; // 向下移动了20px
+  }
+}
+
+// 小屏幕移动设备（最大480px）
+@media (max-width: 480px) {
+  .top-left {
+    .layer-1 {
+      width: 25vw;
+      height: 12vh;
+    }
+    .layer-2 {
+      width: 25vw;
+      height: 10vh;
+    }
+    .layer-3 {
+      width: 4vw;
+      height: 40vh;
+    }
+  }
+
+  .top-right {
+    height: 40vh;
+    .layer-1 {
+      width: 10vw;
+      height: 40vh;
+    }
+    .layer-2 {
+      width: 8vw;
+      height: 40vh;
+    }
+    .layer-3 {
+      width: 4vw;
+      height: 40vh;
+    }
+  }
+
+  .bottom-right {
+    top: 40vh;
+    height: 60vh;
+    .layer-1 {
+      width: 20vw;
+      height: 60vh;
+    }
+    .layer-2 {
+      width: 18vw;
+      height: 60vh;
+    }
+  }
+
+  .queen-logo {
+    position: fixed; // 固定定位
+    width: 60px;
+    height: 60px;
+    right: calc(20vw - 2px); // 向右移动了10px
+    bottom: 20px; // 向下移动了20px
+  }
+}
+
+// 超小屏幕设备（最大375px）
+@media (max-width: 375px) {
+  .top-left {
+    .layer-1 {
+      width: 22vw;
+      height: 10vh;
+    }
+    .layer-2 {
+      width: 22vw;
+      height: 8vh;
+    }
+    .layer-3 {
+      width: 3vw;
+      height: 35vh;
+    }
+  }
+
+  .top-right {
+    height: 35vh;
+    .layer-1 {
+      width: 8vw;
+      height: 35vh;
+    }
+    .layer-2 {
+      width: 6vw;
+      height: 35vh;
+    }
+    .layer-3 {
+      width: 3vw;
+      height: 35vh;
+    }
+  }
+
+  .bottom-right {
+    top: 35vh;
+    height: 65vh;
+    .layer-1 {
+      width: 18vw;
+      height: 65vh;
+    }
+    .layer-2 {
+      width: 16vw;
+      height: 65vh;
+    }
+  }
+
+  .queen-logo {
+    position: fixed; // 固定定位
+    width: 50px;
+    height: 50px;
+    right: calc(18vw - 4px); // 向右移动了10px
+    bottom: 10px; // 向下移动了20px
+  }
+}
+

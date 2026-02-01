@@ -1,0 +1,542 @@
+{
+  "description": "日志查询参数 JSON 示例集合",
+  "version": "1.0.0",
+  "examples": {
+    "example1_basic_query": {
+      "description": "基础查询：按应用和时间范围查询",
+      "params": {
+        "appId": "btc-shopflow-admin-app",
+        "logLevel": "ERROR",
+        "timeRange": {
+          "startTime": "2026-01-15T10:00:00.000Z",
+          "endTime": "2026-01-15T11:00:00.000Z"
+        },
+        "messageKeyword": "订单"
+      }
+    },
+    "example2_api_performance": {
+      "description": "API 性能查询：查找响应时间超过 2 秒的 API 请求",
+      "params": {
+        "appId": "btc-shopflow-admin-app",
+        "eventType": "api:request,api:response",
+        "apiEndpoint": "/api/order/list",
+        "apiResponseTimeRange": {
+          "min": 2000
+        },
+        "timeRange": {
+          "startTime": "2026-01-15T10:00:00.000Z",
+          "endTime": "2026-01-15T11:00:00.000Z"
+        }
+      }
+    },
+    "example3_page_performance": {
+      "description": "页面性能查询：查找 LCP 超过 2.5 秒的页面",
+      "params": {
+        "appId": "btc-shopflow-admin-app",
+        "eventType": "performance:page",
+        "routePath": "/dashboard",
+        "performanceRange": {
+          "lcp": {
+            "min": 2500
+          }
+        },
+        "timeRange": {
+          "startTime": "2026-01-15T10:00:00.000Z",
+          "endTime": "2026-01-15T11:00:00.000Z"
+        }
+      }
+    },
+    "example4_error_query": {
+      "description": "错误查询：查找所有 API 500 错误",
+      "params": {
+        "appId": "btc-shopflow-admin-app",
+        "eventType": "error:api,error:runtime",
+        "hasError": true,
+        "errorType": "api",
+        "apiStatusCode": 500,
+        "timeRange": {
+          "startTime": "2026-01-15T10:00:00.000Z",
+          "endTime": "2026-01-15T11:00:00.000Z"
+        }
+      }
+    },
+    "example5_user_behavior": {
+      "description": "用户行为查询：查找特定用户的操作记录",
+      "params": {
+        "appId": "btc-shopflow-admin-app",
+        "eventType": "route:navigation,user:action",
+        "userId": "user-12345",
+        "sessionId": "session-abc123",
+        "routePath": "/order/create",
+        "userActionType": "click,submit",
+        "timeRange": {
+          "startTime": "2026-01-15T10:00:00.000Z",
+          "endTime": "2026-01-15T11:00:00.000Z"
+        }
+      }
+    },
+    "example6_business_event": {
+      "description": "业务事件查询：查找订单创建和支付事件",
+      "params": {
+        "appId": "btc-shopflow-admin-app",
+        "eventType": "business:event",
+        "businessEventName": "order:create,order:pay",
+        "businessEventCategory": "order",
+        "timeRange": {
+          "startTime": "2026-01-15T00:00:00.000Z",
+          "endTime": "2026-01-15T23:59:59.000Z"
+        }
+      }
+    },
+    "example7_device_compatibility": {
+      "description": "设备兼容性查询：查找移动端 Safari 浏览器的错误",
+      "params": {
+        "appId": "btc-shopflow-mobile-app",
+        "eventType": "error:runtime",
+        "deviceType": "mobile",
+        "browser": "Safari",
+        "os": "iOS",
+        "hasError": true,
+        "timeRange": {
+          "startTime": "2026-01-15T10:00:00.000Z",
+          "endTime": "2026-01-15T11:00:00.000Z"
+        }
+      }
+    },
+    "example8_app_lifecycle": {
+      "description": "应用生命周期查询：查找启动时间超过 3 秒的应用",
+      "params": {
+        "appId": "btc-shopflow-admin-app",
+        "eventType": "app:lifecycle",
+        "microAppLifecycle": "mount",
+        "performanceRange": {
+          "duration": {
+            "min": 3000
+          }
+        },
+        "timeRange": {
+          "startTime": "2026-01-15T00:00:00.000Z",
+          "endTime": "2026-01-15T23:59:59.000Z"
+        }
+      }
+    },
+    "example9_resource_loading": {
+      "description": "资源加载查询：查找加载失败的 JS 资源",
+      "params": {
+        "appId": "btc-shopflow-admin-app",
+        "eventType": "performance:resource,error:resource",
+        "resourceType": "script",
+        "resourceUrl": "/static/js/vendor",
+        "hasError": true,
+        "timeRange": {
+          "startTime": "2026-01-15T10:00:00.000Z",
+          "endTime": "2026-01-15T11:00:00.000Z"
+        }
+      }
+    },
+    "example10_route_navigation": {
+      "description": "路由导航查询：查找切换时间超过 500ms 的路由",
+      "params": {
+        "appId": "btc-shopflow-admin-app",
+        "eventType": "route:navigation",
+        "routePath": "/order",
+        "performanceRange": {
+          "duration": {
+            "min": 500
+          }
+        },
+        "timeRange": {
+          "startTime": "2026-01-15T10:00:00.000Z",
+          "endTime": "2026-01-15T11:00:00.000Z"
+        }
+      }
+    },
+    "example11_complex_query": {
+      "description": "复杂组合查询：多条件组合",
+      "params": {
+        "appId": "btc-shopflow-admin-app",
+        "eventType": "api:request,api:response,error:api",
+        "apiEndpoint": "/api/order",
+        "apiMethod": "POST",
+        "apiStatusCode": 500,
+        "apiResponseTimeRange": {
+          "min": 1000,
+          "max": 5000
+        },
+        "errorType": "api",
+        "hasError": true,
+        "routePath": "/order/create",
+        "userId": "user-12345",
+        "deviceType": "mobile",
+        "timeRange": {
+          "startTime": "2026-01-15T10:00:00.000Z",
+          "endTime": "2026-01-15T11:00:00.000Z"
+        }
+      }
+    },
+    "example12_performance_range": {
+      "description": "性能范围查询：查找多个性能指标异常的记录",
+      "params": {
+        "appId": "btc-shopflow-admin-app",
+        "eventType": "performance:page",
+        "performanceRange": {
+          "fcp": {
+            "min": 1800
+          },
+          "lcp": {
+            "min": 2500
+          },
+          "ttfb": {
+            "min": 600
+          },
+          "duration": {
+            "min": 2000,
+            "max": 10000
+          }
+        },
+        "timeRange": {
+          "startTime": "2026-01-15T10:00:00.000Z",
+          "endTime": "2026-01-15T11:00:00.000Z"
+        }
+      }
+    }
+  },
+  "field_descriptions": {
+    "appId": {
+      "type": "string",
+      "required": false,
+      "description": "应用ID（完整格式，如 'btc-shopflow-admin-app'）",
+      "example": "btc-shopflow-admin-app"
+    },
+    "logLevel": {
+      "type": "string",
+      "required": false,
+      "enum": ["DEBUG", "INFO", "WARN", "ERROR", "FATAL"],
+      "description": "日志级别"
+    },
+    "loggerName": {
+      "type": "string",
+      "required": false,
+      "description": "日志记录器名称"
+    },
+    "messageKeyword": {
+      "type": "string",
+      "required": false,
+      "description": "消息关键词（模糊匹配）"
+    },
+    "timeRange": {
+      "type": "object",
+      "required": false,
+      "properties": {
+        "startTime": {
+          "type": "string",
+          "format": "ISO 8601",
+          "description": "开始时间（ISO 8601 格式）"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "ISO 8601",
+          "description": "结束时间（ISO 8601 格式）"
+        }
+      }
+    },
+    "microAppType": {
+      "type": "string",
+      "required": false,
+      "enum": ["main", "sub", "layout"],
+      "description": "微前端应用类型"
+    },
+    "microAppName": {
+      "type": "string",
+      "required": false,
+      "description": "微前端应用名称"
+    },
+    "microAppInstanceId": {
+      "type": "string",
+      "required": false,
+      "description": "微前端应用实例ID"
+    },
+    "microAppLifecycle": {
+      "type": "string",
+      "required": false,
+      "enum": ["mount", "unmount", "update"],
+      "description": "微前端应用生命周期状态"
+    },
+    "eventType": {
+      "type": "string",
+      "required": false,
+      "description": "事件类型（支持多个，用逗号分隔）",
+      "enum_values": [
+        "app:lifecycle",
+        "route:navigation",
+        "api:request",
+        "api:response",
+        "performance:page",
+        "performance:resource",
+        "error:runtime",
+        "error:api",
+        "error:resource",
+        "user:action",
+        "business:event"
+      ],
+      "example": "api:request,api:response"
+    },
+    "sessionId": {
+      "type": "string",
+      "required": false,
+      "description": "会话ID"
+    },
+    "userId": {
+      "type": "string",
+      "required": false,
+      "description": "用户ID"
+    },
+    "routePath": {
+      "type": "string",
+      "required": false,
+      "description": "路由路径（支持模糊匹配）",
+      "example": "/order"
+    },
+    "routeName": {
+      "type": "string",
+      "required": false,
+      "description": "路由名称（精确匹配）"
+    },
+    "apiEndpoint": {
+      "type": "string",
+      "required": false,
+      "description": "API 端点（支持模糊匹配）",
+      "example": "/api/order/list"
+    },
+    "apiMethod": {
+      "type": "string",
+      "required": false,
+      "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+      "description": "HTTP 方法"
+    },
+    "apiStatusCode": {
+      "type": "number",
+      "required": false,
+      "description": "HTTP 状态码",
+      "example": 200
+    },
+    "apiResponseTimeRange": {
+      "type": "object",
+      "required": false,
+      "properties": {
+        "min": {
+          "type": "number",
+          "description": "最小响应时间（毫秒）"
+        },
+        "max": {
+          "type": "number",
+          "description": "最大响应时间（毫秒）"
+        }
+      },
+      "description": "API 响应时间范围（毫秒）"
+    },
+    "errorType": {
+      "type": "string",
+      "required": false,
+      "enum": ["runtime", "api", "route", "resource", "performance"],
+      "description": "错误类型"
+    },
+    "errorCode": {
+      "type": "string",
+      "required": false,
+      "description": "错误代码"
+    },
+    "hasError": {
+      "type": "boolean",
+      "required": false,
+      "description": "是否有错误"
+    },
+    "performanceRange": {
+      "type": "object",
+      "required": false,
+      "properties": {
+        "duration": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          },
+          "description": "持续时间范围（毫秒）"
+        },
+        "fcp": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          },
+          "description": "FCP 范围（毫秒）"
+        },
+        "lcp": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          },
+          "description": "LCP 范围（毫秒）"
+        },
+        "fid": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          },
+          "description": "FID 范围（毫秒）"
+        },
+        "cls": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          },
+          "description": "CLS 范围"
+        },
+        "ttfb": {
+          "type": "object",
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          },
+          "description": "TTFB 范围（毫秒）"
+        }
+      },
+      "description": "性能指标范围"
+    },
+    "resourceType": {
+      "type": "string",
+      "required": false,
+      "enum": ["script", "stylesheet", "image", "font", "other"],
+      "description": "资源类型"
+    },
+    "resourceUrl": {
+      "type": "string",
+      "required": false,
+      "description": "资源 URL（支持模糊匹配）"
+    },
+    "userActionType": {
+      "type": "string",
+      "required": false,
+      "enum": ["click", "submit", "scroll", "focus", "blur", "change"],
+      "description": "用户操作类型"
+    },
+    "userActionElement": {
+      "type": "string",
+      "required": false,
+      "description": "操作元素（支持模糊匹配）"
+    },
+    "businessEventName": {
+      "type": "string",
+      "required": false,
+      "description": "业务事件名称（支持多个，用逗号分隔）",
+      "example": "order:create,order:pay"
+    },
+    "businessEventCategory": {
+      "type": "string",
+      "required": false,
+      "description": "业务事件分类",
+      "example": "order"
+    },
+    "deviceType": {
+      "type": "string",
+      "required": false,
+      "enum": ["desktop", "mobile", "tablet"],
+      "description": "设备类型"
+    },
+    "browser": {
+      "type": "string",
+      "required": false,
+      "description": "浏览器（支持模糊匹配）",
+      "example": "Chrome"
+    },
+    "os": {
+      "type": "string",
+      "required": false,
+      "description": "操作系统（支持模糊匹配）",
+      "example": "Windows"
+    },
+    "action": {
+      "type": "string",
+      "required": false,
+      "description": "操作（向后兼容字段，映射到 userActionType）"
+    }
+  },
+  "query_mapping": {
+    "description": "查询参数到存储结构的映射关系",
+    "mappings": {
+      "eventType": "extensions.eventType",
+      "userId": "extensions.userId",
+      "sessionId": "extensions.sessionId",
+      "routePath": "extensions.route.routePath",
+      "routeName": "extensions.route.routeName",
+      "apiEndpoint": "extensions.api.endpoint",
+      "apiMethod": "extensions.api.method",
+      "apiStatusCode": "extensions.api.statusCode",
+      "apiResponseTimeRange": "extensions.api.responseTime",
+      "errorType": "extensions.error.errorType",
+      "errorCode": "extensions.error.errorCode",
+      "hasError": "extensions.error (存在性查询)",
+      "performanceRange.duration": "extensions.performance.duration",
+      "performanceRange.fcp": "extensions.performance.fcp",
+      "performanceRange.lcp": "extensions.performance.lcp",
+      "performanceRange.fid": "extensions.performance.fid",
+      "performanceRange.cls": "extensions.performance.cls",
+      "performanceRange.ttfb": "extensions.performance.ttfb",
+      "resourceType": "extensions.resource.type",
+      "resourceUrl": "extensions.resource.url",
+      "userActionType": "extensions.userAction.actionType",
+      "userActionElement": "extensions.userAction.elementType",
+      "businessEventName": "extensions.business.eventName",
+      "businessEventCategory": "extensions.business.eventCategory",
+      "deviceType": "extensions.system.device.deviceType",
+      "browser": "extensions.system.device.browser",
+      "os": "extensions.system.device.os"
+    }
+  },
+  "query_types": {
+    "exact_match": [
+      "appId",
+      "logLevel",
+      "loggerName",
+      "microAppType",
+      "microAppName",
+      "microAppLifecycle",
+      "eventType",
+      "sessionId",
+      "userId",
+      "routeName",
+      "apiMethod",
+      "apiStatusCode",
+      "errorType",
+      "errorCode",
+      "resourceType",
+      "userActionType",
+      "businessEventName",
+      "businessEventCategory",
+      "deviceType"
+    ],
+    "fuzzy_match": [
+      "messageKeyword",
+      "routePath",
+      "apiEndpoint",
+      "resourceUrl",
+      "userActionElement",
+      "browser",
+      "os"
+    ],
+    "range_query": [
+      "apiResponseTimeRange",
+      "performanceRange"
+    ],
+    "existence_query": [
+      "hasError"
+    ],
+    "multiple_values": [
+      "eventType",
+      "businessEventName"
+    ]
+  }
+}

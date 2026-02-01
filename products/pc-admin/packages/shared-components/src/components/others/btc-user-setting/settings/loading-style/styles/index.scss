@@ -1,0 +1,417 @@
+.loading-style-settings {
+  .setting-box-wrap {
+    margin-top: var(--btc-spacing-5);
+    gap: var(--btc-spacing-2-5) var(--btc-spacing-4);
+  }
+
+  .setting-item {
+    flex: 1 1 calc(33.333% - 11px); // 每排展示3个
+    max-width: calc(33.333% - 11px); // 每排展示3个
+    min-width: 0;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+
+    &:focus-visible .loading-style-preview {
+      border-color: var(--el-color-primary);
+    }
+
+    &:hover .loading-style-preview {
+      border-color: var(--el-border-color);
+    }
+
+    &.is-active .loading-style-preview {
+      border-color: var(--el-color-primary);
+    }
+
+    &.is-active .name {
+      color: var(--el-color-primary);
+      font-weight: 600;
+    }
+  }
+
+  .loading-style-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: calc(var(--btc-spacing-24) + var(--btc-spacing-1)); // 96px + 4px
+    border: var(--btc-spacing-0-5) solid var(--el-border-color-light);
+    border-radius: var(--btc-spacing-2-5);
+    transition: border-color 0.2s ease;
+  }
+
+  .loading-preview__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .loading-preview-circle {
+    width: var(--btc-spacing-11);
+    height: var(--btc-spacing-11);
+    border: var(--btc-spacing-2) solid currentColor;
+    border-bottom-color: var(--btc-loading-circle-gap);
+    border-radius: var(--btc-spacing-8);
+    position: relative;
+    animation:
+      loading-spin 1s infinite cubic-bezier(0.17, 0.67, 0.83, 0.67),
+      loading-color-change 2s infinite ease-in;
+    transform: rotate(0deg);
+    box-sizing: border-box;
+    color: var(--el-color-primary);
+
+    &::before,
+    &::after {
+      content: '';
+      display: inline-block;
+      position: absolute;
+      bottom: calc(0px - var(--btc-spacing-0-5));
+      height: var(--btc-spacing-2);
+      width: var(--btc-spacing-2);
+      border-radius: var(--btc-spacing-2-5);
+      background-color: currentColor;
+    }
+
+    &::before {
+      left: calc(0px - var(--btc-spacing-0-5));
+    }
+
+    &::after {
+      right: calc(0px - var(--btc-spacing-0-5));
+    }
+  }
+
+  .loading-preview-dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--btc-spacing-10);
+    height: var(--btc-spacing-10);
+
+    svg {
+      color: currentColor;
+    }
+
+    .spinner {
+      // SVG viewBox 是 0 0 40 40，中心点是 (20, 20)，transform-origin 使用 SVG 坐标系统
+      transform-origin: var(--btc-spacing-5) var(--btc-spacing-5);
+      animation: loading-dots-rotate 1.6s linear infinite;
+    }
+
+    .dot {
+      animation:
+        loading-dots-fade 1.6s linear infinite,
+        loading-dots-color-change 3.2s linear infinite;
+
+      &.dot-1 {
+        fill: var(--el-color-primary);
+        animation-delay: 0s, 0s;
+      }
+
+      &.dot-2 {
+        fill: var(--el-color-success);
+        animation-delay: 0.4s, 0.8s;
+      }
+
+      &.dot-3 {
+        fill: var(--el-color-warning);
+        animation-delay: 0.8s, 1.6s;
+      }
+
+      &.dot-4 {
+        fill: var(--el-color-danger);
+        animation-delay: 1.2s, 2.4s;
+      }
+    }
+  }
+
+  @keyframes loading-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes loading-color-change {
+    0% {
+      color: var(--el-color-primary);
+    }
+    25% {
+      color: var(--el-color-success);
+    }
+    50% {
+      color: var(--el-color-warning);
+    }
+    75% {
+      color: var(--el-color-danger);
+    }
+    100% {
+      color: var(--el-color-primary);
+    }
+  }
+
+  @keyframes loading-dots-rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes loading-dots-fade {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes loading-dots-color-change {
+    0% {
+      fill: var(--el-color-primary);
+    }
+    25% {
+      fill: var(--el-color-success);
+    }
+    50% {
+      fill: var(--el-color-warning);
+    }
+    75% {
+      fill: var(--el-color-danger);
+    }
+    100% {
+      fill: var(--el-color-primary);
+    }
+  }
+
+  .loading-preview-gradient {
+    position: relative;
+    width: var(--btc-spacing-10);
+    height: var(--btc-spacing-10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loading-preview-gradient-circle {
+    width: var(--btc-spacing-10);
+    height: var(--btc-spacing-10);
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--el-color-primary), var(--el-color-danger), var(--el-color-primary));
+    animation: loading-gradient-rotate 2s linear infinite;
+    position: relative;
+  }
+
+  .loading-preview-gradient-circle::before {
+    content: '';
+    position: absolute;
+    inset: var(--btc-spacing-1-5);
+    background: var(--el-bg-color);
+    border-radius: 50%;
+  }
+
+  .loading-preview-progress {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--btc-spacing-2-5);
+  }
+
+  .loading-preview-progress .progress-bar-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: var(--btc-spacing-72); // 288px
+  }
+
+  .loading-preview-progress .progress-bar-track {
+    position: relative;
+    flex: 1;
+    height: var(--btc-spacing-1-5);
+    background: color-mix(in srgb, var(--el-text-color-primary) 10%, transparent);
+    border-radius: var(--btc-spacing-1);
+    overflow: hidden;
+    box-shadow:
+      inset 0 var(--btc-spacing-0-5) var(--btc-spacing-1) color-mix(in srgb, var(--el-text-color-primary) 18%, transparent),
+      0 var(--btc-spacing-0-5) 0 color-mix(in srgb, var(--el-text-color-primary) 8%, transparent);
+  }
+
+  .loading-preview-progress .progress-bar-fill {
+    position: relative;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      var(--el-color-primary) 0%,
+      var(--el-color-success) 25%,
+      var(--el-color-warning) 50%,
+      var(--el-color-danger) 75%,
+      var(--el-color-primary) 100%
+    );
+    background-size: 200% 100%;
+    border-radius: var(--btc-spacing-1);
+    animation: loading-progress-gradient 2s linear infinite;
+    box-shadow:
+      0 0 var(--btc-spacing-2) color-mix(in srgb, var(--el-color-primary) 35%, transparent),
+      inset 0 var(--btc-spacing-0-5) 0 color-mix(in srgb, var(--el-text-color-primary) 12%, transparent);
+    overflow: hidden;
+  }
+
+  .loading-preview-progress .progress-bar-shine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--el-text-color-primary) 22%, transparent) 50%,
+      transparent 100%
+    );
+    animation: loading-progress-shine 1.5s ease-in-out infinite;
+    border-radius: var(--btc-spacing-1);
+  }
+
+  .loading-preview-progress .progress-percentage {
+    font-size: var(--btc-spacing-3-5);
+    font-weight: 700;
+    color: var(--el-text-color-primary);
+    min-width: var(--btc-spacing-10);
+    text-align: right;
+    text-shadow: 0 var(--btc-spacing-0-5) var(--btc-spacing-1) color-mix(in srgb, var(--el-text-color-primary) 20%, transparent);
+    margin-left: var(--btc-spacing-2); // 使用 margin-left 替代 gap，保持与进度条的间距
+  }
+
+  @keyframes loading-progress-gradient {
+    0% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 200% 0%;
+    }
+  }
+
+  @keyframes loading-progress-shine {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(200%);
+    }
+  }
+
+  @keyframes loading-gradient-rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .loading-preview-flower {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--btc-spacing-10);
+    height: var(--btc-spacing-10);
+    margin: 0 auto;
+
+    svg {
+      width: var(--btc-spacing-10);
+      height: var(--btc-spacing-10);
+      display: block;
+      // 确保 SVG 居中，与 dots 预览保持一致
+      vertical-align: middle;
+    }
+
+    .flower-preview-group {
+      // 旋转中心应该是主圆圆心，在 viewBox="-90 -90 180 180" 中，主圆圆心在 (0, 0)
+      // 使用 0 0 确保围绕主圆圆心定点旋转
+      transform-origin: 0 0;
+      animation: loading-flower-rotate 3s linear infinite;
+    }
+
+    .petal {
+      stroke-width: 1.2;
+      stroke-dasharray: none;
+      animation: loading-flower-petal-pulse 2s ease-in-out infinite;
+      opacity: 1;
+    }
+
+    .petal-1 {
+      stroke: var(--el-color-primary);
+      fill: var(--el-color-primary);
+      animation-delay: 0s;
+    }
+
+    .petal-2 {
+      stroke: var(--el-color-warning);
+      fill: var(--el-color-warning);
+      animation-delay: 0.25s;
+    }
+
+    .petal-3 {
+      stroke: color-mix(in srgb, var(--el-color-warning) 70%, var(--el-color-primary));
+      fill: color-mix(in srgb, var(--el-color-warning) 70%, var(--el-color-primary));
+      animation-delay: 0.5s;
+    }
+
+    .petal-4 {
+      stroke: var(--el-color-success);
+      fill: var(--el-color-success);
+      animation-delay: 0.75s;
+    }
+
+    .petal-5 {
+      stroke: var(--el-color-info);
+      fill: var(--el-color-info);
+      animation-delay: 1s;
+    }
+
+    .petal-6 {
+      stroke: var(--el-color-primary);
+      fill: var(--el-color-primary);
+      animation-delay: 1.25s;
+    }
+
+    .petal-7 {
+      stroke: color-mix(in srgb, var(--el-color-primary) 55%, var(--el-color-danger));
+      fill: color-mix(in srgb, var(--el-color-primary) 55%, var(--el-color-danger));
+      animation-delay: 1.5s;
+    }
+
+    .petal-8 {
+      stroke: var(--el-color-danger);
+      fill: var(--el-color-danger);
+      animation-delay: 1.75s;
+    }
+  }
+
+  @keyframes loading-flower-rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes loading-flower-petal-pulse {
+    0%,
+    100% {
+      opacity: 0.8;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+

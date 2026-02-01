@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Bridge</title>
+    <style>
+        /* 确保页面完全隐藏 */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        (function() {
+            'use strict';
+
+            // 允许的子域列表（安全校验）
+            const ALLOWED_ORIGINS = [
+                'https://bellis.com.cn',
+                'https://admin.bellis.com.cn',
+                'https://logistics.bellis.com.cn',
+                'https://finance.bellis.com.cn',
+                'https://engineering.bellis.com.cn',
+                'https://quality.bellis.com.cn',
+                'https://production.bellis.com.cn',
+                'https://operations.bellis.com.cn',
+                // 开发环境支持（可选）
+                'http://localhost',
+                'http://127.0.0.1'
+            ];
+
+            // Broadcast Channel 频道名称
+            const CHANNEL_NAME = 'bellis-auth-channel';
+
+            // 检查 Broadcast Channel 支持
+            if (typeof BroadcastChannel === 'undefined') {
+                console.warn('[Auth Bridge] BroadcastChannel is not supported, falling back to localStorage events');
+                // 降级到 localStorage 事件方案
+                setupLocalStorageFallback();
+                return;
+            }
+
+            // 创建全局广播频道
+            const authChannel = new BroadcastChannel(CHANNEL_NAME);
+
+            // 存储已注册的父窗口 origin（用于消息转发）
+            const registeredOrigins = new Set();
+
+            /**
+             * 校验 origin 是否在允许列表中
+             */
+            function isAllowedOrigin(origin) {
+                // 检查精确匹配
+                if (ALLOWED_ORIGINS.includes(origin)) {
+                    return true;
+                }
+
+                // 检查开发环境的端口变体（如 http://localhost:5173）
+                if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+                    return true;
+                }
+
+                // 检查开发环境的 IP 地址（如 http://10.80.8.199:8080）
+                // 支持私有 IP 地址段：10.x.x.x, 172.16-31.x.x, 192.168.x.x
+                const ipPattern = /^http:\/\/(10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|192\.168\.\d+\.\d+)(:\d+)?$/;
+                if (ipPattern.test(origin)) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            /**
+             * 接收子域页面通过 postMessage 发送的消息
+             */
+            window.addEventListener('message', function(e) {
+                // 安全校验：仅允许指定子域的消息
+                if (!isAllowedOrigin(e.origin)) {
+                    if (window.console && console.warn) {
+                        console.warn('[Auth Bridge] Rejected message from unauthorized origin:', e.origin);
+                    }
+                    return;
+                }
+
+                // 记录注册的 origin（用于后续消息转发）
+                if (e.data && e.data.type === 'register') {
+                    registeredOrigins.add(e.origin);
+                    // 回复注册成功
+                    e.source.postMessage({ type: 'registered', timestamp: Date.now() }, e.origin);
+                    return;
+                }
+
+                // 处理登出和登录消息
+                if (e.data && (e.data.type === 'logout' || e.data.type === 'login')) {
+                    // 记录触发消息的 origin
+                    const message = {
+                        type: e.data.type,
+                        origin: e.origin,
+                        payload: e.data.payload,
+                        timestamp: e.data.timestamp || Date.now()
+                    };
+
+                    // 通过 Broadcast Channel 广播消息
+                    try {
+                        authChannel.postMessage(message);
+                    } catch (error) {
+                        console.error('[Auth Bridge] Failed to broadcast', e.data.type, 'message:', error);
+                    }
+                }
+            });
+
+            /**
+             * 接收 Broadcast Channel 的消息（登出或登录），转发给所有注册的父窗口
+             */
+            authChannel.onmessage = function(e) {
+                if (e.data && (e.data.type === 'logout' || e.data.type === 'login')) {
+                    // 向所有注册的父窗口发送通知
+                    // 注意：由于同源策略，我们只能向 window.parent 发送消息
+                    // 但 Broadcast Channel 已经处理了跨标签页通信
+                    // 这里主要是为了确保当前 iframe 的父窗口也能收到消息
+                    try {
+                        if (window.parent && window.parent !== window) {
+                            window.parent.postMessage(e.data, '*');
+                        }
+                    } catch (error) {
+                        // 静默失败，Broadcast Channel 已经处理了主要通信
+                        if (window.console && console.warn) {
+                            console.warn('[Auth Bridge] Failed to forward', e.data.type, 'message to parent:', error);
+                        }
+                    }
+                }
+            };
+
+            /**
+             * 降级方案：使用 localStorage 事件（兼容老浏览器）
+             */
+            function setupLocalStorageFallback() {
+                // 接收子域 postMessage 消息
+                window.addEventListener('message', function(e) {
+                    if (!isAllowedOrigin(e.origin)) {
+                        return;
+                    }
+
+                    if (e.data && e.data.type === 'logout') {
+                        // 修改 localStorage 触发 storage 事件
+                        const key = 'bellis-logout-signal';
+                        const value = Date.now().toString();
+                        try {
+                            localStorage.setItem(key, value);
+                            // 立即删除，避免冗余存储
+                            setTimeout(function() {
+                                try {
+                                    localStorage.removeItem(key);
+                                } catch (err) {
+                                    // 忽略错误
+                                }
+                            }, 100);
+                        } catch (error) {
+                            console.error('[Auth Bridge] Failed to set localStorage:', error);
+                        }
+                    }
+                });
+
+                // 监听 localStorage 变化，转发给父窗口
+                window.addEventListener('storage', function(e) {
+                    if (e.key === 'bellis-logout-signal') {
+                        try {
+                            if (window.parent && window.parent !== window) {
+                                window.parent.postMessage({ type: 'logout', origin: window.location.origin }, '*');
+                            }
+                        } catch (error) {
+                            console.warn('[Auth Bridge] Failed to forward storage event:', error);
+                        }
+                    }
+                });
+            }
+
+            // 通知父窗口通信桥已就绪
+            if (window.parent && window.parent !== window) {
+                try {
+                    window.parent.postMessage({ type: 'bridge-ready', timestamp: Date.now() }, '*');
+                } catch (error) {
+                    // 静默失败
+                }
+            }
+        })();
+    </script>
+</body>
+</html>
+

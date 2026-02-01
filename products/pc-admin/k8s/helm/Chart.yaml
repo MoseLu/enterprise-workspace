@@ -1,0 +1,17 @@
+apiVersion: v2
+name: btc-shopflow
+description: BTC ShopFlow 微前端应用 Helm Chart
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - btc-shopflow
+  - microfrontend
+  - vue
+  - qiankun
+home: https://github.com/BellisGit/btc-shopflow-monorepo
+sources:
+  - https://github.com/BellisGit/btc-shopflow-monorepo
+maintainers:
+  - name: BTC IT Team
+    email: mlu@bellis-technology.cn

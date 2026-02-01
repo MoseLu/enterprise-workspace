@@ -1,0 +1,191 @@
+btc-shopflow-monorepo
+│
+├── apps/ (应用架构)
+│   ├── admin-app              # 管理后台应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # qiankun 生命周期 (bootstrap/mount/unmount)
+│   │       ├── bootstrap/
+│   │       │   └── index.ts         # createAdminApp/mountAdminApp
+│   │       ├── bootstrap/core/      # router/store/i18n/ui
+│   │       └── App.vue              # 根组件
+│   │
+│   ├── dashboard-app          # 仪表板应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # qiankun 生命周期
+│   │       ├── bootstrap/
+│   │       │   └── index.ts         # createDashboardApp/mountDashboardApp
+│   │       ├── bootstrap/core/      # router/store/i18n/ui
+│   │       └── App.vue
+│   │
+│   ├── docs-app              # 文档应用 (VitePress)
+│   │   ├── .vitepress/              # VitePress 配置
+│   │   └── index.md                 # 文档入口
+│   │
+│   ├── engineering-app       # 工程应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # qiankun 生命周期
+│   │       ├── bootstrap/
+│   │       │   └── index.ts         # createEngineeringApp/mountEngineeringApp
+│   │       ├── bootstrap/core/      # router/store/i18n/ui
+│   │       └── App.vue
+│   │
+│   ├── finance-app           # 财务应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # qiankun 生命周期
+│   │       ├── bootstrap/
+│   │       │   └── index.ts         # createFinanceApp/mountFinanceApp
+│   │       ├── bootstrap/core/      # router/store/i18n/ui
+│   │       └── App.vue
+│   │
+│   ├── home-app              # 首页应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # Vue createApp
+│   │       ├── router/
+│   │       └── App.vue
+│   │
+│   ├── layout-app            # 布局应用 (主容器/基座)
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # 导入 runtime/main
+│   │       ├── runtime/
+│   │       │   ├── main.ts          # 实际运行时代码
+│   │       │   └── App.vue
+│   │       └── template/            # 模板文件
+│   │
+│   ├── logistics-app         # 物流应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # qiankun 生命周期
+│   │       ├── bootstrap/
+│   │       │   └── index.ts         # createLogisticsApp/mountLogisticsApp
+│   │       ├── bootstrap/core/      # router/store/i18n/ui
+│   │       └── App.vue
+│   │
+│   ├── main-app              # 主应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # qiankun 生命周期
+│   │       ├── bootstrap/
+│   │       │   └── index.ts         # createMainApp/mountMainApp
+│   │       ├── bootstrap/core/      # router/store/i18n/ui
+│   │       └── App.vue
+│   │
+│   ├── mobile-app            # 移动端应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # Vue createApp + PWA
+│   │       ├── router/
+│   │       ├── i18n/
+│   │       └── App.vue
+│   │
+│   ├── operations-app        # 运营应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # qiankun 生命周期
+│   │       ├── bootstrap/
+│   │       │   └── index.ts         # createOperationsApp/mountOperationsApp
+│   │       ├── bootstrap/core/      # router/store/i18n/ui
+│   │       └── App.vue
+│   │
+│   ├── personnel-app         # 人事应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # qiankun 生命周期
+│   │       ├── bootstrap/
+│   │       │   └── index.ts         # createPersonnelApp/mountPersonnelApp
+│   │       ├── bootstrap/core/      # router/store/i18n/ui
+│   │       └── App.vue
+│   │
+│   ├── production-app        # 生产应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # qiankun 生命周期
+│   │       ├── bootstrap/
+│   │       │   └── index.ts         # createProductionApp/mountProductionApp
+│   │       ├── bootstrap/core/      # router/store/i18n/ui
+│   │       └── App.vue
+│   │
+│   ├── quality-app           # 质量应用
+│   │   ├── index.html
+│   │   └── src/
+│   │       ├── main.ts              # qiankun 生命周期
+│   │       ├── bootstrap/
+│   │       │   └── index.ts         # createQualityApp/mountQualityApp
+│   │       ├── bootstrap/core/      # router/store/i18n/ui
+│   │       └── App.vue
+│   │
+│   └── system-app            # 系统应用
+│       ├── index.html
+│       └── src/
+│           ├── main.ts              # qiankun 生命周期
+│           ├── bootstrap-subapp.ts # createSystemApp/mountSystemApp
+│           ├── bootstrap/         # core/integrations/handlers
+│           └── App.vue
+│
+└── packages/ (包基础架构)
+    │
+    ├── @build-utils/
+    │   └── logger/            # 构建工具日志包
+    │       └── src/
+    │
+    ├── design-tokens/         # 设计令牌包
+    │   ├── tokens/
+    │   │   ├── base/          # 基础令牌 (color, spacing)
+    │   │   └── btc.json       # BTC 品牌令牌
+    │   └── src/
+    │
+    ├── shared-components/     # 共享组件库
+    │   └── src/               # Vue 组件、TS 类型、SVG 图标等
+    │
+    ├── shared-core/           # 共享核心包
+    │   └── src/
+    │       ├── auth/          # 认证相关
+    │       ├── btc/           # BTC 框架核心
+    │       ├── composables/   # Vue Composables
+    │       │   ├── form-helpers/
+    │       │   ├── subapp-i18n/
+    │       │   ├── subapp-lifecycle/
+    │       │   └── user-check/
+    │       ├── configs/       # 配置管理
+    │       │   ├── unified-env-config.ts
+    │       │   ├── app-configs-collected.ts
+    │       │   └── qiankun-config-center.ts
+    │       ├── eps/           # EPS (Endpoint Service)
+    │       ├── manifest/      # 清单文件
+    │       ├── types/         # 类型定义
+    │       └── utils/         # 工具函数
+    │           ├── cdn/
+    │           ├── cookie/
+    │           ├── date/
+    │           ├── error-monitor/
+    │           ├── form/
+    │           ├── http/
+    │           ├── i18n/
+    │           ├── logger/
+    │           ├── qiankun/
+    │           ├── storage/
+    │           └── zod/
+    │
+    ├── shared-router/         # 共享路由包
+    │   └── src/
+    │       ├── guards/        # 路由守卫
+    │       │   ├── authGuard.ts
+    │       │   ├── loginRedirectGuard.ts
+    │       │   ├── logoutGuard.ts
+    │       │   └── titleGuard.ts
+    │       └── utils/         # 路由工具
+    │
+    └── vite-plugin/           # Vite 插件包
+        └── src/
+            ├── copy-logo/     # Logo 复制插件
+            ├── eps/           # EPS 生成插件
+            ├── fix-chunk-references/  # 修复 chunk 引用
+            ├── inject-fallback-title/ # 注入标题
+            ├── proxy/         # 代理插件
+            ├── svg/           # SVG 处理插件
+            └── tag/           # 标签插件

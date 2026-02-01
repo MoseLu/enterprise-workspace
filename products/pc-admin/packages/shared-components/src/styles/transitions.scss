@@ -1,0 +1,64 @@
+// 页面切换过渡动画样式
+// 统一管理所有子应用的页面切换动画效果
+
+// slide-left 动画（默认，向右滑动消失效果）
+.slide-left-enter-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.25s ease-in-out 0.1s;
+  background-color: var(--el-bg-color);
+  z-index: 1;
+}
+
+.slide-left-leave-active {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 0.25s ease-in-out;
+  background-color: var(--el-bg-color);
+  z-index: 0;
+}
+
+.slide-left-enter-to {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+.slide-left-enter-from {
+  transform: translate3d(-5%, 0, 0);
+  opacity: 0;
+}
+
+.slide-left-leave-to {
+  transform: translate3d(5%, 0, 0);
+  opacity: 0;
+}
+
+.slide-left-leave-from {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+// fade 淡入淡出动画（保留用于向后兼容）
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+}
+

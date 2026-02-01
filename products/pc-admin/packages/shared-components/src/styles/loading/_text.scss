@@ -1,0 +1,17 @@
+// ==================== Loading 文本动画样式 ====================
+
+// 文本动画（可选）
+#Loading .preload__name,
+#Loading .preload__title,
+#Loading .preload__sub-title {
+	animation: btc-loading-text-fade-in 0.5s ease-in;
+}
+
+@keyframes btc-loading-text-fade-in {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}

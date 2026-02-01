@@ -1,0 +1,19 @@
+{
+  "recycle": {
+    "operator": "操作人",
+    "operation_desc": "操作描述",
+    "ip_address": "IP地址",
+    "deleted_data": "删除数据",
+    "request_url": "请求URL",
+    "request_params": "请求参数",
+    "create_time": "创建时间",
+    "restore": "恢复",
+    "batch_restore": "批量恢复",
+    "restore_confirm": "确定要恢复这条数据吗？",
+    "batch_restore_confirm": "确定要恢复选中的 {count} 条数据吗？",
+    "restore_success": "恢复成功",
+    "batch_restore_success": "成功恢复 {count} 条数据",
+    "please_select_data": "请选择要恢复的数据",
+    "restore_failed": "恢复失败"
+  }
+}

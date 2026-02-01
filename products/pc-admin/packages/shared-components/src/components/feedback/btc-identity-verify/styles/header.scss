@@ -1,0 +1,43 @@
+// 头部样式
+.identity-verify {
+  // 顶部Header区域（左右分栏）
+  &__header {
+    display: flex;
+    padding: 12px 0 16px;
+
+    // Header左侧：标题
+    &-left {
+      width: 180px;
+      flex-shrink: 0;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+    }
+
+    // Header右侧：提示语
+    &-right {
+      flex: 1;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+    }
+
+    &-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--el-text-color-primary);
+    }
+
+    &-desc {
+      font-size: 14px;
+      color: var(--el-text-color-regular);
+      line-height: 1.5;
+    }
+
+    &-account {
+      color: var(--el-color-primary);
+      font-weight: 500;
+    }
+  }
+}
+

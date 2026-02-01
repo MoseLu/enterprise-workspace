@@ -1,0 +1,68 @@
+.strategy-designer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--el-bg-color-page);
+
+  // 确保 btc-grid-group 有正确的高度
+  .btc-grid-group {
+    height: 100%;
+    flex: 1;
+
+    &__header {
+      padding: 10px;
+    }
+  }
+
+  .canvas-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0 16px;
+  }
+
+  .zoom-controls {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    .el-button {
+      margin: 0;
+      border-radius: 0;
+
+      &:first-child {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      &:last-child {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+
+    .zoom-input {
+      flex: 1;
+      text-align: center;
+      margin: 0;
+
+      .el-input__wrapper {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+
+        .el-input__inner {
+          text-align: center;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .strategy-input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

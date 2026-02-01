@@ -1,0 +1,168 @@
+{
+  "description": "日志存储结构完整示例（批次 + 日志数组）",
+  "note": "这是后端返回的结构（包含数据库生成的 id 和 createdAt），前端上报时不需要 id 和 createdAt",
+  
+  "example_batch_response": {
+    "description": "后端返回的批次结构（包含数据库生成的字段）",
+    "id": 335,
+    "appId": "btc-shopflow-production-app",
+    "appName": "production",
+    "timestamp": "2026-01-16T02:04:15.000+00:00",
+    "createdAt": "2026-01-16T02:04:15.000+00:00",
+    "logs": [
+      {
+        "timestamp": "2026-01-16T02:04:14.832Z",
+        "logLevel": "DEBUG",
+        "loggerName": "log-reporter-test",
+        "microApp": {
+          "microAppType": "sub",
+          "microAppName": "production-app",
+          "microAppInstanceId": "production-app-instance-1768529054832",
+          "microAppLifecycle": "mount"
+        },
+        "message": "这是一条测试日志消息",
+        "data": null,
+        "extensions": {
+          "eventType": "app:lifecycle",
+          "performance": {
+            "duration": 1234
+          }
+        }
+      },
+      {
+        "timestamp": "2026-01-16T02:04:15.832Z",
+        "logLevel": "INFO",
+        "loggerName": "log-reporter-test",
+        "microApp": {
+          "microAppType": "sub",
+          "microAppName": "production-app",
+          "microAppInstanceId": "production-app-instance-1768529054832",
+          "microAppLifecycle": "mount"
+        },
+        "message": "批量测试日志 1",
+        "data": null,
+        "extensions": {
+          "eventType": "route:navigation",
+          "route": {
+            "from": "/dashboard",
+            "to": "/order/list",
+            "routePath": "/order/list"
+          },
+          "performance": {
+            "duration": 567
+          }
+        }
+      },
+      {
+        "timestamp": "2026-01-16T02:04:16.832Z",
+        "logLevel": "WARN",
+        "loggerName": "log-reporter-test",
+        "microApp": {
+          "microAppType": "sub",
+          "microAppName": "production-app",
+          "microAppInstanceId": "production-app-instance-1768529054832",
+          "microAppLifecycle": "mount"
+        },
+        "message": "批量测试日志 2",
+        "data": null,
+        "extensions": {
+          "eventType": "api:request",
+          "api": {
+            "endpoint": "/api/order/list",
+            "method": "GET",
+            "responseTime": 2345,
+            "statusCode": 200
+          }
+        }
+      },
+      {
+        "timestamp": "2026-01-16T02:04:17.832Z",
+        "logLevel": "ERROR",
+        "loggerName": "log-reporter-test",
+        "microApp": {
+          "microAppType": "sub",
+          "microAppName": "production-app",
+          "microAppInstanceId": "production-app-instance-1768529054832",
+          "microAppLifecycle": "mount"
+        },
+        "message": "批量测试日志 3",
+        "data": {
+          "name": "TestError",
+          "message": "测试错误信息",
+          "stack": "Error: 测试错误信息\n    at test (test.js:1:1)"
+        },
+        "extensions": {
+          "eventType": "error:api",
+          "error": {
+            "name": "TestError",
+            "message": "测试错误信息",
+            "stack": "Error: 测试错误信息\n    at test (test.js:1:1)",
+            "errorType": "api",
+            "errorCode": "ERR_500"
+          },
+          "api": {
+            "endpoint": "/api/order/create",
+            "method": "POST",
+            "statusCode": 500,
+            "responseTime": 1234
+          }
+        }
+      },
+      {
+        "timestamp": "2026-01-16T02:04:18.832Z",
+        "logLevel": "FATAL",
+        "loggerName": "log-reporter-test",
+        "microApp": {
+          "microAppType": "sub",
+          "microAppName": "production-app",
+          "microAppInstanceId": "production-app-instance-1768529054832",
+          "microAppLifecycle": "mount"
+        },
+        "message": "批量测试日志 4",
+        "data": null,
+        "extensions": {
+          "eventType": "performance:page",
+          "performance": {
+            "fcp": 1200,
+            "lcp": 2500,
+            "fid": 150,
+            "cls": 0.1,
+            "ttfb": 600,
+            "duration": 3000
+          },
+          "route": {
+            "routePath": "/dashboard"
+          }
+        }
+      }
+    ]
+  },
+  
+  "example_batch_request": {
+    "description": "前端上报的批次结构（不包含数据库生成的字段）",
+    "appId": "btc-shopflow-production-app",
+    "appName": "production",
+    "timestamp": "2026-01-16T02:04:15.000+00:00",
+    "logs": [
+      {
+        "timestamp": "2026-01-16T02:04:14.832Z",
+        "logLevel": "DEBUG",
+        "loggerName": "log-reporter-test",
+        "microApp": {
+          "microAppType": "sub",
+          "microAppName": "production-app",
+          "microAppInstanceId": "production-app-instance-1768529054832",
+          "microAppLifecycle": "mount"
+        },
+        "message": "这是一条测试日志消息",
+        "data": null,
+        "extensions": {
+          "eventType": "app:lifecycle",
+          "performance": {
+            "duration": 1234
+          }
+        }
+      }
+    ]
+  }
+}

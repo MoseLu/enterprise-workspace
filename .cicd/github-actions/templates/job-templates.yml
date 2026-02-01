@@ -1,0 +1,45 @@
+# ========================================
+# GitHub Actions 作业模板
+# 通用作业模板，可被其他工作流复用
+# ========================================
+
+# Node.js 构建模板
+jobs:
+  node-build-template:
+    name: Node.js 构建
+    runs-on: ubuntu-latest
+    env:
+      NODE_VERSION: '18'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: node-build
+          path: dist/
+
+# Docker 构建模板
+jobs:
+  docker-build-template:
+    name: Docker 构建
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}

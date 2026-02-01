@@ -1,0 +1,48 @@
+# ========================================
+# GitHub Actions 缓存模板
+# 常用缓存配置集合
+# ========================================
+
+# NPM 缓存配置
+cache:
+  npm:
+    name: NPM 缓存
+    uses: actions/cache@v3
+    with:
+      path: ~/.npm
+      key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+      restore-keys: |
+        ${{ runner.os }}-npm-
+
+# pip 缓存配置
+cache:
+  pip:
+    name: pip 缓存
+    uses: actions/cache@v3
+    with:
+      path: ~/.cache/pip
+      key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+      restore-keys: |
+        ${{ runner.os }}-pip-
+
+# Docker 层缓存配置
+cache:
+  docker:
+    name: Docker 缓存
+    uses: actions/cache@v3
+    with:
+      path: /tmp/.docker-cache
+      key: ${{ runner.os }}-docker-${{ github.sha }}
+      restore-keys: |
+        ${{ runner.os }}-docker-
+
+# 构建产物缓存配置
+cache:
+  build:
+    name: 构建产物缓存
+    uses: actions/cache@v3
+    with:
+      path: dist/
+      key: ${{ runner.os }}-build-${{ github.sha }}
+      restore-keys: |
+        ${{ runner.os }}-build-

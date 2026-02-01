@@ -1,0 +1,143 @@
+/**
+ * Loading 统一样式
+ * 定义所有层级的 loading 动画和样式变量
+ */
+
+// z-index 层级常量
+$ROOT_Z_INDEX: 99999;
+$APP_Z_INDEX: 9999;
+$ROUTE_Z_INDEX: 999;
+$OPERATION_Z_INDEX: 99;
+$COMPONENT_Z_INDEX: 9;
+
+// Loading 动画
+@keyframes btc-loading-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// 全局根级 Loading 样式
+.root-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.root-loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top-color: var(--el-color-primary, #409eff);
+  border-radius: 50%;
+  animation: btc-loading-spin 1s linear infinite;
+}
+
+.root-loading-text {
+  color: var(--el-text-color-regular, #606266);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+// 应用级 Loading 样式
+.app-loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: config.$APP_Z_INDEX;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--el-bg-color);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.app-loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--el-border-color-lighter);
+  border-top-color: var(--el-color-primary);
+  border-radius: 50%;
+  animation: btc-loading-spin 1s linear infinite;
+}
+
+// 路由级 Loading 样式
+.route-loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: config.$ROUTE_Z_INDEX;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--el-bg-color);
+  opacity: 1;
+  pointer-events: auto;
+  min-height: 200px;
+}
+
+.route-loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--el-border-color-lighter);
+  border-top-color: var(--el-color-primary);
+  border-radius: 50%;
+  animation: btc-loading-spin 1s linear infinite;
+}
+
+// 操作级 Loading 样式
+.operation-loading {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: config.$OPERATION_Z_INDEX;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  opacity: 1;
+  pointer-events: auto;
+  min-height: 40px;
+}
+
+.operation-loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--el-border-color-lighter);
+  border-top-color: var(--el-color-primary);
+  border-radius: 50%;
+  animation: btc-loading-spin 1s linear infinite;
+}
+
+.operation-loading-text {
+  margin-top: 8px;
+  color: var(--el-text-color-regular);
+  font-size: 12px;
+}
+
+// 暗色模式适配
+.dark {
+  .root-loading-spinner {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .operation-loading {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+}
+

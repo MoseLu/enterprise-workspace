@@ -1,0 +1,115 @@
+@use '../../../styles/index.scss' as *;
+
+.button-style-settings {
+  .setting-box-wrap {
+    margin-top: 20px;
+    gap: 10px 16px;
+  }
+
+  .setting-item {
+    flex: 1 1 calc(50% - 8px);
+    max-width: calc(50% - 8px);
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+
+    &:focus-visible .btn-style-preview {
+      border-color: var(--el-color-primary);
+    }
+
+    &:hover .btn-style-preview {
+      border-color: var(--el-border-color);
+    }
+
+    &.is-active .btn-style-preview {
+      border-color: var(--el-color-primary);
+    }
+
+    &.is-active .name {
+      color: var(--el-color-primary);
+      font-weight: 600;
+    }
+  }
+
+  .btn-style-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 8px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: 2px solid var(--el-border-color-light);
+    border-radius: 10px;
+    transition: border-color 0.2s ease;
+
+    .btn-preview__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      max-width: 180px;
+      padding: 0 12px;
+    }
+
+    .btn-preview {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 22px;
+      padding: 0 6px;
+      border-radius: 6px;
+      border: 1px solid var(--el-border-color);
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s;
+      gap: 4px;
+      min-width: 48px;
+
+      &.primary {
+        background-color: var(--el-color-primary);
+        color: #fff;
+        border-color: var(--el-color-primary);
+      }
+
+      &.secondary {
+        background-color: var(--el-fill-color-light);
+        color: var(--el-text-color-regular);
+      }
+
+      &.icon-only {
+        min-width: 28px;
+        padding: 0 5px;
+      }
+
+      &.with-text .btn-text {
+        white-space: nowrap;
+      }
+    }
+
+    .btn-icon {
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    &.btn-style-minimal {
+      .btn-preview {
+        background-color: transparent;
+        border-color: var(--el-border-color);
+        color: var(--el-text-color-primary);
+
+        &.primary {
+          border-color: var(--el-color-primary);
+          color: var(--el-color-primary);
+        }
+      }
+
+      .btn-icon {
+        font-size: 12px;
+      }
+    }
+  }
+}
+

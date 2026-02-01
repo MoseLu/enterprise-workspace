@@ -1,0 +1,23 @@
+﻿{
+  "inventory.common.stock_in_success": "入库成功",
+  "inventory.common.stock_out_success": "出库成功",
+  "inventory.common.stock_check_success": "盘点完成",
+  "inventory.warehouse.title": "仓库管理",
+  "inventory.warehouse.location.code": "库位编码",
+  "inventory.warehouse.location.name": "库位名称",
+  "inventory.warehouse.location.zone": "库区",
+  "inventory.warehouse.location.shelf": "货架",
+  "inventory.warehouse.location.level": "层数",
+  "inventory.warehouse.capacity": "容量",
+  "inventory.warehouse.occupied": "已占用",
+  "inventory.warehouse.available": "可用",
+  "inventory.stock.title": "库存管理",
+  "inventory.stock.item.name": "物料名称",
+  "inventory.stock.item.code": "物料编码",
+  "inventory.stock.quantity": "库存数量",
+  "inventory.stock.safety_stock": "安全库存",
+  "inventory.stock.max_stock": "最大库存",
+  "inventory.stock.min_stock": "最小库存",
+  "inventory.stock.unit_cost": "单位成本",
+  "inventory.stock.total_value": "库存总值"
+}

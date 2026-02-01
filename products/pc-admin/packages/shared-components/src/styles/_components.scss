@@ -1,0 +1,137 @@
+// ==================== 通用组件样式 ====================
+
+// 通用图标按钮样式（与 cool-admin 的 .cl-comm__icon 保持一致）
+// 用于 btc-icon-button 组件的基础样式
+.btc-comm__icon {
+	--btc-icon-color: var(--el-text-color-primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--btc-spacing-6);
+	width: var(--btc-spacing-6);
+	// 先设置基础边框颜色（使用 Element Plus 变量，确保初始渲染时有边框）
+	border: 1px solid var(--el-fill-color-dark);
+	// 如果支持 color-mix，则使用更精细的颜色混合（覆盖基础边框）
+	@supports (background-color: color-mix(in srgb, red 50%, blue)) {
+		border-color: color-mix(in srgb, var(--btc-icon-color) 35%, transparent);
+		background-color: color-mix(in srgb, var(--btc-icon-color) 6%, transparent);
+	}
+	// 如果不支持 color-mix，使用基础背景色
+	@supports not (background-color: color-mix(in srgb, red 50%, blue)) {
+		background-color: var(--el-bg-color);
+	}
+	border-radius: var(--btc-spacing-1-5);
+	transition: all 0.2s ease-in-out;
+	outline: none;
+	cursor: pointer;
+	flex-shrink: 0;
+
+	.btc-svg {
+		font-size: var(--btc-spacing-4);
+		color: var(--btc-icon-color);
+	}
+
+	// 关键：只在支持 hover 的设备上应用 hover 样式（触摸设备不会触发）
+	// 触摸设备使用 :active 样式
+	@media (hover: hover) {
+		&:hover {
+			border-color: var(--btc-icon-color);
+			@supports (background-color: color-mix(in srgb, red 50%, blue)) {
+				background-color: color-mix(in srgb, var(--btc-icon-color) 12%, transparent);
+			}
+			@supports not (background-color: color-mix(in srgb, red 50%, blue)) {
+				background-color: transparent;
+			}
+		}
+	}
+
+	// 触摸设备使用 :active 样式（点击时显示反馈）
+	@media (hover: none) {
+		&:active {
+			border-color: var(--btc-icon-color);
+			@supports (background-color: color-mix(in srgb, red 50%, blue)) {
+				background-color: color-mix(in srgb, var(--btc-icon-color) 12%, transparent);
+			}
+			@supports not (background-color: color-mix(in srgb, red 50%, blue)) {
+				background-color: transparent;
+			}
+		}
+	}
+
+	&.is-disabled {
+		cursor: not-allowed;
+		opacity: 0.45;
+		pointer-events: none;
+	}
+}
+
+// =========================
+// 通知/消息图标：呼吸灯（全局）
+// =========================
+// 说明：
+// - 之前该样式仅存在于 system-app/admin-app 的 global.scss，其他子应用（layout-app 模式）不会加载，导致生产环境不生效
+// - 这里下沉到 shared-components 全局样式，保证所有应用一致生效
+// - 使用更具体的选择器确保样式优先级，避免被 scoped 样式覆盖
+.btc-icon-button--breath,
+.btc-comm__icon.btc-icon-button--breath,
+.btc-icon-button-wrapper .btc-comm__icon.btc-icon-button--breath {
+	--btc-breath-color: var(--el-color-primary);
+	position: relative;
+
+	&::after {
+		content: '';
+		position: absolute;
+		top: var(--btc-spacing-1-5);
+		right: var(--btc-spacing-1-5);
+		width: var(--btc-spacing-2);
+		height: var(--btc-spacing-2);
+		border-radius: 50%;
+		background-color: var(--btc-breath-color);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--btc-breath-color) 30%, transparent);
+		animation: btc-breathe 1.5s ease-in-out infinite;
+		z-index: 20;
+		pointer-events: none;
+	}
+}
+
+// 通知：红色常亮（warning 命名沿用历史）
+.btc-icon-button--breath--warning::after,
+.btc-comm__icon.btc-icon-button--breath--warning::after,
+.btc-icon-button-wrapper .btc-comm__icon.btc-icon-button--breath--warning::after {
+	--btc-breath-color: var(--el-color-danger);
+	animation: none;
+	opacity: 1;
+	transform: none;
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--btc-breath-color) 35%, transparent);
+}
+
+// 消息：绿色呼吸
+.btc-icon-button--breath--success::after,
+.btc-comm__icon.btc-icon-button--breath--success::after,
+.btc-icon-button-wrapper .btc-comm__icon.btc-icon-button--breath--success::after {
+	--btc-breath-color: var(--el-color-success);
+}
+
+@keyframes btc-breathe {
+	0% {
+		opacity: 0.4;
+		transform: scale(0.85);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1.2);
+	}
+	100% {
+		opacity: 0.4;
+		transform: scale(0.85);
+	}
+}
+
+// Element Plus 元素覆盖样式已移至 _elements.scss（Elements 层）
+
+// 用户设置工具栏样式（确保按钮之间的间距）
+.btc-user-setting-toolbar {
+	display: flex;
+	align-items: center;
+	gap: var(--btc-spacing-2-5); // 两个按钮之间的间距，与顶栏插件间距保持一致
+}

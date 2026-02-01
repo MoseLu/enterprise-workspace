@@ -1,0 +1,48 @@
+// 密码登录表单样式
+.password-login {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+
+  .form {
+    margin-top: 16px; // 增加与 tab-bar 的间距
+    width: 100%;
+
+    // 使用标准的 el-form 样式
+    :deep(.el-form-item) {
+      margin-bottom: 16px; // 表单项之间的间距
+      width: 100%;
+      
+      .el-form-item__content {
+        width: 100%;
+      }
+    }
+
+    // 确保输入框与按钮宽度一致
+    :deep(.el-input) {
+      width: 100% !important;
+    }
+
+    :deep(.el-input__wrapper) {
+      width: 100% !important;
+    }
+
+    :deep(.el-input__inner) {
+      height: 45px !important;
+      color: var(--el-text-color-primary) !important;
+      font-size: 15px !important;
+      width: 100% !important;
+
+      &::placeholder {
+        color: var(--el-text-color-placeholder) !important;
+      }
+    }
+  }
+
+  .login-button {
+    width: 100%;
+    margin-top: 8px; // 与表单的间距
+  }
+}

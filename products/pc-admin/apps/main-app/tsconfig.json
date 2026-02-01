@@ -1,0 +1,26 @@
+{
+  "extends": "../../packages/tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "baseUrl": ".",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@services": ["./src/services"],
+      "@services/*": ["./src/services/*"],
+      "@configs": ["../../packages/shared-core/src/configs"],
+      "@configs/*": ["../../packages/shared-core/src/configs/*"],
+      "@btc/shared-core": ["../../packages/shared-core/src", "../../packages/shared-core/dist"],
+      "@btc/shared-core/*": ["../../packages/shared-core/src/*", "../../packages/shared-core/dist/*"],
+      "@btc/shared-components": ["../../packages/shared-components/src", "../../packages/shared-components/dist"],
+      "@btc/shared-components/*": ["../../packages/shared-components/src/*", "../../packages/shared-components/dist/*"],
+      "@workspace/locales/*": ["../../locales/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "src/**/*.tsx", "../../configs/**/*.ts"],
+  "exclude": ["node_modules", "dist", "../../packages/**/dist/**/*.js", "../../packages/**/dist/**/*.mjs", "**/dist/**/*.js", "**/dist/**/*.mjs"]
+}
+

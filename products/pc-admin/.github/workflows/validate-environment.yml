@@ -1,0 +1,177 @@
+name: Validate Environment
+
+on:
+  workflow_call:
+    secrets:
+      SERVER_KEY:
+        description: 'SSH Private Key'
+        required: false
+      SERVER_HOST:
+        description: 'Server Host IP'
+        required: false
+      SERVER_USER:
+        description: 'Server User'
+        required: false
+      SERVER_PORT:
+        description: 'Server Port'
+        required: false
+    outputs:
+      resources_validated:
+        description: 'Server resources validation result'
+        value: ${{ jobs.validate-environment.outputs.resources_validated }}
+
+jobs:
+  validate-environment:
+    name: Validate Environment
+    runs-on: ubuntu-latest
+    outputs:
+      resources_validated: ${{ steps.set-output.outputs.resources_validated }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Validate Server Resources
+      id: resources-check
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER || 'root' }}
+        key: ${{ secrets.SERVER_KEY }}
+        port: ${{ secrets.SERVER_PORT || '22' }}
+        script: |
+          set -e
+          
+          echo "=== 服务器资源检查 ==="
+          echo ""
+          
+          # 1. 检查磁盘空间（需要至少10GB可用空间）
+          echo "📊 检查磁盘空间..."
+          DISK_INFO=$(df -h / | tail -1)
+          DISK_AVAILABLE=$(echo "$DISK_INFO" | awk '{print $4}')
+          DISK_USAGE=$(echo "$DISK_INFO" | awk '{print $5}' | sed 's/%//')
+          DISK_TOTAL=$(echo "$DISK_INFO" | awk '{print $2}')
+          
+          echo "  总空间: $DISK_TOTAL"
+          echo "  已使用: $(echo "$DISK_INFO" | awk '{print $3}')"
+          echo "  可用空间: $DISK_AVAILABLE"
+          echo "  使用率: ${DISK_USAGE}%"
+          echo ""
+          
+          # 转换可用空间为KB进行比较
+          DISK_AVAILABLE_KB=$(df / | tail -1 | awk '{print $4}')
+          DISK_REQUIRED_KB=10485760  # 10GB = 10 * 1024 * 1024 KB
+          
+          if [ "$DISK_AVAILABLE_KB" -lt "$DISK_REQUIRED_KB" ]; then
+            echo "❌ 错误: 磁盘空间不足！"
+            echo "  需要: 至少10GB可用空间"
+            echo "  当前可用: $DISK_AVAILABLE"
+            echo ""
+            echo "建议执行以下命令释放空间："
+            echo "  docker system prune -af --volumes"
+            echo "  docker image prune -af"
+            exit 1
+          fi
+          
+          if [ "$DISK_USAGE" -gt 90 ]; then
+            echo "⚠️  警告: 磁盘使用率过高 (${DISK_USAGE}%)"
+            echo "  建议在90%以下，请考虑清理磁盘空间"
+          fi
+          
+          echo "✅ 磁盘空间检查通过"
+          echo ""
+          
+          # 2. 检查内存（需要至少2GB可用内存）
+          echo "💾 检查内存..."
+          MEM_INFO=$(free -h)
+          MEM_TOTAL=$(echo "$MEM_INFO" | grep Mem | awk '{print $2}')
+          MEM_AVAILABLE=$(echo "$MEM_INFO" | grep Mem | awk '{print $7}')
+          
+          # 转换为MB进行比较
+          MEM_TOTAL_MB=$(free -m | grep Mem | awk '{print $2}')
+          MEM_AVAILABLE_MB=$(free -m | grep Mem | awk '{print $7}')
+          MEM_REQUIRED_MB=2048  # 2GB = 2048 MB
+          
+          echo "  总内存: $MEM_TOTAL"
+          echo "  可用内存: $MEM_AVAILABLE"
+          echo ""
+          
+          if [ "$MEM_TOTAL_MB" -lt "$MEM_REQUIRED_MB" ]; then
+            echo "❌ 错误: 内存不足！"
+            echo "  需要: 至少2GB总内存"
+            echo "  当前总内存: $MEM_TOTAL"
+            exit 1
+          fi
+          
+          if [ "$MEM_AVAILABLE_MB" -lt 512 ]; then
+            echo "⚠️  警告: 可用内存较少 (${MEM_AVAILABLE_MB}MB)"
+            echo "  建议至少有512MB可用内存用于部署"
+          fi
+          
+          echo "✅ 内存检查通过"
+          echo ""
+          
+          # 3. 检查Docker
+          echo "🐳 检查Docker..."
+          if ! command -v docker &> /dev/null; then
+            echo "❌ 错误: Docker未安装"
+            exit 1
+          fi
+          
+          DOCKER_VERSION=$(docker --version)
+          echo "  Docker版本: $DOCKER_VERSION"
+          
+          if ! docker info &> /dev/null; then
+            echo "❌ 错误: Docker服务未运行"
+            exit 1
+          fi
+          
+          echo "✅ Docker检查通过"
+          echo ""
+          
+          # 4. 检查Docker Compose（可选，但推荐）
+          if command -v docker-compose &> /dev/null; then
+            COMPOSE_VERSION=$(docker-compose --version)
+            echo "✅ Docker Compose已安装: $COMPOSE_VERSION"
+          elif docker compose version &> /dev/null; then
+            COMPOSE_VERSION=$(docker compose version)
+            echo "✅ Docker Compose (插件)已安装: $COMPOSE_VERSION"
+          else
+            echo "⚠️  警告: Docker Compose未安装（将尝试使用docker compose插件）"
+          fi
+          echo ""
+          
+          # 5. 检查Docker数据目录空间（/var/lib/docker）
+          echo "📦 检查Docker数据目录空间..."
+          if [ -d "/var/lib/docker" ]; then
+            DOCKER_DISK_INFO=$(df -h /var/lib/docker 2>/dev/null | tail -1 || df -h / | tail -1)
+            DOCKER_DISK_USAGE=$(echo "$DOCKER_DISK_INFO" | awk '{print $5}' | sed 's/%//')
+            DOCKER_DISK_AVAILABLE=$(echo "$DOCKER_DISK_INFO" | awk '{print $4}')
+            
+            echo "  Docker数据目录可用空间: $DOCKER_DISK_AVAILABLE"
+            echo "  使用率: ${DOCKER_DISK_USAGE}%"
+            
+            if [ "$DOCKER_DISK_USAGE" -gt 85 ]; then
+              echo "⚠️  警告: Docker数据目录空间使用率较高 (${DOCKER_DISK_USAGE}%)"
+              echo "  建议清理Docker镜像和容器"
+              echo "  执行: docker system prune -af --volumes"
+            fi
+          fi
+          echo ""
+          
+          echo "=== ✅ 所有资源检查通过 ==="
+          echo "磁盘空间: ✅"
+          echo "内存: ✅"
+          echo "Docker: ✅"
+    
+    - name: Set validation output
+      id: set-output
+      if: success()
+      run: |
+        echo "resources_validated=true" >> $GITHUB_OUTPUT
+    
+    - name: Environment validation summary
+      run: |
+        echo "✅ Environment validation completed"
+        echo "✅ Server resources validated successfully"
+    

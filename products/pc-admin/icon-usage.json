@@ -1,0 +1,1145 @@
+{
+  "btcSvg": {
+    "amount-alt": [
+      "apps/main-app/src/pages/home/index.vue"
+    ],
+    "app.icon": [
+      "apps/main-app/src/modules/base/components/layout/menu-drawer/index.vue"
+    ],
+    "close": [
+      "apps/main-app/src/modules/base/components/layout/process/index.vue"
+    ],
+    "engineering": [
+      "apps/main-app/src/pages/home/index.vue"
+    ],
+    "exit": [
+      "apps/main-app/src/modules/base/components/layout/user-info/index.vue"
+    ],
+    "logistics": [
+      "apps/main-app/src/pages/home/index.vue"
+    ],
+    "my": [
+      "apps/main-app/src/modules/base/components/layout/user-info/index.vue"
+    ],
+    "production": [
+      "apps/main-app/src/pages/home/index.vue"
+    ],
+    "quality": [
+      "apps/main-app/src/pages/home/index.vue"
+    ],
+    "refresh": [
+      "apps/main-app/src/modules/data/views/files/preview/index.vue"
+    ],
+    "search": [
+      "apps/main-app/src/modules/base/components/layout/dual-menu/index.vue",
+      "apps/main-app/src/modules/base/components/layout/global-search/index.vue",
+      "apps/main-app/src/modules/base/components/layout/sidebar/index.vue",
+      "apps/main-app/src/modules/base/components/layout/top-left-sidebar/index.vue"
+    ],
+    "set": [
+      "apps/main-app/src/modules/base/components/layout/user-info/index.vue"
+    ]
+  },
+  "iconStrings": {
+    "/favicon.ico": [
+      "apps/main-app/src/config/app.js",
+      "apps/main-app/src/config/app.ts"
+    ],
+    "&#xe608;": [
+      "apps/main-app/src/plugins/notification/components/notification-panel.vue"
+    ],
+    "&#xe694;": [
+      "apps/main-app/src/plugins/user-setting/composables/useSettingsConfig.ts"
+    ],
+    "&#xe6c2;": [
+      "apps/main-app/src/plugins/notification/components/notification-panel.vue"
+    ],
+    "&#xe6de;": [
+      "apps/main-app/src/plugins/user-setting/composables/useSettingsConfig.ts"
+    ],
+    "&#xe714;": [
+      "apps/main-app/src/plugins/notification/components/notification-panel.vue"
+    ],
+    "&#xe72e;": [
+      "apps/main-app/src/plugins/notification/components/notification-panel.vue"
+    ],
+    "&#xe747;": [
+      "apps/main-app/src/plugins/notification/components/notification-panel.vue"
+    ],
+    "404测试接口": [
+      "apps/main-app/src/pages/test/api-test-center/index.vue"
+    ],
+    "成功率": [
+      "apps/main-app/src/modules/strategy/views/monitor/index.vue"
+    ],
+    "订单审批流程策略": [
+      "apps/main-app/src/services/strategy.ts"
+    ],
+    "动作": [
+      "apps/main-app/src/modules/strategy/views/designer/composables/useComponentLibrary.ts",
+      "apps/main-app/src/modules/strategy/views/designer/composables/useStrategyDesigner.ts"
+    ],
+    "工作流策略": [
+      "apps/main-app/src/modules/strategy/views/monitor/index.vue"
+    ],
+    "结束": [
+      "apps/main-app/src/modules/strategy/views/designer/composables/useComponentLibrary.ts",
+      "apps/main-app/src/modules/strategy/views/designer/composables/useStrategyDesigner.ts"
+    ],
+    "决策": [
+      "apps/main-app/src/modules/strategy/views/designer/composables/useComponentLibrary.ts",
+      "apps/main-app/src/modules/strategy/views/designer/composables/useStrategyDesigner.ts"
+    ],
+    "开始": [
+      "apps/main-app/src/modules/strategy/views/designer/composables/useComponentLibrary.ts",
+      "apps/main-app/src/modules/strategy/views/designer/composables/useStrategyDesigner.ts"
+    ],
+    "李四": [
+      "apps/main-app/src/pages/test/btc-tabs/index.vue",
+      "apps/main-app/src/plugins/message/components/message-panel.vue"
+    ],
+    "其他": [
+      "apps/main-app/src/modules/data/views/files/preview/index.vue"
+    ],
+    "全部文件": [
+      "apps/main-app/src/modules/data/views/files/preview/index.vue"
+    ],
+    "权限策略": [
+      "apps/main-app/src/modules/strategy/views/monitor/index.vue"
+    ],
+    "视频": [
+      "apps/main-app/src/modules/data/views/files/preview/index.vue"
+    ],
+    "数据策略": [
+      "apps/main-app/src/modules/strategy/views/monitor/index.vue"
+    ],
+    "条件": [
+      "apps/main-app/src/modules/strategy/views/designer/composables/useComponentLibrary.ts",
+      "apps/main-app/src/modules/strategy/views/designer/composables/useStrategyDesigner.ts"
+    ],
+    "图片": [
+      "apps/main-app/src/modules/data/views/files/preview/index.vue"
+    ],
+    "王五": [
+      "apps/main-app/src/pages/test/btc-tabs/index.vue",
+      "apps/main-app/src/plugins/message/components/message-panel.vue"
+    ],
+    "网关": [
+      "apps/main-app/src/modules/strategy/views/designer/composables/useComponentLibrary.ts",
+      "apps/main-app/src/modules/strategy/views/designer/composables/useStrategyDesigner.ts"
+    ],
+    "文档": [
+      "apps/main-app/src/modules/data/views/files/preview/index.vue"
+    ],
+    "系统消息": [
+      "apps/main-app/src/plugins/message/components/message-panel.vue"
+    ],
+    "响应拦截器测试": [
+      "apps/main-app/src/pages/test/api-test-center/index.vue"
+    ],
+    "响应时间分布": [
+      "apps/main-app/src/modules/strategy/views/monitor/index.vue"
+    ],
+    "业务策略": [
+      "apps/main-app/src/modules/strategy/views/monitor/index.vue"
+    ],
+    "音频": [
+      "apps/main-app/src/modules/data/views/files/preview/index.vue"
+    ],
+    "用户权限验证策略": [
+      "apps/main-app/src/services/strategy.ts"
+    ],
+    "张三": [
+      "apps/main-app/src/pages/test/btc-tabs/index.vue",
+      "apps/main-app/src/plugins/message/components/message-panel.vue"
+    ],
+    "执行次数": [
+      "apps/main-app/src/modules/strategy/views/monitor/index.vue"
+    ],
+    "access": [
+      "apps/main-app/src/modules/platform/access/config.ts"
+    ],
+    "Actions": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "add": [
+      "apps/main-app/mock-server.js"
+    ],
+    "admin": [
+      "apps/main-app/src/pages/test/btc-code-json/index.vue",
+      "apps/main-app/src/pages/test/crud/index.vue",
+      "apps/main-app/src/pages/test/import-demo/index.vue"
+    ],
+    "Administrator": [
+      "apps/main-app/src/pages/test/crud/index.vue",
+      "apps/main-app/src/pages/test/import-demo/index.vue"
+    ],
+    "advanced": [
+      "apps/main-app/src/modules/strategy/views/designer/composables/useComponentLibrary.ts"
+    ],
+    "amount-alt": [
+      "apps/main-app/src/modules/base/components/layout/menu-drawer/index.vue"
+    ],
+    "api-services": [
+      "apps/main-app/src/modules/api-services/config.ts"
+    ],
+    "ApiTestCenter": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "approve": [
+      "apps/main-app/src/modules/base/components/layout/menu-drawer/index.vue"
+    ],
+    "AppSkeleton": [
+      "apps/main-app/src/components/AppSkeleton.vue"
+    ],
+    "arrow-left": [
+      "apps/main-app/src/modules/base/components/layout/process/index.vue"
+    ],
+    "arrow-right": [
+      "apps/main-app/src/modules/base/components/layout/process/index.vue"
+    ],
+    "back": [
+      "apps/main-app/src/modules/base/components/layout/process/index.vue"
+    ],
+    "base": [
+      "apps/main-app/src/modules/base/config.ts"
+    ],
+    "Baseline": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "basic": [
+      "apps/main-app/src/modules/strategy/views/designer/composables/useComponentLibrary.ts"
+    ],
+    "BTC": [
+      "apps/main-app/src/config/app.js",
+      "apps/main-app/src/config/app.ts"
+    ],
+    "btc-cascader": [
+      "apps/main-app/src/modules/access/views/roles/config.ts",
+      "apps/main-app/src/modules/org/views/users/config.ts"
+    ],
+    "btc-code-json": [
+      "apps/main-app/src/modules/data/views/recycle/index.vue",
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "btc-logistics-procurement-auxiliary": [
+      "apps/logistics-app/src/modules/logistics/views/procurement/auxiliary/index.vue"
+    ],
+    "btc-logistics-procurement-packaging": [
+      "apps/logistics-app/src/modules/logistics/views/procurement/packaging/index.vue"
+    ],
+    "btc-logistics-procurement-supplier": [
+      "apps/logistics-app/src/modules/logistics/views/procurement/supplier/index.vue"
+    ],
+    "btc-logistics-warehouse-inventory-detail": [
+      "apps/logistics-app/src/modules/logistics/views/warehouse/inventory/detail/index.vue"
+    ],
+    "btc-logistics-warehouse-inventory-info": [
+      "apps/logistics-app/src/modules/logistics/views/warehouse/inventory/info/index.vue"
+    ],
+    "btc-logistics-warehouse-material-list": [
+      "apps/logistics-app/src/modules/logistics/views/warehouse/material/list/index.vue"
+    ],
+    "btc-tabs": [
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "btc-upload": [
+      "apps/main-app/src/pages/profile/composables/form/avatarEditor.ts",
+      "apps/main-app/src/pages/profile/composables/form/formItems.ts"
+    ],
+    "BTC管理系统": [
+      "apps/main-app/src/config/app.js",
+      "apps/main-app/src/config/app.ts"
+    ],
+    "BtcActionTable": [
+      "apps/main-app/src/modules/access/views/perm-compose/components/BtcActionTable.vue"
+    ],
+    "BtcAgreementText": [
+      "apps/main-app/src/pages/auth/shared/components/agreement-text/index.vue"
+    ],
+    "BtcAuthDivider": [
+      "apps/main-app/src/pages/auth/shared/components/auth-divider/index.vue"
+    ],
+    "BtcAuthFooter": [
+      "apps/main-app/src/pages/auth/shared/components/auth-footer/index.vue"
+    ],
+    "BtcAuthHeader": [
+      "apps/main-app/src/pages/auth/shared/components/auth-header/index.vue"
+    ],
+    "BtcAuthLayout": [
+      "apps/main-app/src/pages/auth/shared/components/auth-layout/index.vue"
+    ],
+    "BtcCodeJson": [
+      "apps/main-app/src/modules/ops/views/api-list/index.vue",
+      "apps/main-app/src/modules/ops/views/logs/operation/index.vue",
+      "apps/main-app/src/modules/ops/views/logs/request/index.vue"
+    ],
+    "BtcCodeJsonTest": [
+      "apps/main-app/src/pages/test/btc-code-json/index.vue"
+    ],
+    "BtcConfigForm": [
+      "apps/main-app/src/components/btc-config-form/index.vue"
+    ],
+    "BtcConfigFormItem": [
+      "apps/main-app/src/components/btc-config-form/btc-config-form-item.vue"
+    ],
+    "BtcForgetPasswordForm": [
+      "apps/main-app/src/pages/auth/forget-password/components/forget-password-form/index.vue"
+    ],
+    "BtcForgotPasswordLink": [
+      "apps/main-app/src/pages/auth/shared/components/forgot-password-link/index.vue"
+    ],
+    "BtcGithubCode": [
+      "apps/main-app/src/plugins/github/components/code.vue"
+    ],
+    "BtcLoginFormLayout": [
+      "apps/main-app/src/pages/auth/shared/components/login-form-layout/index.vue"
+    ],
+    "BtcLoginOptions": [
+      "apps/main-app/src/pages/auth/shared/components/login-options/index.vue"
+    ],
+    "BtcLoginTabs": [
+      "apps/main-app/src/pages/auth/shared/components/login-tabs/index.vue"
+    ],
+    "BtcMessageIcon": [
+      "apps/main-app/src/plugins/message/components/message-icon.vue"
+    ],
+    "BtcMessagePanel": [
+      "apps/main-app/src/plugins/message/components/message-panel.vue"
+    ],
+    "BtcNotificationIcon": [
+      "apps/main-app/src/plugins/notification/components/notification-icon.vue"
+    ],
+    "BtcNotificationPanel": [
+      "apps/main-app/src/plugins/notification/components/notification-panel.vue"
+    ],
+    "BtcPasswordForm": [
+      "apps/main-app/src/pages/auth/login/components/password-form/index.vue"
+    ],
+    "BtcPermissionList": [
+      "apps/main-app/src/modules/access/views/perm-compose/components/BtcPermissionList.vue"
+    ],
+    "BtcQrForm": [
+      "apps/main-app/src/pages/auth/login/components/qr-form/index.vue"
+    ],
+    "BtcQrToggleBtn": [
+      "apps/main-app/src/pages/auth/shared/components/qr-toggle-btn/index.vue"
+    ],
+    "BtcRegisterForm": [
+      "apps/main-app/src/pages/auth/register/components/register-form/index.vue"
+    ],
+    "BtcResourceTree": [
+      "apps/main-app/src/modules/access/views/perm-compose/components/BtcResourceTree.vue"
+    ],
+    "BtcSmsCodeInput": [
+      "apps/main-app/src/pages/auth/shared/components/sms-code-input/index.vue"
+    ],
+    "BtcSmsForm": [
+      "apps/main-app/src/pages/auth/login/components/sms-form/index.vue"
+    ],
+    "BtcTabsTest": [
+      "apps/main-app/src/pages/test/btc-tabs/index.vue"
+    ],
+    "BtcThirdPartyLogin": [
+      "apps/main-app/src/pages/auth/shared/components/third-party-login/index.vue"
+    ],
+    "BtcUserSetting": [
+      "apps/main-app/src/plugins/user-setting/index.vue"
+    ],
+    "BtcUserSettingDrawer": [
+      "apps/main-app/src/plugins/user-setting/components/preferences-drawer.vue"
+    ],
+    "cancel": [
+      "apps/main-app/mock-server.js"
+    ],
+    "ChatDotRound": [
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "close": [
+      "apps/main-app/src/modules/base/components/layout/process/index.vue"
+    ],
+    "close-border": [
+      "apps/main-app/src/modules/base/components/layout/process/index.vue"
+    ],
+    "Coin": [
+      "apps/logistics-app/src/router/routes/logistics.ts",
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "Collection": [
+      "apps/logistics-app/src/router/routes/logistics.ts",
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "CollectionTag": [
+      "apps/logistics-app/src/router/routes/logistics.ts",
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "Connection": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "create": [
+      "apps/main-app/mock-server.js"
+    ],
+    "crud": [
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "custom": [
+      "apps/main-app/src/modules/base/components/layout/theme-switcher/index.vue",
+      "apps/main-app/src/plugins/user-setting/composables/useThemeSwitcher.ts",
+      "apps/main-app/src/plugins/user-setting/settings/color-settings/index.vue"
+    ],
+    "DataDictionaryFileCategories": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "DataFilesList": [
+      "apps/main-app/src/modules/data/views/files/list/index.vue",
+      "apps/main-app/src/router/index.ts"
+    ],
+    "DataFilesPreview": [
+      "apps/main-app/src/modules/data/views/files/preview/index.vue",
+      "apps/main-app/src/router/index.ts"
+    ],
+    "DataFilesTemplates": [
+      "apps/main-app/src/modules/data/views/files/templates/index.vue",
+      "apps/main-app/src/router/index.ts"
+    ],
+    "DataRecycle": [
+      "apps/main-app/src/modules/data/views/recycle/index.vue",
+      "apps/main-app/src/router/index.ts"
+    ],
+    "delete": [
+      "apps/main-app/mock-server.js",
+      "apps/main-app/src/modules/data/views/files/list/index.vue"
+    ],
+    "DeleteFilled": [
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "Departments": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "DeptRoleBind": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "design": [
+      "apps/main-app/src/modules/base/components/layout/menu-drawer/index.vue"
+    ],
+    "DictionaryFileCategories": [
+      "apps/main-app/src/modules/data/views/dictionary/file-categories/index.vue"
+    ],
+    "docs": [
+      "apps/main-app/src/modules/base/components/layout/menu-drawer/index.vue"
+    ],
+    "Docs": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "DocsPage": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "Document": [
+      "apps/logistics-app/src/router/routes/logistics.ts",
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue",
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "Domains": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "Edit": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "EditPen": [
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "el-date-picker": [
+      "apps/logistics-app/src/modules/logistics/views/warehouse/inventory/detail/index.vue",
+      "apps/logistics-app/src/modules/logistics/views/warehouse/inventory/info/index.vue"
+    ],
+    "el-input": [
+      "apps/logistics-app/src/modules/logistics/views/warehouse/inventory/detail/index.vue",
+      "apps/logistics-app/src/modules/logistics/views/warehouse/inventory/info/index.vue",
+      "apps/logistics-app/src/modules/logistics/views/warehouse/material/list/index.vue",
+      "apps/main-app/src/modules/access/views/actions/index.vue",
+      "apps/main-app/src/modules/access/views/permissions/index.vue",
+      "apps/main-app/src/modules/access/views/resources/index.vue",
+      "apps/main-app/src/modules/access/views/roles/config.ts",
+      "apps/main-app/src/modules/data/views/dictionary/file-categories/index.vue",
+      "apps/main-app/src/modules/data/views/files/templates/index.vue",
+      "apps/main-app/src/modules/navigation/views/menus/index.vue",
+      "apps/main-app/src/modules/ops/views/baseline/index.vue",
+      "apps/main-app/src/modules/org/views/departments/index.vue",
+      "apps/main-app/src/modules/org/views/tenants/index.vue",
+      "apps/main-app/src/modules/org/views/users/config.ts",
+      "apps/main-app/src/modules/platform/access/views/actions/index.vue",
+      "apps/main-app/src/modules/platform/access/views/roles/index.vue",
+      "apps/main-app/src/modules/platform/views/domains/index.vue",
+      "apps/main-app/src/modules/platform/views/modules/index.vue",
+      "apps/main-app/src/modules/platform/views/plugins/index.vue",
+      "apps/main-app/src/modules/strategy/views/management/index.vue",
+      "apps/main-app/src/pages/profile/composables/form/fieldConfig.ts",
+      "apps/main-app/src/pages/profile/composables/form/formItems.ts",
+      "apps/main-app/src/pages/test/crud/index.vue",
+      "apps/main-app/src/pages/test/import-demo/index.vue"
+    ],
+    "el-input-number": [
+      "apps/logistics-app/src/modules/logistics/views/warehouse/inventory/detail/index.vue",
+      "apps/logistics-app/src/modules/logistics/views/warehouse/material/list/index.vue",
+      "apps/main-app/src/modules/navigation/views/menus/index.vue",
+      "apps/main-app/src/modules/org/views/departments/index.vue",
+      "apps/main-app/src/modules/strategy/views/management/index.vue"
+    ],
+    "el-radio-group": [
+      "apps/main-app/src/modules/data/views/files/templates/index.vue",
+      "apps/main-app/src/modules/navigation/views/menus/index.vue",
+      "apps/main-app/src/modules/org/views/users/config.ts",
+      "apps/main-app/src/modules/platform/views/plugins/index.vue",
+      "apps/main-app/src/pages/test/crud/index.vue",
+      "apps/main-app/src/pages/test/import-demo/index.vue"
+    ],
+    "el-select": [
+      "apps/main-app/src/modules/access/views/resources/index.vue",
+      "apps/main-app/src/modules/access/views/roles/config.ts",
+      "apps/main-app/src/modules/data/views/files/templates/index.vue",
+      "apps/main-app/src/modules/navigation/views/menus/index.vue",
+      "apps/main-app/src/modules/ops/views/baseline/index.vue",
+      "apps/main-app/src/modules/org/views/departments/index.vue",
+      "apps/main-app/src/modules/platform/views/domains/index.vue",
+      "apps/main-app/src/modules/strategy/views/management/index.vue"
+    ],
+    "el-switch": [
+      "apps/main-app/src/modules/navigation/views/menus/index.vue"
+    ],
+    "engineering": [
+      "apps/engineering-app/src/main.ts",
+      "apps/main-app/src/config/index.js",
+      "apps/main-app/src/config/index.ts",
+      "apps/main-app/src/micro/apps.ts"
+    ],
+    "EngineeringApp": [
+      "apps/engineering-app/src/App.vue"
+    ],
+    "error": [
+      "apps/main-app/src/utils/message-manager/config.d.ts",
+      "apps/main-app/src/utils/message-manager/config.ts",
+      "apps/main-app/src/utils/notification-manager/config.ts"
+    ],
+    "excel": [
+      "apps/main-app/src/plugins/index.ts"
+    ],
+    "Files": [
+      "apps/logistics-app/src/router/routes/logistics.ts",
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "finance": [
+      "apps/main-app/src/micro/apps.ts"
+    ],
+    "FolderOpened": [
+      "apps/logistics-app/src/router/routes/logistics.ts",
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "ForgetPassword": [
+      "apps/main-app/src/pages/auth/forget-password/index.vue",
+      "apps/main-app/src/router/index.ts"
+    ],
+    "github": [
+      "apps/main-app/src/plugins/github/components/code.vue",
+      "apps/main-app/src/plugins/github/index.ts"
+    ],
+    "GlobalSearch": [
+      "apps/main-app/src/modules/base/components/layout/global-search/index.vue"
+    ],
+    "Grid": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue",
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "Histogram": [
+      "apps/logistics-app/src/router/routes/logistics.ts",
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "home": [
+      "apps/main-app/src/modules/base/components/layout/menu-drawer/index.vue",
+      "apps/main-app/src/modules/base/components/layout/process/index.vue"
+    ],
+    "Home": [
+      "apps/engineering-app/src/main.ts",
+      "apps/main-app/src/router/index.ts",
+      "apps/production-app/src/main.ts",
+      "apps/quality-app/src/main.ts"
+    ],
+    "i18n": [
+      "apps/main-app/src/plugins/i18n/index.ts",
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "IconBtn": [
+      "apps/main-app/src/components/IconBtn.vue"
+    ],
+    "import-demo": [
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "info": [
+      "apps/main-app/mock-server.js",
+      "apps/main-app/src/modules/data/views/files/list/index.vue",
+      "apps/main-app/src/utils/message-manager/config.d.ts",
+      "apps/main-app/src/utils/message-manager/config.ts",
+      "apps/main-app/src/utils/notification-manager/config.ts"
+    ],
+    "John Doe": [
+      "apps/main-app/src/pages/test/btc-code-json/index.vue"
+    ],
+    "Key": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "lang": [
+      "apps/main-app/src/modules/base/components/layout/locale-switcher/index.vue"
+    ],
+    "LayoutBreadcrumb": [
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "LayoutDualMenu": [
+      "apps/main-app/src/modules/base/components/layout/dual-menu/index.vue"
+    ],
+    "LayoutDynamicMenu": [
+      "apps/main-app/src/modules/base/components/layout/dynamic-menu/index.vue"
+    ],
+    "LayoutLocaleSwitcher": [
+      "apps/main-app/src/modules/base/components/layout/locale-switcher/index.vue"
+    ],
+    "LayoutMenuDrawer": [
+      "apps/main-app/src/modules/base/components/layout/menu-drawer/index.vue"
+    ],
+    "LayoutProcess": [
+      "apps/main-app/src/modules/base/components/layout/process/index.vue"
+    ],
+    "LayoutSidebar": [
+      "apps/main-app/src/modules/base/components/layout/sidebar/index.vue"
+    ],
+    "LayoutThemeSwitcher": [
+      "apps/main-app/src/modules/base/components/layout/theme-switcher/index.vue"
+    ],
+    "LayoutTopbar": [
+      "apps/main-app/src/modules/base/components/layout/topbar/index.vue"
+    ],
+    "LayoutTopLeftMenu": [
+      "apps/main-app/src/modules/base/components/layout/top-left-menu/index.vue"
+    ],
+    "LayoutTopLeftSidebar": [
+      "apps/main-app/src/modules/base/components/layout/top-left-sidebar/index.vue"
+    ],
+    "LayoutTopMenu": [
+      "apps/main-app/src/modules/base/components/layout/top-menu/index.vue"
+    ],
+    "Li Si": [
+      "apps/main-app/src/pages/test/crud/index.vue",
+      "apps/main-app/src/pages/test/import-demo/index.vue"
+    ],
+    "list": [
+      "apps/main-app/mock-server.js"
+    ],
+    "List": [
+      "apps/logistics-app/src/router/routes/logistics.ts",
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "localhost": [
+      "apps/main-app/src/micro/apps.ts"
+    ],
+    "Location": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "Lock": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "Login": [
+      "apps/main-app/src/pages/auth/login/index.vue",
+      "apps/main-app/src/router/index.ts"
+    ],
+    "logistics": [
+      "apps/logistics-app/src/bootstrap/index.ts",
+      "apps/main-app/src/config/index.js",
+      "apps/main-app/src/config/index.ts",
+      "apps/main-app/src/micro/apps.ts"
+    ],
+    "logistics-customs": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "logistics-home": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "logistics-procurement": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "logistics-procurement-auxiliary": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "logistics-procurement-packaging": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "logistics-procurement-supplier": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "logistics-warehouse": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "logistics-warehouse-inventory-detail": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "logistics-warehouse-inventory-info": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "logistics-warehouse-material-list": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "LogisticsApp": [
+      "apps/logistics-app/src/App.vue"
+    ],
+    "LogisticsCustoms": [
+      "apps/logistics-app/src/modules/logistics/views/customs/index.vue"
+    ],
+    "LogisticsHome": [
+      "apps/logistics-app/src/pages/home/index.vue"
+    ],
+    "LogisticsProcurement": [
+      "apps/logistics-app/src/modules/logistics/views/procurement/index.vue"
+    ],
+    "LogisticsWarehouse": [
+      "apps/logistics-app/src/modules/logistics/views/warehouse/index.vue"
+    ],
+    "main": [
+      "apps/main-app/src/modules/base/components/layout/menu-drawer/index.vue"
+    ],
+    "map": [
+      "apps/main-app/src/modules/base/components/layout/menu-drawer/index.vue"
+    ],
+    "MapLocation": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "Menu": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "MenuPermBind": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "MenuPreview": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "MenuRenderer": [
+      "apps/main-app/src/modules/base/components/layout/menu-renderer/index.vue"
+    ],
+    "Menus": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "message": [
+      "apps/main-app/src/plugins/message/index.ts"
+    ],
+    "Message": [
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "message-notification": [
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "MessageNotificationTest": [
+      "apps/main-app/src/pages/test/message-notification/index.vue"
+    ],
+    "Modules": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "Monitor": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "msg": [
+      "apps/main-app/src/plugins/message/components/message-icon.vue"
+    ],
+    "navigation": [
+      "apps/main-app/src/modules/platform/navigation/config.ts"
+    ],
+    "NavigationMenuPermBind": [
+      "apps/main-app/src/modules/navigation/views/menu-perm-bind/index.vue"
+    ],
+    "NavigationMenuPreview": [
+      "apps/main-app/src/modules/navigation/views/menu-preview/index.vue"
+    ],
+    "NavigationMenus": [
+      "apps/main-app/src/modules/navigation/views/menus/index.vue"
+    ],
+    "notice": [
+      "apps/main-app/src/plugins/notification/components/notification-icon.vue"
+    ],
+    "notification": [
+      "apps/main-app/src/plugins/notification/index.ts"
+    ],
+    "Odometer": [
+      "apps/logistics-app/src/router/routes/logistics.ts",
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "OfficeBuilding": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "operation": [
+      "apps/main-app/src/modules/ops/views/logs/config.ts"
+    ],
+    "Operation": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "OperationLog": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "Opportunity": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "ops": [
+      "apps/main-app/src/modules/platform/ops/config.ts"
+    ],
+    "OpsApiList": [
+      "apps/main-app/src/modules/ops/views/api-list/index.vue",
+      "apps/main-app/src/router/index.ts"
+    ],
+    "OpsAudit": [
+      "apps/main-app/src/modules/ops/views/logs/operation/index.vue"
+    ],
+    "OpsLogs": [
+      "apps/main-app/src/modules/ops/views/logs/index.vue"
+    ],
+    "OpsLogsPage": [
+      "apps/main-app/src/pages/ops/logs.vue"
+    ],
+    "OpsSimulator": [
+      "apps/main-app/src/modules/ops/views/simulator/index.vue"
+    ],
+    "org": [
+      "apps/main-app/src/modules/platform/org/config.ts"
+    ],
+    "page": [
+      "apps/main-app/mock-server.js"
+    ],
+    "password": [
+      "apps/main-app/src/pages/auth/shared/components/login-tabs/index.vue"
+    ],
+    "pc": [
+      "apps/main-app/src/pages/auth/shared/composables/useAuthTabs.d.ts",
+      "apps/main-app/src/pages/auth/shared/composables/useAuthTabs.ts"
+    ],
+    "PermCompose": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "Permissions": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "PicCaptcha": [
+      "apps/main-app/src/pages/auth/login/components/PicCaptcha.vue"
+    ],
+    "Picture": [
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "platform": [
+      "apps/main-app/src/modules/platform/config.ts"
+    ],
+    "plugin_test": [
+      "apps/main-app/src/pages/test/svg-plugin/index.vue"
+    ],
+    "Plugins": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "Postcard": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "production": [
+      "apps/main-app/src/config/index.js",
+      "apps/main-app/src/config/index.ts",
+      "apps/main-app/src/micro/apps.ts",
+      "apps/production-app/src/main.ts"
+    ],
+    "ProductionApp": [
+      "apps/production-app/src/App.vue"
+    ],
+    "Profile": [
+      "apps/main-app/src/pages/profile/index.vue",
+      "apps/main-app/src/router/index.ts"
+    ],
+    "ProfileCard": [
+      "apps/main-app/src/pages/profile/components/ProfileCard.vue"
+    ],
+    "ProfileContent": [
+      "apps/main-app/src/pages/profile/components/ProfileContent.vue"
+    ],
+    "ProfileHeader": [
+      "apps/main-app/src/pages/profile/components/ProfileHeader.vue"
+    ],
+    "ProfileInfoItem": [
+      "apps/main-app/src/pages/profile/components/ProfileInfoItem.vue"
+    ],
+    "qr": [
+      "apps/main-app/src/pages/auth/shared/components/qr-toggle-btn/index.vue",
+      "apps/main-app/src/pages/auth/shared/composables/useAuthTabs.d.ts",
+      "apps/main-app/src/pages/auth/shared/composables/useAuthTabs.ts"
+    ],
+    "quality": [
+      "apps/main-app/src/config/index.js",
+      "apps/main-app/src/config/index.ts",
+      "apps/main-app/src/micro/apps.ts",
+      "apps/quality-app/src/main.ts"
+    ],
+    "QualityApp": [
+      "apps/quality-app/src/App.vue"
+    ],
+    "RBAC权限验证模板": [
+      "apps/main-app/src/services/strategy.ts"
+    ],
+    "refresh": [
+      "apps/main-app/src/modules/base/components/layout/process/index.vue"
+    ],
+    "Register": [
+      "apps/main-app/src/pages/auth/register/index.vue",
+      "apps/main-app/src/router/index.ts"
+    ],
+    "request": [
+      "apps/main-app/src/modules/ops/views/logs/config.ts"
+    ],
+    "RequestLog": [
+      "apps/main-app/src/modules/ops/views/logs/request/index.vue",
+      "apps/main-app/src/router/index.ts"
+    ],
+    "requiredRole": [
+      "apps/main-app/src/services/strategy.ts"
+    ],
+    "resourceName": [
+      "apps/main-app/src/services/strategy.ts"
+    ],
+    "Resources": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "RetryStatusIndicator": [
+      "apps/main-app/src/components/RetryStatusIndicator/index.vue"
+    ],
+    "RolePermBind": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "Roles": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "School": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "Select": [
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "select-button": [
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "SelectButtonTestPage": [
+      "apps/main-app/src/pages/test/select-button/index.vue"
+    ],
+    "Setting": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "share": [
+      "apps/main-app/src/modules/data/views/files/list/index.vue"
+    ],
+    "ShoppingCart": [
+      "apps/logistics-app/src/router/routes/logistics.ts"
+    ],
+    "Simulator": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "sms": [
+      "apps/main-app/src/pages/auth/shared/components/login-tabs/index.vue"
+    ],
+    "StrategyDesigner": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "StrategyManagement": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "StrategyMonitor": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "success": [
+      "apps/main-app/src/utils/message-manager/config.d.ts",
+      "apps/main-app/src/utils/message-manager/config.ts",
+      "apps/main-app/src/utils/notification-manager/config.ts"
+    ],
+    "svg-plugin": [
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "svg:amount-alt": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:approve": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:card": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:cart": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:database": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:design": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:dict": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:doc": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:folder": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:goods": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:home": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:map": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:monitor": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:recycle-bin": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:stats": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:task": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:time": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:trend": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "svg:warn": [
+      "apps/main-app/src/micro/menus.ts"
+    ],
+    "tab-1": [
+      "apps/main-app/src/pages/test/btc-tabs/index.vue"
+    ],
+    "tab-2": [
+      "apps/main-app/src/pages/test/btc-tabs/index.vue"
+    ],
+    "tab-3": [
+      "apps/main-app/src/pages/test/btc-tabs/index.vue"
+    ],
+    "tab-4": [
+      "apps/main-app/src/pages/test/btc-tabs/index.vue"
+    ],
+    "tabbar-menu": [
+      "apps/main-app/src/modules/base/components/layout/process/index.vue"
+    ],
+    "Tenants": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "test-plugin": [
+      "apps/main-app/src/plugins/test-plugin/config.ts"
+    ],
+    "TestCenterPage": [
+      "apps/main-app/src/pages/test/components/index.vue"
+    ],
+    "TestComponents": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "TestEps": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "theme": [
+      "apps/main-app/src/modules/base/components/layout/theme-switcher/index.vue",
+      "apps/main-app/src/plugins/theme/index.ts",
+      "apps/main-app/src/plugins/user-setting/index.vue"
+    ],
+    "Tickets": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "TrendCharts": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "tutorial": [
+      "apps/main-app/src/modules/base/components/layout/menu-drawer/index.vue"
+    ],
+    "update": [
+      "apps/main-app/mock-server.js"
+    ],
+    "upload": [
+      "apps/main-app/src/modules/data/views/files/list/index.vue"
+    ],
+    "Upload": [
+      "apps/main-app/src/utils/test-instance-scanner.ts"
+    ],
+    "User": [
+      "apps/logistics-app/src/router/routes/logistics.ts",
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "user-setting": [
+      "apps/main-app/src/plugins/user-setting/index.ts"
+    ],
+    "user1": [
+      "apps/main-app/src/pages/test/btc-code-json/index.vue",
+      "apps/main-app/src/pages/test/crud/index.vue",
+      "apps/main-app/src/pages/test/import-demo/index.vue"
+    ],
+    "user2": [
+      "apps/main-app/src/pages/test/crud/index.vue",
+      "apps/main-app/src/pages/test/import-demo/index.vue"
+    ],
+    "UserFilled": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "UserInfo": [
+      "apps/main-app/src/modules/base/components/layout/user-info/index.vue"
+    ],
+    "userRole": [
+      "apps/main-app/src/services/strategy.ts"
+    ],
+    "UserRoleAssign": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "Users": [
+      "apps/main-app/src/router/index.ts"
+    ],
+    "View": [
+      "apps/main-app/src/micro/menus.ts",
+      "apps/main-app/src/modules/base/components/layout/breadcrumb/index.vue"
+    ],
+    "vite-plugin-title-inject": [
+      "apps/main-app/vite-plugin-title-inject.js",
+      "apps/main-app/vite-plugin-title-inject.ts"
+    ],
+    "warning": [
+      "apps/main-app/src/utils/message-manager/config.d.ts",
+      "apps/main-app/src/utils/message-manager/config.ts",
+      "apps/main-app/src/utils/notification-manager/config.ts"
+    ],
+    "work": [
+      "apps/main-app/src/modules/base/components/layout/menu-drawer/index.vue"
+    ],
+    "Zhang San": [
+      "apps/main-app/src/pages/test/crud/index.vue",
+      "apps/main-app/src/pages/test/import-demo/index.vue"
+    ]
+  }
+}

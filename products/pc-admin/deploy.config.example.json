@@ -1,0 +1,44 @@
+{
+  "apps": {
+    "system-app": {
+      "deployPath": "/www/wwwroot/bellis.com.cn",
+      "domain": "bellis.com.cn",
+      "description": "系统主应用"
+    },
+    "admin-app": {
+      "deployPath": "/www/wwwroot/admin.bellis.com.cn",
+      "domain": "admin.bellis.com.cn",
+      "description": "管理应用"
+    },
+    "logistics-app": {
+      "deployPath": "/www/wwwroot/logistics.bellis.com.cn",
+      "domain": "logistics.bellis.com.cn",
+      "description": "物流应用"
+    },
+    "quality-app": {
+      "deployPath": "/www/wwwroot/quality.bellis.com.cn",
+      "domain": "quality.bellis.com.cn",
+      "description": "质量应用"
+    },
+    "production-app": {
+      "deployPath": "/www/wwwroot/production.bellis.com.cn",
+      "domain": "production.bellis.com.cn",
+      "description": "生产应用"
+    },
+    "engineering-app": {
+      "deployPath": "/www/wwwroot/engineering.bellis.com.cn",
+      "domain": "engineering.bellis.com.cn",
+      "description": "工程应用"
+    },
+    "finance-app": {
+      "deployPath": "/www/wwwroot/finance.bellis.com.cn",
+      "domain": "finance.bellis.com.cn",
+      "description": "财务应用"
+    },
+  },
+  "server": {
+    "backupPath": "/www/backups",
+    "nginxReloadCommand": "nginx -s reload"
+  }
+}
+

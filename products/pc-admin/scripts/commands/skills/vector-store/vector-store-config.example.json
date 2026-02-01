@@ -1,0 +1,7 @@
+{
+  "embedding": {
+    "provider": "local",
+    "localModel": "Xenova/all-MiniLM-L6-v2",
+    "dimensions": 384
+  }
+}

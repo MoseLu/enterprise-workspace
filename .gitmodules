@@ -1,7 +1,0 @@
-[submodule "products/agent-orchestrator"]
-    path = products/agent-orchestrator
-    url = https://github.com/BellisGit/agent-orchestrator-platform.git
-
-[submodule "references/ralph-claude-code"]
-    path = references/ralph-claude-code
-    url = https://github.com/frankbria/ralph-claude-code.git

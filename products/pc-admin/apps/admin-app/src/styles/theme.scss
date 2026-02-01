@@ -1,0 +1,172 @@
+// View Transition API 样式 - 支持主题切换动画（参考 cool-admin-vue-8.x）
+// 注意：在微前端场景下，view-transition-name 应该由主应用统一设置
+// 子应用不应该设置全局的 view-transition-name，避免与主应用冲突
+// 禁用默认动画，完全使用 JavaScript animate() API 控制
+::view-transition-new(root),
+::view-transition-old(root) {
+  animation: none !important;
+}
+
+// 全局设置 --el-bg-color，确保子应用加载时就能使用正确的背景色
+// 覆盖 Element Plus 默认的 #141414，统一使用 #0a0a0a
+// 注意：CSS 变量不支持 !important，但可以通过选择器优先级覆盖
+// 使用 html.dark:root 选择器（比 :root 优先级更高）确保覆盖 Element Plus 的样式
+// 在预览服务器上，确保样式优先级足够高，能够覆盖 Element Plus 的 dark/css-vars.css
+html.dark:root,
+html.dark,
+html.dark :root,
+html.dark html {
+  --el-bg-color: #0a0a0a;
+  --el-bg-color-page: #0a0a0a;
+}
+
+// 暗黑模式样式
+// 同时支持 html.dark 和 .dark，确保在 qiankun 样式隔离环境下也能正确应用
+html.dark:root,
+html.dark,
+.dark {
+  // Element Plus 组件背景色使用 #0a0a0a
+  --el-bg-color: #0a0a0a;
+  // Element Plus 页面背景色也使用 #0a0a0a（确保与组件背景色一致）
+  --el-bg-color-page: #0a0a0a;
+
+  // View Transition 遮罩层 z-index 设置（参考 cool-admin-vue-8.x）
+  // 当切换到暗黑模式时，旧视图（亮色）需要在上层显示
+  &::view-transition-old(root) {
+    z-index: 100;
+  }
+
+  // 暗黑模式下的背景色层次
+  // 布局区域（顶栏、面包屑、tabbar、内容区域、侧边栏）使用 #0a0a0a
+  // 组件背景使用 Element Plus 的 --el-bg-color #0a0a0a
+  // 全局背景使用 Element Plus 默认的暗色背景（不修改）
+  // 注意：布局背景色样式已移至共享组件 @btc/shared-components/styles/dark-theme.css
+  // 组件级别的暗色主题样式也已移至共享组件库，确保在 qiankun 样式隔离环境下也能正确应用
+  // 这里只保留 admin-app 特有的样式
+
+  // 优化暗黑模式下的遮罩层（排除偏好设置抽屉）
+  .el-overlay:not(.user-preferences-modal) {
+    background-size: 4px 4px;
+    backdrop-filter: saturate(50%) blur(4px);
+  }
+
+  // 优化抽屉（排除偏好设置抽屉，偏好设置抽屉有自己的样式）
+  .el-overlay:not(.user-preferences-modal) .el-drawer {
+    --el-drawer-bg-color: var(--el-bg-color);
+  }
+
+  // 子应用根容器背景色（确保在 qiankun 隔离环境下也能正确应用）
+  #app,
+  .admin-app,
+  .admin-app__container,
+  .admin-app__page {
+    background-color: var(--el-bg-color) !important;
+  }
+
+  // 确保子应用挂载点背景色正确
+  [data-qiankun='admin'] {
+    background-color: var(--el-bg-color) !important;
+  }
+
+  // 管理域首页的暗色模式样式
+  .main-home {
+    // 快速访问项在暗色模式下的样式
+    .access-item {
+      background: var(--el-bg-color) !important;
+      border-color: var(--el-border-color) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+
+      span {
+        color: var(--el-text-color-primary) !important;
+      }
+
+      &:hover {
+        background-color: var(--el-fill-color-light) !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+      }
+
+      // 暗色模式下的渐变效果
+      &::before {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+      }
+    }
+
+    // 图表区域在暗色模式下的背景色
+    .strategy-charts {
+      background-color: var(--el-bg-color) !important;
+
+      // 确保图表容器有正确的背景色
+      .btc-chart-gallery {
+        background-color: var(--el-bg-color) !important;
+      }
+
+      // 确保图表卡片有正确的背景色和文字颜色
+      .btc-card {
+        background-color: var(--el-bg-color) !important;
+        color: var(--el-text-color-primary) !important;
+
+        .btc-card__header {
+          background-color: var(--el-bg-color) !important;
+          color: var(--el-text-color-primary) !important;
+          border-bottom-color: var(--el-border-color) !important;
+        }
+
+        .btc-card__body {
+          background-color: var(--el-bg-color) !important;
+          color: var(--el-text-color-primary) !important;
+        }
+      }
+    }
+
+    // 系统信息区域在暗色模式下的样式
+    .system-info {
+      .info-item {
+        border-bottom-color: var(--el-border-color) !important;
+
+        .label {
+          color: var(--el-text-color-secondary) !important;
+        }
+      }
+    }
+
+    // 卡片在暗色模式下的样式
+    .main-home__card {
+      .btc-card {
+        background-color: var(--el-bg-color) !important;
+        color: var(--el-text-color-primary) !important;
+
+        .btc-card__header {
+          background-color: var(--el-bg-color) !important;
+          color: var(--el-text-color-primary) !important;
+          border-bottom-color: var(--el-border-color) !important;
+        }
+
+        .btc-card__body {
+          background-color: var(--el-bg-color) !important;
+          color: var(--el-text-color-primary) !important;
+        }
+      }
+    }
+  }
+}
+
+// 确保暗黑模式下的文本颜色正确
+.dark {
+  color-scheme: dark;
+}
+
+// ========== 关键：在文件末尾再次覆盖 CSS 变量，确保在预览服务器上也能生效 ==========
+// 在预览服务器上，样式可能被合并或压缩，导致加载顺序改变
+// 通过在文件末尾再次定义，确保覆盖样式在最后加载，优先级最高
+// 使用多个选择器组合，确保覆盖 Element Plus 的 dark/css-vars.css
+html.dark:root,
+html.dark,
+html.dark :root,
+html.dark html,
+html.dark body,
+html.dark #app {
+  // 再次覆盖，确保在预览服务器上也能生效
+  --el-bg-color: #0a0a0a;
+  --el-bg-color-page: #0a0a0a;
+}
+

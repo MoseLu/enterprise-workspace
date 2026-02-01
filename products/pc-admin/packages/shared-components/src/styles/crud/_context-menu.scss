@@ -1,0 +1,92 @@
+// ==================== CRUD 右键菜单样式 ====================
+
+.btc-context-menu {
+	position: absolute;
+	z-index: 9999;
+
+	&__box {
+		width: 160px;
+		background-color: var(--el-bg-color);
+		border: 1px solid var(--el-border-color-extra-light);
+		box-shadow:
+			0 4px 6px -1px rgba(0, 0, 0, 0.1),
+			0 2px 4px -2px rgba(0, 0, 0, 0.1);
+		border-radius: 6px;
+		position: absolute;
+		top: 0;
+		padding: 5px;
+
+		&.is-append {
+			right: calc(-100% - 5px);
+			top: -5px;
+		}
+
+		& > div {
+			display: flex;
+			align-items: center;
+			font-size: 12px;
+			cursor: pointer;
+			padding: 5px 15px;
+			color: var(--el-text-color-primary);
+			position: relative;
+			border-radius: 4px;
+
+			span {
+				flex: 1;
+				user-select: none;
+			}
+
+			&:hover {
+				background-color: var(--el-fill-color-lighter);
+			}
+
+			i {
+				&:first-child {
+					margin-right: 5px;
+				}
+
+				&:last-child {
+					margin-left: 5px;
+				}
+			}
+
+			&.is-active {
+				background-color: #f7f7f7;
+				color: #000;
+			}
+
+			&.is-ellipsis {
+				span {
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+			}
+
+			&.is-disabled {
+				span {
+					color: #ccc;
+
+					&:hover {
+						color: #ccc;
+					}
+				}
+			}
+		}
+	}
+
+	&__target {
+		position: relative;
+
+		&::after {
+			content: "";
+			display: block;
+			position: absolute;
+			left: 0;
+			top: 0;
+			height: 100%;
+			width: 100%;
+			background-color: rgba(0, 0, 0, 0.05);
+		}
+	}
+}

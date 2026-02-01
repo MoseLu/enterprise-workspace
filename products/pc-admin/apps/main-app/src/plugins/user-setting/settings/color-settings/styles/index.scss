@@ -1,0 +1,54 @@
+/**
+ * 颜色设置样式
+ */
+
+.color-settings {
+  .main-color-wrap {
+    .offset {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      width: 100%;
+
+      $size: 23px;
+
+      > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: $size;
+        height: $size;
+        margin-bottom: 10px;
+        cursor: pointer;
+        border-radius: $size;
+        transition: all 0.3s;
+        flex-shrink: 0;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+
+        .el-icon {
+          font-size: 14px;
+          color: #fff !important;
+        }
+
+        // 自定义颜色：静态圆形彩虹色渐变（未选择颜色时）
+        &.custom-color.is-custom {
+          background: conic-gradient(
+            from 0deg,
+            #ff0000,
+            #ff7f00,
+            #ffff00,
+            #00ff00,
+            #0000ff,
+            #4b0082,
+            #9400d3,
+            #ff0000
+          ) !important;
+        }
+      }
+    }
+  }
+}
+

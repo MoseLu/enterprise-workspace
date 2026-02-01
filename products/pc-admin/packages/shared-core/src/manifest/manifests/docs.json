@@ -1,0 +1,20 @@
+{
+  "app": {
+    "id": "docs",
+    "basePath": "/docs",
+    "nameKey": "menu.docs_center",
+    "app-name": "domain.type.docs"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "labelKey": "menu.docs_center",
+      "tab": {
+        "enabled": false
+      },
+      "breadcrumbs": []
+    }
+  ],
+  "menus": []
+}
+

@@ -1,0 +1,11 @@
+// 共享组件样式入口文件
+// 导入所有子样式
+
+@use './variables';
+@use './_base';
+@use './_auth-card';
+@use './_components';
+@use './_qr-toggle-btn';
+@use './_login-tabs';
+@use './_glassmorphism';
+// @use './_responsive'; // 响应式样式已禁用，避免影响全局

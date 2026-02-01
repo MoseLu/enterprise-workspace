@@ -1,0 +1,21 @@
+{
+  "procurement.common.create_po_success": "已创建 {count} 条采购订单",
+  "procurement.common.create_po_failed": "创建采购订单失败",
+  "procurement.aux.title": "辅料管理",
+  "procurement.aux.po.create.success": "已创建 {count} 条辅料采购订单",
+  "procurement.aux.request.empty": "暂无辅料需求，去创建一条？",
+  "procurement.aux.supplier.name": "供应商名称",
+  "procurement.aux.supplier.code": "供应商编码",
+  "procurement.aux.material.name": "辅料名称",
+  "procurement.aux.material.spec": "规格型号",
+  "procurement.aux.material.unit": "单位",
+  "procurement.aux.quantity": "数量",
+  "procurement.aux.price": "单价",
+  "procurement.aux.total_amount": "总金额",
+  "procurement.packaging.title": "包材管理",
+  "procurement.packaging.create_success": "包装方案创建成功",
+  "procurement.packaging.material.name": "包装材料",
+  "procurement.packaging.dimension": "尺寸规格",
+  "procurement.packaging.weight": "重量",
+  "procurement.packaging.cost": "成本"
+}

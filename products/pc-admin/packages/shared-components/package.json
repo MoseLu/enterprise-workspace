@@ -1,0 +1,142 @@
+{
+  "name": "@btc/shared-components",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "BTC ShopFlow 共享组件库",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "registry": "http://localhost:4873"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./src/index.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./plugins": {
+      "types": "./src/plugins/index.d.ts",
+      "development": "./src/plugins/index.ts",
+      "import": "./dist/plugins/index.mjs",
+      "require": "./dist/plugins/index.js"
+    },
+    "./plugins/i18n": {
+      "types": "./src/plugins/i18n/index.d.ts",
+      "development": "./src/plugins/i18n/index.ts",
+      "import": "./dist/plugins/i18n/index.mjs",
+      "require": "./dist/plugins/i18n/index.js"
+    },
+    "./plugins/theme": {
+      "types": "./src/plugins/theme/index.d.ts",
+      "development": "./src/plugins/theme/index.ts",
+      "import": "./dist/plugins/theme/index.mjs",
+      "require": "./dist/plugins/theme/index.js"
+    },
+    "./plugins/preference": {
+      "types": "./src/plugins/preference/index.d.ts",
+      "development": "./src/plugins/preference/index.ts",
+      "import": "./dist/plugins/preference/index.mjs",
+      "require": "./dist/plugins/preference/index.js"
+    },
+    "./plugins/message": {
+      "types": "./src/plugins/message/index.d.ts",
+      "development": "./src/plugins/message/index.ts",
+      "import": "./dist/plugins/message/index.mjs",
+      "require": "./dist/plugins/message/index.js"
+    },
+    "./plugins/notification": {
+      "types": "./src/plugins/notification/index.d.ts",
+      "development": "./src/plugins/notification/index.ts",
+      "import": "./dist/plugins/notification/index.mjs",
+      "require": "./dist/plugins/notification/index.js"
+    },
+    "./plugins/github": {
+      "types": "./src/plugins/github/index.d.ts",
+      "development": "./src/plugins/github/index.ts",
+      "import": "./dist/plugins/github/index.mjs",
+      "require": "./dist/plugins/github/index.js"
+    },
+    "./i18n": {
+      "types": "./src/i18n/index.d.ts",
+      "development": "./src/i18n/index.ts",
+      "import": "./src/i18n/index.ts",
+      "require": "./src/i18n/index.ts"
+    },
+    "./i18n/types": {
+      "types": "./src/i18n/types.d.ts",
+      "development": "./src/i18n/types.ts",
+      "import": "./src/i18n/types.ts",
+      "require": "./src/i18n/types.ts"
+    },
+    "./i18n/utils": {
+      "types": "./src/i18n/utils.d.ts",
+      "development": "./src/i18n/utils.ts",
+      "import": "./src/i18n/utils.ts",
+      "require": "./src/i18n/utils.ts"
+    },
+    "./i18n/locales": {
+      "types": "./src/i18n/locales/index.d.ts",
+      "development": "./src/i18n/locales/index.ts",
+      "import": "./src/i18n/locales/index.ts",
+      "require": "./src/i18n/locales/index.ts"
+    },
+    "./dist/style.css": "./dist/style.css",
+    "./style.css": "./dist/style.css",
+    "./styles/dark-theme.css": "./dist/styles/dark-theme.css",
+    "./styles/index.scss": "./src/styles/index.scss",
+    "./locales/zh-CN.json": "./src/locales/zh-CN.json",
+    "./locales/en-US.json": "./src/locales/en-US.json",
+    "./components/others/btc-user-setting/index.vue": {
+      "development": "./src/components/others/btc-user-setting/index.vue",
+      "import": "./src/components/others/btc-user-setting/index.vue",
+      "require": "./src/components/others/btc-user-setting/index.vue"
+    }
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build && vue-tsc --project tsconfig.build.json --skipLibCheck --skipDefaultLibCheck && node scripts/verify-build.mjs",
+    "type-check": "vue-tsc --noEmit --project tsconfig.type-check.json",
+    "clean": "node scripts/clean.mjs",
+    "verify-build": "node scripts/verify-build.mjs"
+  },
+  "peerDependencies": {
+    "@btc/shared-core": "^2.0.0",
+    "@element-plus/icons-vue": "^2.0.0",
+    "@vueuse/core": "^12.0.0 || ^13.0.0",
+    "element-plus": "^2.13.0",
+    "qiankun": "^2.10.16",
+    "vue": "^3.3.0",
+    "vue-i18n": "^9.0.0 || ^11.0.0"
+  },
+  "devDependencies": {
+    "@btc/design-tokens": "workspace:*",
+    "@btc/shared-core": "workspace:*",
+    "@element-plus/icons-vue": "^2.3.2",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^24.7.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "element-plus": "^2.13.0",
+    "pinia": "^2.0.0",
+    "sass": "^1.93.2",
+    "vite": "^5.0.0",
+    "vite-plugin-dts": "^4.5.4",
+    "vue-router": "^4.0.0",
+    "vue-tsc": "^2.0.0"
+  },
+  "dependencies": {
+    "@octokit/rest": "^21.0.0",
+    "@vueuse/core": "^12.8.2",
+    "chardet": "^2.1.0",
+    "echarts": "^6.0.0",
+    "lodash-es": "^4.17.21",
+    "lunr": "^2.3.9",
+    "vue-echarts": "^8.0.1"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "color": {
+    "base": {
+      "primary": {
+        "value": "var(--el-color-primary)",
+        "type": "color",
+        "description": "主色，引用 Element Plus 变量"
+      },
+      "text": {
+        "primary": {
+          "value": "var(--el-text-color-primary)",
+          "type": "color",
+          "description": "主要文本颜色，引用 Element Plus 变量"
+        }
+      }
+    },
+    "crud": {
+      "button": {
+        "value": "{color.base.text.primary}",
+        "type": "color",
+        "description": "CRUD 按钮的文字颜色，默认继承主要文本颜色"
+      },
+      "icon": {
+        "value": "{color.base.primary}",
+        "type": "color",
+        "description": "CRUD 图标按钮的颜色，默认继承主色"
+      }
+    },
+    "icon": {
+      "value": "{color.base.text.primary}",
+      "type": "color",
+      "description": "通用图标按钮的颜色，默认继承主要文本颜色"
+    },
+    "breath": {
+      "value": "{color.base.primary}",
+      "type": "color",
+      "description": "通知/消息图标的呼吸灯动画颜色，默认继承主色"
+    },
+    "table": {
+      "button": {
+        "value": "{color.base.primary}",
+        "type": "color",
+        "description": "表格工具栏按钮的颜色，默认继承主色"
+      }
+    },
+    "accent": {
+      "jade": {
+        "value": "#CFEAD6",
+        "type": "color",
+        "description": "玉色强调色"
+      }
+    }
+  }
+}

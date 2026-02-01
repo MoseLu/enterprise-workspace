@@ -1,0 +1,265 @@
+@use 'variables' as *;
+
+// 表单元素样式
+.auth-page .login-card .card-content {
+	// 参考cool-admin-vue的高优先级输入框样式覆盖
+	// 使用完整的DOM路径确保优先级
+	.card-content .password-login .form .el-form .el-input .el-input__inner,
+	.card-content .sms-login .form .el-form .el-input .el-input__inner,
+	.forget-password .forget-password-form .el-form .el-input .el-input__inner {
+		height: $auth-input-height;
+		color: $auth-light-input-color;
+		font-size: $auth-input-font-size;
+		
+		&::placeholder {
+			color: $auth-light-input-placeholder;
+		}
+	}
+	
+	// 暗黑模式适配 - 确保输入框文字在暗色主题下可见
+	html.dark & {
+		.card-content .password-login .form .el-form .el-input .el-input__inner,
+		.card-content .sms-login .form .el-form .el-input .el-input__inner,
+		.forget-password .forget-password-form .el-form .el-input .el-input__inner {
+			color: $auth-dark-input-color !important;
+			
+			&::placeholder {
+				color: $auth-dark-input-placeholder !important;
+			}
+		}
+	}
+}
+
+// 统一的表单项样式 - 提高优先级
+// 只对登录页面生效，不影响注册页面的 BtcStepsForm
+.auth-page .login-card .card-content .el-form-item:not(.btc-steps-form .el-form-item) {
+	.el-form-item__content {
+		transition: none !important;
+		width: 100% !important;
+		min-width: 0 !important;
+		margin-left: 0 !important; // 强制移除Element Plus自动添加的margin-left
+	}
+}
+
+// 统一的按钮样式 - 确保按钮占据完整宽度
+// 重构后DOM结构：.card-content > .password-login > PasswordForm > .password-login > .op
+.auth-page .login-card .card-content .password-login .password-login .op,
+.auth-page .login-card .card-content .sms-login .sms-login .op {
+	width: 100% !important;
+	
+	.el-button {
+		width: 100% !important;
+		max-width: 100% !important;
+		min-width: 0 !important;
+		flex: 1 !important;
+	}
+}
+
+// 确保登录按钮有背景色（备用样式，防止 glassmorphism 样式未生效）
+// 使用更高优先级的选择器，确保样式能够正确应用
+.auth-page .el-button.el-button--primary,
+.auth-page .button-container .el-button.el-button--primary,
+.auth-page :deep(.el-button.el-button--primary) {
+	// 如果 glassmorphism 样式未生效，使用 Element Plus 默认主题色
+	background-color: var(--el-color-primary) !important;
+	background: var(--el-color-primary) !important;
+	border-color: var(--el-color-primary) !important;
+	color: var(--el-color-white) !important;
+	
+	&:hover {
+		background-color: var(--el-color-primary-light-3) !important;
+		background: var(--el-color-primary-light-3) !important;
+		border-color: var(--el-color-primary-light-3) !important;
+	}
+	
+	&:active {
+		background-color: var(--el-color-primary-dark-2) !important;
+		background: var(--el-color-primary-dark-2) !important;
+		border-color: var(--el-color-primary-dark-2) !important;
+	}
+}
+
+// 忘记密码页面的按钮样式
+.auth-page .login-card .card-content .forget-password {
+	// 短信验证码按钮样式
+	:deep(.el-input__suffix) {
+		.sms-btn {
+			font-size: 14px;
+			padding: 8px 12px;
+			height: auto;
+			min-width: 80px;
+			border: none;
+			background: none;
+			color: var(--el-text-color-regular);
+			transition: all 0.3s ease;
+
+			&:hover:not(.is-disabled) {
+				color: var(--el-color-primary);
+				background-color: rgba(64, 158, 255, 0.1);
+			}
+
+			&:active:not(.is-disabled) {
+				transform: translateY(1px);
+				background-color: rgba(64, 158, 255, 0.2);
+			}
+
+			&.is-disabled {
+				color: var(--el-text-color-disabled) !important;
+				background: none !important;
+				border: none !important;
+				cursor: not-allowed !important;
+			}
+		}
+	}
+}
+
+// 忘记密码页面暗色模式输入框文字样式 - 使用更高优先级
+.auth-page .login-card .card-content .forget-password {
+	// 暗色模式下的输入框文字样式
+	html.dark & {
+		:deep(.el-input__wrapper) {
+			.el-input__inner {
+				color: #ffffff !important;
+				
+				&::placeholder {
+					color: #b3b3b3 !important;
+				}
+			}
+		}
+		
+		// 兼容旧版本 Element Plus
+		:deep(.el-input__inner) {
+			color: #ffffff !important;
+			
+			&::placeholder {
+				color: #b3b3b3 !important;
+			}
+		}
+	}
+}
+
+
+// 统一的获取验证码按钮样式
+:deep(.sms-btn) {
+	font-size: 14px;
+	padding: 8px 12px;
+	height: auto;
+	min-width: 80px;
+	border: none;
+	background: none !important;
+	color: $auth-light-text-secondary;
+	transition: color 0.3s ease;
+
+	&:hover:not(.is-disabled) {
+		color: var(--el-color-primary);
+		background: none !important;
+	}
+
+	&:active:not(.is-disabled) {
+		background: none !important;
+	}
+
+	&.is-disabled {
+		color: $auth-light-text-placeholder;
+		background: none !important;
+		border: none;
+		cursor: not-allowed;
+	}
+	
+	// 暗黑模式适配 - 现在由主题插件处理，这里可以移除
+	// html.dark & {
+	// 	color: $auth-dark-text-secondary !important;
+	// 	
+	// 	&:hover:not(.is-disabled) {
+	// 		color: var(--el-color-primary) !important;
+	// 	}
+	// 	
+	// 	&.is-disabled {
+	// 		color: $auth-dark-text-placeholder !important;
+	// 	}
+	// }
+}
+
+// 统一的输入框后缀按钮布局样式
+:deep(.el-input) {
+	.el-input__wrapper {
+		transition: none;
+		width: 100%;
+		min-width: 0;
+	}
+	
+	.el-input__inner {
+		width: 100%;
+		min-width: 0;
+	}
+	
+	.el-input__suffix {
+		position: absolute;
+		right: 8px;
+		top: 50%;
+		transform: translateY(-50%);
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+	
+	.el-input__suffix-inner {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+	}
+	
+	.sms-btn {
+		order: 1;
+	}
+	
+	.el-input__clear {
+		order: 2;
+	}
+}
+
+// append 区域内的元素布局
+:deep(.el-input-group__append) {
+	display: flex;
+	align-items: center;
+	gap: 0;
+	padding: 0;
+	background-color: transparent !important;
+	
+	.email-suffix {
+		color: var(--el-text-color-regular);
+		font-size: 14px;
+		white-space: nowrap;
+		order: 1;
+		font-weight: 500;
+		padding: 0 12px;
+		background-color: var(--el-fill-color-light);
+		border-right: 1px solid var(--el-border-color);
+		color: var(--el-text-color-primary);
+		height: 100%;
+		display: flex;
+		align-items: center;
+		border-top: 1px solid var(--el-border-color);
+		border-bottom: 1px solid var(--el-border-color);
+	}
+	
+	.sms-btn {
+		order: 2;
+		height: 28px;
+		padding: 0 12px;
+		font-size: 12px;
+		border-radius: 0;
+		white-space: nowrap;
+		margin: 0 8px 0 0;
+		background: none !important;
+		border: none !important;
+		box-shadow: none !important;
+	}
+	
+	// 暗黑模式适配 - 现在由主题插件处理，这里可以移除
+	// html.dark & {
+	// 	.email-suffix {
+	// 		color: $auth-dark-text-regular !important;
+	// 	}
+	// }
+}

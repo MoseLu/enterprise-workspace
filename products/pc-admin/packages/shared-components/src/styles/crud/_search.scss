@@ -1,0 +1,127 @@
+// ==================== CRUD 搜索框样式 ====================
+
+.btc-search-key {
+	display: inline-flex;
+	align-items: center;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: 0;
+	min-width: 0;
+	flex: 0 0 var(--btc-crud-search-width, var(--btc-crud-op-width, 220px));
+	width: var(--btc-crud-search-width, var(--btc-crud-op-width, 220px));
+	max-width: var(--btc-crud-search-width, var(--btc-crud-op-width, 220px));
+
+	&.is-expanded {
+		flex: 0 1 var(--btc-crud-search-width, 200px);
+		width: var(--btc-crud-search-width, 200px);
+		max-width: var(--btc-crud-search-width, 200px);
+	}
+
+	&.is-collapsible:not(.is-expanded) {
+		flex: 0 0 34px !important;
+		width: 34px !important;
+		max-width: 34px !important;
+		min-width: 34px !important;
+		justify-content: flex-end;
+	}
+
+	.el-input-group__append {
+		padding: 0;
+		border: none;
+		background: transparent;
+	}
+
+	&__select {
+		margin-right: 10px;
+
+		&.el-select {
+			width: 100px;
+		}
+	}
+
+	&__wrap {
+		display: inline-flex;
+		align-items: center;
+
+		.el-input {
+			flex: 1;
+		}
+	}
+
+	&__icon-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 34px;
+		height: 34px;
+		padding: 0;
+		border: 1px solid var(--el-border-color);
+		background-color: transparent;
+		color: var(--el-text-color-regular);
+		cursor: pointer;
+		border-radius: 6px;
+		box-sizing: border-box;
+		margin-left: 0;
+		transition: background-color 0.2s ease, color 0.2s ease;
+		outline: none;
+
+		&:hover,
+		&:focus-visible {
+			color: var(--el-color-primary);
+			background-color: transparent;
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--el-color-primary);
+			outline-offset: 2px;
+		}
+
+		.btc-svg {
+			width: 18px;
+			height: 18px;
+		}
+	}
+
+	&.is-expanded .btc-search-key__icon-btn {
+		margin-left: -1px;
+		border-radius: 0;
+	}
+
+	&.is-collapsible:not(.is-expanded) .btc-search-key__icon-btn {
+		margin-left: 0;
+	}
+
+	&.is-expanded {
+		:deep(.el-input__wrapper) {
+			border-color: var(--el-color-primary);
+			box-shadow: 0 0 0 1px var(--el-color-primary) inset;
+		}
+
+		:deep(.el-input__wrapper:hover),
+		:deep(.el-input__wrapper.is-focus),
+		:deep(.el-input__wrapper.is-focus:hover) {
+			border-color: var(--el-color-primary);
+			box-shadow: 0 0 0 1px var(--el-color-primary) inset;
+		}
+
+		.btc-search-key__icon-btn {
+			border-color: var(--el-color-primary);
+			color: var(--el-color-primary);
+		}
+	}
+
+	:deep(.el-input__wrapper.is-focus) {
+		border-color: var(--el-color-primary);
+		box-shadow: 0 0 0 1px var(--el-color-primary) inset;
+	}
+
+	:deep(.el-input__wrapper.is-focus) + .el-input__suffix {
+		color: var(--el-color-primary);
+	}
+
+	&.is-collapsible:not(.is-expanded) .btc-search-key__icon-btn:hover,
+	&.is-collapsible:not(.is-expanded) .btc-search-key__icon-btn:focus-visible {
+		border-color: var(--el-color-primary);
+		color: var(--el-color-primary);
+	}
+}

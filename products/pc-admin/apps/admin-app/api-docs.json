@@ -1,0 +1,4219 @@
+{
+    "code": 200,
+    "msg": "响应成功",
+    "data": {
+        "com.btc.systemservice.business.controller.base.BaseSysCheckTicketController": {
+            "className": "com.btc.systemservice.business.controller.base.BaseSysCheckTicketController",
+            "simpleName": "BaseSysCheckTicketController",
+            "apis": [
+                {
+                    "methodName": "savePrint",
+                    "paths": "/api/system/base/checkTicket/print",
+                    "httpMethods": "POST",
+                    "description": {},
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "ticketPrint",
+                    "paths": "/api/system/base/checkTicket/info",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "盘点票查询打印",
+                        "description": "盘点票查询打印"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.base.BaseUserController": {
+            "className": "com.btc.systemservice.business.controller.base.BaseUserController",
+            "simpleName": "BaseUserController",
+            "description": "",
+            "tags": [
+                "系统基础模块"
+            ],
+            "apis": [
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/base/profile/update",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "编辑用户档案信息",
+                        "description": "编辑用户档案信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysUserProfile",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "info",
+                    "paths": "/api/system/base/profile/info",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "获取当前用户档案信息",
+                        "description": "从Cookie中获取accessToken，返回用户档案信息（支持脱敏）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "boolean",
+                            "name": "showFull",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "verify",
+                    "paths": "/api/system/base/profile/info/verify",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "获取邮箱或手机号的脱敏数据",
+                        "description": "type(必填) 值：email/phone "
+                    },
+                    "parameters": [
+                        {
+                            "type": "VerifyDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "password",
+                    "paths": "/api/system/base/profile/update/password",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "修改初始密码",
+                        "description": "initPass(必填)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysUserProfile",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.base.EmailController": {
+            "className": "com.btc.systemservice.business.controller.base.EmailController",
+            "simpleName": "EmailController",
+            "description": "",
+            "tags": [
+                "邮箱管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/base/email/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "验证验证码并修改邮箱",
+                        "description": "email(必填),scene(场景，必填)，code(验证码，必填)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "VerifyEmailCodeRequest",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody",
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "bind",
+                    "paths": "/api/system/base/email/bind",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "绑定发送邮箱验证码",
+                        "description": "前端传递用户邮箱，获取验证码进行验证绑定，email(必填)，type(必填)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "VerifyDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody",
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "verify",
+                    "paths": "/api/system/base/email/verify",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "校验邮箱或者手机号验证码",
+                        "description": "code(必填),smsType(必填)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "VerifyDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody",
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "send",
+                    "paths": "/api/system/base/email/send",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "发送邮箱验证码",
+                        "description": "通过cookie获取用户邮箱，进行换绑，type（必填）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "VerifyDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody",
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.base.EpsController": {
+            "className": "com.btc.systemservice.business.controller.base.EpsController",
+            "simpleName": "EpsController",
+            "description": "EPS接口",
+            "tags": [
+                "EPS接口"
+            ],
+            "apis": [
+                {
+                    "methodName": "getEps",
+                    "paths": "/api/system/open/eps",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "获取EPS数据"
+                    },
+                    "parameters": []
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.base.I18nController": {
+            "className": "com.btc.systemservice.business.controller.base.I18nController",
+            "simpleName": "I18nController",
+            "description": "",
+            "tags": [
+                "国际化管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "testMessage",
+                    "paths": "/api/system/iam/i18n",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "测试国际化消息",
+                        "description": "返回整个消息文件内容"
+                    },
+                    "parameters": []
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.base.PhoneController": {
+            "className": "com.btc.systemservice.business.controller.base.PhoneController",
+            "simpleName": "PhoneController",
+            "description": "",
+            "tags": [
+                "手机号管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/base/phone/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "验证码并修改手机号",
+                        "description": "phone(必填),smsCode(必填),smsType(必填)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SmsDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody",
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "bind",
+                    "paths": "/api/system/base/phone/bind",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "绑定发送手机号验证码",
+                        "description": "前端传递用户手机号，获取验证码进行验证绑定，phone(必填),smsType(必填)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SmsDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody",
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "verify",
+                    "paths": "/api/system/base/phone/verify",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "校验邮箱或者手机号验证码",
+                        "description": "code(必填),smsType(必填)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "VerifyDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody",
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "send",
+                    "paths": "/api/system/base/phone/send",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "发送手机号验证码",
+                        "description": "通过cookie获取用户手机号，进行换绑，type（必填）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "VerifyDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody",
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.base.SysBtcBomController": {
+            "className": "com.btc.systemservice.business.controller.base.SysBtcBomController",
+            "simpleName": "SysBtcBomController",
+            "description": "",
+            "tags": [
+                "BTC BOM管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/base/bom/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增BTC BOM"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysBtcBom",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/base/bom/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新BTC BOM"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysBtcBom",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/base/bom/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询BTC BOM"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "importExcel",
+                    "paths": "/api/system/base/bom/import",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "导入bom表",
+                        "description": "导入盘点非sysprobom表，前端传值：{domainId:'',list: [{...},{...}]}"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysBomDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "exportExcel",
+                    "paths": "/api/system/base/bom/export",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "导出bom表",
+                        "description": "导出根据域查询到的数据的数据，"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.base.SysBtcDataController": {
+            "className": "com.btc.systemservice.business.controller.base.SysBtcDataController",
+            "simpleName": "SysBtcDataController",
+            "description": "",
+            "tags": [
+                "BTC数据管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/base/data/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增BTC数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysBtcData",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/base/data/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新BTC数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysBtcData",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/base/data/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询BTC数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "importExcel",
+                    "paths": "/api/system/base/data/import",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "导入数据表",
+                        "description": "导入盘点数据表，前端传值：{domainId:'',list: [{...},{...}]}"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysDataDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "exportExcel",
+                    "paths": "/api/system/base/data/export",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "导出数据表",
+                        "description": "导出根据域查询到的数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.base.SysFinanceController": {
+            "className": "com.btc.systemservice.business.controller.base.SysFinanceController",
+            "simpleName": "SysFinanceController",
+            "description": "",
+            "tags": [
+                "财务管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "findAll",
+                    "paths": "/api/system/base/finance-result/result",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "导出结果数据",
+                        "description": "导出结果数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "summary",
+                    "paths": "/api/system/base/finance-result/summary",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "总结",
+                        "description": "总结账面数据与实际数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/base/finance-result/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "财务结果查询",
+                        "description": "分页查询数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "financeTOP",
+                    "paths": "/api/system/base/finance-result/top",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "财务差异TOP",
+                        "description": "财务差异正负 top10 与价值差异正负 top10"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysActionController": {
+            "className": "com.btc.systemservice.business.controller.SysActionController",
+            "simpleName": "SysActionController",
+            "description": "",
+            "tags": [
+                "行为管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/action/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/action/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/action/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/action/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/action/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysApprovalController": {
+            "className": "com.btc.systemservice.business.controller.SysApprovalController",
+            "simpleName": "SysApprovalController",
+            "description": "",
+            "tags": [
+                "审批管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "confirm",
+                    "paths": "/api/system/base/approval/confirm",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "确认",
+                        "description": "编辑确认人，自动生成时间,前端需传递{id: ''}"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysApproval",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "revoke",
+                    "paths": "/api/system/base/approval/revoke",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "撤销确认",
+                        "description": "撤销确认状态"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysApproval",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "selectPage",
+                    "paths": "/api/system/base/approval/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "前端需传递：{checkNo:''}"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysDataSourceController": {
+            "className": "com.btc.systemservice.business.controller.SysDataSourceController",
+            "simpleName": "SysDataSourceController",
+            "description": "",
+            "tags": [
+                "数据源管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/base/data-source/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新数据源信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysDataSource",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "export",
+                    "paths": "/api/system/base/data-source/export",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "导出数据源",
+                        "description": "根据主键ID更新数据源信息，前端需传递：{checkNo: '',position: '',checker: '',partName: ''}"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/base/data-source/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询数据源数据,前端需传递：{checkNo: '',position: '',checker: '',partName: ''}"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysDepartmentController": {
+            "className": "com.btc.systemservice.business.controller.SysDepartmentController",
+            "simpleName": "SysDepartmentController",
+            "description": "",
+            "tags": [
+                "部门接口"
+            ],
+            "apis": [
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/department/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "deleteBatch",
+                    "paths": "/api/system/iam/department/delete/batch",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量删除",
+                        "description": "根据id列表集合批量删除"
+                    },
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/department/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/department/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/department/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/department/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysDictInfoController": {
+            "className": "com.btc.systemservice.business.controller.SysDictInfoController",
+            "simpleName": "SysDictInfoController",
+            "description": "",
+            "tags": [
+                "字典信息管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/dict/info/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/dict/info/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/dict/info/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/dict/info/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/dict/info/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysDictItemController": {
+            "className": "com.btc.systemservice.business.controller.SysDictItemController",
+            "simpleName": "SysDictItemController",
+            "description": "",
+            "tags": [
+                "字典项管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/dict/item/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/dict/item/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/dict/item/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/dict/item/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/dict/item/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysDomainController": {
+            "className": "com.btc.systemservice.business.controller.SysDomainController",
+            "simpleName": "SysDomainController",
+            "description": "",
+            "tags": [
+                "域接口"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/domain/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "异步新增域",
+                        "description": "异步新增域，返回布尔值"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysDomain",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/domain/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "异步新增域",
+                        "description": "异步新增域，返回布尔值"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/domain/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "编辑域",
+                        "description": "编辑域数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysDomain",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/domain/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "编辑域",
+                        "description": "编辑域数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "me",
+                    "paths": "/api/system/iam/domain/me",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "查询当前用户有哪些域",
+                        "description": "根据用户名查询有哪些域"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "deleteBatch",
+                    "paths": "/api/system/iam/domain/delete/batch",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量删除",
+                        "description": "根据id列表集合批量删除"
+                    },
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/domain/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/domain/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/domain/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysMenuController": {
+            "className": "com.btc.systemservice.business.controller.SysMenuController",
+            "simpleName": "SysMenuController",
+            "description": "",
+            "tags": [
+                "菜单管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "deleteBatch",
+                    "paths": "/api/system/iam/menu/delete/batch",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量删除",
+                        "description": "根据id列表集合批量删除"
+                    },
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody",
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/menu/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/menu/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/menu/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/menu/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/menu/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysModuleController": {
+            "className": "com.btc.systemservice.business.controller.SysModuleController",
+            "simpleName": "SysModuleController",
+            "description": "",
+            "tags": [
+                "模块管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/module/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "异步新增"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysModule",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/module/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "异步新增"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "deleteBatch",
+                    "paths": "/api/system/iam/module/delete/batch",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量删除",
+                        "description": "根据id列表集合批量删除"
+                    },
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/module/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/module/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/module/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/module/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysPermissionController": {
+            "className": "com.btc.systemservice.business.controller.SysPermissionController",
+            "simpleName": "SysPermissionController",
+            "description": "",
+            "tags": [
+                "权限接口"
+            ],
+            "apis": [
+                {
+                    "methodName": "deleteBatch",
+                    "paths": "/api/system/iam/permission/delete/batch",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量删除",
+                        "description": "根据id列表集合批量删除"
+                    },
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/permission/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/permission/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/permission/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/permission/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/permission/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysPluginController": {
+            "className": "com.btc.systemservice.business.controller.SysPluginController",
+            "simpleName": "SysPluginController",
+            "description": "",
+            "tags": [
+                "插件接口"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/plugin/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/plugin/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/plugin/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/plugin/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/plugin/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysPolicyController": {
+            "className": "com.btc.systemservice.business.controller.SysPolicyController",
+            "simpleName": "SysPolicyController",
+            "description": "",
+            "tags": [
+                "策略管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "enablePolicy",
+                    "paths": "/api/system/iam/policy/enable/{policyId}",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "启用策略",
+                        "description": "启用指定的策略"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "disablePolicy",
+                    "paths": "/api/system/iam/policy/disable/{policyId}",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "停用策略",
+                        "description": "停用指定的策略"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/policy/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/policy/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/policy/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/policy/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/policy/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysResourceController": {
+            "className": "com.btc.systemservice.business.controller.SysResourceController",
+            "simpleName": "SysResourceController",
+            "description": "",
+            "tags": [
+                "资源接口"
+            ],
+            "apis": [
+                {
+                    "methodName": "deleteBatch",
+                    "paths": "/api/system/iam/resource/delete/batch",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量删除",
+                        "description": "根据id列表集合批量删除"
+                    },
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/resource/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/resource/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/resource/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/resource/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/resource/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysRoleController": {
+            "className": "com.btc.systemservice.business.controller.SysRoleController",
+            "simpleName": "SysRoleController",
+            "description": "",
+            "tags": [
+                "角色接口"
+            ],
+            "apis": [
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/role/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询角色列表"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "deleteBatch",
+                    "paths": "/api/system/iam/role/delete/batch",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量删除",
+                        "description": "根据id列表集合批量删除"
+                    },
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/role/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/role/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/role/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/role/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysRolePermissionController": {
+            "className": "com.btc.systemservice.business.controller.SysRolePermissionController",
+            "simpleName": "SysRolePermissionController",
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/role-permission/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/role-permission/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/role-permission/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/role-permission/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/role-permission/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysSystemController": {
+            "className": "com.btc.systemservice.business.controller.SysSystemController",
+            "simpleName": "SysSystemController",
+            "description": "",
+            "tags": [
+                "系统管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "register",
+                    "paths": "/api/system/auth/register",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "用户注册",
+                        "description": "使用Keycloak进行用户注册，参数：phone(必填)、password(必填)、sessionId(必填)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "BtcSysUserDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "logout",
+                    "paths": "/api/system/auth/logout",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "退出登录",
+                        "description": "用户退出登录，不需要传递参数"
+                    },
+                    "parameters": [
+                        {
+                            "type": "HttpServletResponse",
+                            "name": "arg0",
+                            "annotations": []
+                        }
+                    ]
+                },
+                {
+                    "methodName": "login",
+                    "paths": "/api/system/auth/login",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "登录",
+                        "description": "用户名密码登录接口参数: username (用户名)、password (密码)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "UserDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        },
+                        {
+                            "type": "HttpServletResponse",
+                            "name": "arg1",
+                            "annotations": []
+                        }
+                    ]
+                },
+                {
+                    "methodName": "getUserName",
+                    "paths": "/api/system/auth/health",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "健康检查",
+                        "description": "用于检查接口是否正常"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "verifyCode",
+                    "paths": "/api/system/auth/verify/code",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "验证码校验",
+                        "description": "前端需要传递的参数：smsType（发送验证码类型）,phone（手机号码）,smsCode(验证码)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SmsDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "sendSmsCode",
+                    "paths": "/api/system/auth/code/sms/send",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "发送手机号验证码",
+                        "description": "前端需要传递的参数：phone（手机号）,smsType（类型）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SmsDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "refreshAccessToken",
+                    "paths": "/api/system/auth/refresh/access-token",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "刷新access_token",
+                        "description": "前端不需要传递参数"
+                    },
+                    "parameters": [
+                        {
+                            "type": "HttpServletResponse",
+                            "name": "arg0",
+                            "annotations": []
+                        }
+                    ]
+                },
+                {
+                    "methodName": "resetPassword",
+                    "paths": "/api/system/auth/reset/password",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "重置密码",
+                        "description": "使用验证码重置密码，参数：sessionId(sessionId,必填)、password(新密码,必填)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "BtcSysUserDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "batchLogout",
+                    "paths": "/api/system/auth/logout/batch",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量退出登录",
+                        "description": "管理员批量退出用户，参数：usernames(用户名数组，必填)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "BatchLogoutRequest",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "getCaptcha",
+                    "paths": "/api/system/auth/captcha",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "获取验证码",
+                        "description": "用于获取图形验证码的接口"
+                    },
+                    "parameters": [
+                        {
+                            "type": "HttpServletResponse",
+                            "name": "arg0",
+                            "annotations": []
+                        }
+                    ]
+                },
+                {
+                    "methodName": "smsLogin",
+                    "paths": "/api/system/auth/login/sms",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "手机号登录",
+                        "description": "前端需要发送的参数：phone（手机号）,smsCode（验证码）,smsType(发送验证码类型)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SmsDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        },
+                        {
+                            "type": "HttpServletResponse",
+                            "name": "arg1",
+                            "annotations": []
+                        }
+                    ]
+                },
+                {
+                    "methodName": "sendEmailCode",
+                    "paths": "/api/system/auth/code/email/send",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "发送邮箱验证码",
+                        "description": "向指定邮箱发送验证码，参数：email(邮箱地址，必填)、scene(使用场景，必填)"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SendEmailCodeRequest",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysTenantController": {
+            "className": "com.btc.systemservice.business.controller.SysTenantController",
+            "simpleName": "SysTenantController",
+            "description": "",
+            "tags": [
+                "租户接口"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/tenant/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "异步新增租户",
+                        "description": "异步新增租户-返回布尔值"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysTenant",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/tenant/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "异步新增租户",
+                        "description": "异步新增租户-返回布尔值"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "deleteBatch",
+                    "paths": "/api/system/iam/tenant/delete/batch",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量删除",
+                        "description": "根据id列表集合批量删除"
+                    },
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "tenantLike",
+                    "paths": "/api/system/iam/tenant/tenant/like",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "模糊搜索供应商租户",
+                        "description": "前端需要传递字段：tenant_name"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysTenant",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/tenant/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/tenant/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/tenant/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/tenant/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysUserController": {
+            "className": "com.btc.systemservice.business.controller.SysUserController",
+            "simpleName": "SysUserController",
+            "description": "",
+            "tags": [
+                "用户管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/user/update",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "用户分配",
+                        "description": "在用户表分配部门与角色"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysUser",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/user/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "用户列表",
+                        "description": "查询所有用户列表"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "data",
+                    "paths": "/api/system/iam/user/data",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "用户列表数据",
+                        "description": "查询所有用户数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/user/delete",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "删除用户",
+                        "description": "删除用户，把用户状态改为停用"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/user/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询用户数据（返回DTO）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "deleteBatch",
+                    "paths": "/api/system/iam/user/delete/batch",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量删除",
+                        "description": "根据id列表集合批量删除"
+                    },
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysUserProfileController": {
+            "className": "com.btc.systemservice.business.controller.SysUserProfileController",
+            "simpleName": "SysUserProfileController",
+            "description": "",
+            "tags": [
+                "用户档案接口"
+            ],
+            "apis": [
+                {
+                    "methodName": "selectByEmployeeId",
+                    "paths": "/api/system/iam/profile/list/info",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "根据工号查询信息",
+                        "description": "必要参数有：employeeId（员工工号）,scene（场景）,initPass（初始密码）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "ProfileDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "getCurrentUser",
+                    "paths": "/api/system/iam/profile/me",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "获取当前用户信息",
+                        "description": "从Cookie中获取accessToken，解析用户信息并返回"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/profile/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/profile/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/profile/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/profile/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/profile/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysUserRoleController": {
+            "className": "com.btc.systemservice.business.controller.SysUserRoleController",
+            "simpleName": "SysUserRoleController",
+            "description": "",
+            "tags": [
+                "用户分配角色"
+            ],
+            "apis": [
+                {
+                    "methodName": "unbind",
+                    "paths": "/api/system/iam/user-role/unbind",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "用户解绑角色",
+                        "description": "单用户解绑单角色，前端传值：{uid:''，rid:''}"
+                    },
+                    "parameters": [
+                        {
+                            "type": "AssignRoleDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "data",
+                    "paths": "/api/system/iam/user-role/data",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "用户名筛选角色",
+                        "description": "根据用户名筛选用户没有分配的角色,前端传值：{userId: '',roleName: '',domainId:''}"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "bind",
+                    "paths": "/api/system/iam/user-role/batchBind",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量新增授权",
+                        "description": "多用户分配多角色，前端传值：{uid:[]，rid:[]}"
+                    },
+                    "parameters": [
+                        {
+                            "type": "AssignRoleDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/user-role/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询用户角色信息",
+                        "description": "查询用户角色分页信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "modifyBind",
+                    "paths": "/api/system/iam/user-role/modifyBind",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "修改绑定角色",
+                        "description": "单用户绑定多角色，前端传值：{uid:''，rid:[]}"
+                    },
+                    "parameters": [
+                        {
+                            "type": "AssignRoleDTO",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "unbindBatch",
+                    "paths": "/api/system/iam/user-role/batchUnbind",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量解绑角色",
+                        "description": "多用户多角色批量解绑角色，前端传值：[{uid:'',rid:''},……]"
+                    },
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysWorkflowDefinitionController": {
+            "className": "com.btc.systemservice.business.controller.SysWorkflowDefinitionController",
+            "simpleName": "SysWorkflowDefinitionController",
+            "description": "流程定义管理",
+            "tags": [
+                "流程定义管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/workflow-definition/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/workflow-definition/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/workflow-definition/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/workflow-definition/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/workflow-definition/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.SysWorkflowInstanceController": {
+            "className": "com.btc.systemservice.business.controller.SysWorkflowInstanceController",
+            "simpleName": "SysWorkflowInstanceController",
+            "description": "流程实例管理",
+            "tags": [
+                "流程实例管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/iam/workflow-instance/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增",
+                        "description": "新增实体"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/iam/workflow-instance/update",
+                    "httpMethods": "PUT",
+                    "description": {
+                        "summary": "根据ID更新",
+                        "description": "根据主键ID更新实体信息"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Object",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/iam/workflow-instance/list",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "查询列表",
+                        "description": "查询实体列表（支持分页和条件查询）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "delete",
+                    "paths": "/api/system/iam/workflow-instance/delete/{id}",
+                    "httpMethods": "DELETE",
+                    "description": {
+                        "summary": "根据ID删除",
+                        "description": "根据主键ID删除实体（软删除）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "Serializable",
+                            "name": "id",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/iam/workflow-instance/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询实体数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.TestController": {
+            "className": "com.btc.systemservice.business.controller.TestController",
+            "simpleName": "TestController",
+            "description": "",
+            "tags": [
+                "测试接口"
+            ],
+            "apis": [
+                {
+                    "methodName": "test500",
+                    "paths": "/api/system/test/500",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "操作失败",
+                        "description": "测试操作失败错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test512",
+                    "paths": "/api/system/test/512",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "keycloak客户端地址错误",
+                        "description": "测试keycloak客户端地址错误错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test515",
+                    "paths": "/api/system/test/515",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "获取客户端密钥失败",
+                        "description": "测试获取客户端密钥失败错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test516",
+                    "paths": "/api/system/test/516",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "连接keycloak失败",
+                        "description": "测试连接keycloak失败错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test517",
+                    "paths": "/api/system/test/517",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "身份令牌已过期",
+                        "description": "测试身份令牌已过期错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test514",
+                    "paths": "/api/system/test/514",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "获取客户端id失败",
+                        "description": "测试获取客户端id失败错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test511",
+                    "paths": "/api/system/test/511",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "登录失败，未获取到令牌",
+                        "description": "测试登录失败，未获取到令牌错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test518",
+                    "paths": "/api/system/test/518",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "获取到的身份令牌为空",
+                        "description": "测试获取到的身份令牌为空错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test513",
+                    "paths": "/api/system/test/513",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "获取领域失败",
+                        "description": "测试获取领域失败错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test501",
+                    "paths": "/api/system/test/501",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "系统繁忙，请稍候再试",
+                        "description": "测试系统繁忙错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test527",
+                    "paths": "/api/system/test/527",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "手机号不存在",
+                        "description": "测试手机号不存在错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test524",
+                    "paths": "/api/system/test/524",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "账号已存在",
+                        "description": "测试账号已存在错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test520",
+                    "paths": "/api/system/test/520",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "没有该工号",
+                        "description": "测试没有该工号错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test521",
+                    "paths": "/api/system/test/521",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "初始密码错误",
+                        "description": "测试初始密码错误错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test528",
+                    "paths": "/api/system/test/528",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "验证码已过期",
+                        "description": "测试验证码已过期错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test529",
+                    "paths": "/api/system/test/529",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "邮箱不存在",
+                        "description": "测试邮箱不存在错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test523",
+                    "paths": "/api/system/test/523",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "数据错误",
+                        "description": "测试数据错误错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test526",
+                    "paths": "/api/system/test/526",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "表单id过期",
+                        "description": "测试表单id过期错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test522",
+                    "paths": "/api/system/test/522",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "参数不能为空",
+                        "description": "测试参数不能为空错误码"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "test510MethodArgument",
+                    "paths": "/api/system/test/510",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "方法参数校验异常",
+                        "description": "测试方法参数校验异常错误码"
+                    },
+                    "parameters": []
+                }
+            ]
+        },
+        "com.btc.systemservice.business.controller.WorkflowController": {
+            "className": "com.btc.systemservice.business.controller.WorkflowController",
+            "simpleName": "WorkflowController",
+            "description": "流程管理",
+            "tags": [
+                "流程管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "cancelWorkflow",
+                    "paths": "/api/system/iam/workflow/cancel",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "取消流程"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg2",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "revokeWorkflow",
+                    "paths": "/api/system/iam/workflow/revoke",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "撤回流程"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg2",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "resumeWorkflow",
+                    "paths": "/api/system/iam/workflow/resume",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "恢复流程"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg2",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "canRevoke",
+                    "paths": "/api/system/iam/workflow/instance/{instanceId}/can-revoke",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "检查是否可以撤回"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "transferTask",
+                    "paths": "/api/system/iam/workflow/transfer",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "转办任务"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg2",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg3",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "rollbackToNode",
+                    "paths": "/api/system/iam/workflow/rollback-to",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "回退到指定节点"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg2",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg3",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "getRollbackOptions",
+                    "paths": "/api/system/iam/workflow/instance/{instanceId}/rollback-options",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "查询可回退的节点列表"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "restartWorkflow",
+                    "paths": "/api/system/iam/workflow/restart",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "重启流程"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "getMyPendingTasks",
+                    "paths": "/api/system/iam/workflow/my-tasks",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "查询我的待办任务"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "executeNodeAction",
+                    "paths": "/api/system/iam/workflow/action",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "执行节点操作"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg2",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg3",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg4",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "Map",
+                            "name": "arg5",
+                            "annotations": [
+                                "RequestBody",
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "startWorkflow",
+                    "paths": "/api/system/iam/workflow/start",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "启动流程"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg2",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg3",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg4",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "Map",
+                            "name": "arg5",
+                            "annotations": [
+                                "RequestBody",
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "getWorkflowHistory",
+                    "paths": "/api/system/iam/workflow/instance/{instanceId}/history",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "查询流程历史"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "suspendWorkflow",
+                    "paths": "/api/system/iam/workflow/suspend",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "暂停流程"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg2",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "getWorkflowInstanceDetail",
+                    "paths": "/api/system/iam/workflow/instance/{instanceId}",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "查询流程实例详情"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "PathVariable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "rollbackToPreviousNode",
+                    "paths": "/api/system/iam/workflow/rollback",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "回退到上一节点"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg2",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg3",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "getWorkflowByBusiness",
+                    "paths": "/api/system/iam/workflow/by-business",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "根据业务ID获取流程实例"
+                    },
+                    "parameters": [
+                        {
+                            "type": "String",
+                            "name": "arg0",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        },
+                        {
+                            "type": "String",
+                            "name": "arg1",
+                            "annotations": [
+                                "Parameter",
+                                "RequestParam"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.log.controller.DeleteLogController": {
+            "className": "com.btc.systemservice.log.controller.DeleteLogController",
+            "simpleName": "DeleteLogController",
+            "description": "",
+            "tags": [
+                "删除操作日志管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "restore",
+                    "paths": "/api/system/log/deletelog/restore",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "恢复数据",
+                        "description": "恢复删除后的数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysOperationLog",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/log/deletelog/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询删除操作日志"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "restoreBatch",
+                    "paths": "/api/system/log/deletelog/restore/batch",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "批量恢复",
+                        "description": "恢复多条数据"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysOperationLog",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.log.controller.SysLogConfigController": {
+            "className": "com.btc.systemservice.log.controller.SysLogConfigController",
+            "simpleName": "SysLogConfigController",
+            "description": "",
+            "tags": [
+                "日志配置"
+            ],
+            "apis": [
+                {
+                    "methodName": "add",
+                    "paths": "/api/system/log/config/add",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "新增配置",
+                        "description": "新增日志配置"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysLogConfig",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/log/config/update",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "编辑日志配置",
+                        "description": "编辑日志配置"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysLogConfig",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "list",
+                    "paths": "/api/system/log/config/list",
+                    "httpMethods": "GET",
+                    "description": {
+                        "summary": "获取日志保存天数",
+                        "description": "获取请求日志或操作日志的保存天数"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/log/config/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询",
+                        "description": "分页查询接口（返回PageResult）"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.log.controller.SysOperationLogController": {
+            "className": "com.btc.systemservice.log.controller.SysOperationLogController",
+            "simpleName": "SysOperationLogController",
+            "description": "",
+            "tags": [
+                "操作日志管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/log/operation/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询操作日志"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "com.btc.systemservice.log.controller.SysRequestLogController": {
+            "className": "com.btc.systemservice.log.controller.SysRequestLogController",
+            "simpleName": "SysRequestLogController",
+            "description": "",
+            "tags": [
+                "请求日志管理"
+            ],
+            "apis": [
+                {
+                    "methodName": "update",
+                    "paths": "/api/system/log/request/update",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "保存请求日志"
+                    },
+                    "parameters": [
+                        {
+                            "type": "List",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "page",
+                    "paths": "/api/system/log/request/page",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "分页查询请求日志"
+                    },
+                    "parameters": [
+                        {
+                            "type": "QueryEntity",
+                            "name": "arg0",
+                            "annotations": [
+                                "RequestBody"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "methodName": "getKep",
+                    "paths": "/api/system/log/request/getkep",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "获取日志配置",
+                        "description": "获取关于请求日志的配置"
+                    },
+                    "parameters": []
+                },
+                {
+                    "methodName": "setKep",
+                    "paths": "/api/system/log/request/setkep",
+                    "httpMethods": "POST",
+                    "description": {
+                        "summary": "设置日志配置",
+                        "description": "设置关于请求日志的配置"
+                    },
+                    "parameters": [
+                        {
+                            "type": "SysLogConfig",
+                            "name": "arg0",
+                            "annotations": []
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

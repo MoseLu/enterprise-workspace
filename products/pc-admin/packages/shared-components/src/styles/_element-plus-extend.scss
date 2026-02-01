@@ -1,0 +1,20 @@
+// ==================== Element Plus 扩展变量 ====================
+// 参考 cool-admin-vue-7.x 的方式，在 SCSS 中定义高对比度变量结构
+// 这些变量会通过 JavaScript 动态设置值，但结构在 SCSS 中定义
+
+:root {
+  // 高对比度变体（基于 WCAG 2.1 标准）
+  // 这些变量会在运行时通过 setThemeColor 函数动态设置
+  --el-color-primary-contrast-light: var(--el-color-primary); // 用于深色背景的高对比度浅色
+  --el-color-primary-contrast-dark: var(--el-color-primary);  // 用于浅色背景的高对比度深色
+  --el-color-primary-contrast-aa: var(--el-color-primary);   // 满足 WCAG AA 级对比度（≥ 4.5:1）
+  --el-color-primary-contrast-aaa: var(--el-color-primary);  // 满足 WCAG AAA 级对比度（≥ 7:1）
+}
+
+// 暗色模式下的高对比度变量
+html.dark {
+  --el-color-primary-contrast-light: var(--el-color-primary);
+  --el-color-primary-contrast-dark: var(--el-color-primary);
+  --el-color-primary-contrast-aa: var(--el-color-primary);
+  --el-color-primary-contrast-aaa: var(--el-color-primary);
+}

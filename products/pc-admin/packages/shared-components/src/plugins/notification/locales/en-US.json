@@ -1,0 +1,10 @@
+{
+  "notice": {
+    "title": "Notifications",
+    "btnRead": "Mark all as read",
+    "viewAll": "View all",
+    "bar": ["Notifications", "Messages", "Todos"],
+    "text": ["No"]
+  }
+}
+

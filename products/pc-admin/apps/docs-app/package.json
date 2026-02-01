@@ -1,0 +1,45 @@
+{
+  "name": "docs-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "node ../../scripts/sync-docs-to-vitepress.mjs",
+    "sync:changelog": "node scripts/sync-changelog.mjs && node scripts/merge-changelog.mjs",
+    "sync:docs-index": "node ../../scripts/commands/tools/generate-docs-index.mjs",
+    "dev": "pnpm run sync && vitepress dev",
+    "dev:clean": "node scripts/kill-port.mjs",
+    "build": "pnpm run sync && vitepress build",
+    "preview": "vitepress preview",
+    "migrate": "tsx scripts/migrate-docs.ts",
+    "add-frontmatter-batch": "tsx scripts/add-frontmatter-batch.ts",
+    "ingest": "tsx scripts/ingest.ts",
+    "add-frontmatter": "tsx scripts/add-frontmatter.ts",
+    "validate-frontmatter": "tsx scripts/validate-frontmatter.ts",
+    "new-doc": "tsx scripts/new-doc.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@btc/shared-components": "workspace:*",
+    "@btc/shared-core": "workspace:*",
+    "@element-plus/icons-vue": "^2.3.1",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "gray-matter": "^4.0.3",
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "element-plus": "^2.13.0",
+    "execa": "^9.5.2",
+    "fast-glob": "^3.3.2",
+    "fs-extra": "^11.2.0",
+    "glob": "^11.0.0",
+    "pino": "^10.1.1",
+    "pino-pretty": "^13.1.3",
+    "sass": "^1.93.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.3.3",
+    "vitepress": "^1.5.0"
+  }
+}

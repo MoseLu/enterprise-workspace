@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>人事应用</title>
+    <style>
+      /* 统一的首屏 Loading 样式 */
+      html,
+      body,
+      #app,
+      #layout-container {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      /* 关键：在 CSS 加载前就覆盖浏览器默认的 body margin: 8px */
+      /* 关键：在 HTML 解析时立即设置 body 背景色，避免白屏 */
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        background-color: #ffffff; /* 默认白色背景 */
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #000000; /* 暗色模式黑色背景 */
+        }
+      }
+
+      * {
+        -webkit-font-smoothing: antialiased;
+        font-family:
+          'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+          'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+      }
+
+      #Loading.is-hide {
+        opacity: 0;
+      }
+
+      .preload__name,
+      .preload__title,
+      .preload__sub-title {
+        animation: s 0.5s ease-in;
+      }
+
+      @keyframes s {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+    <script>
+      // 关键：在页面加载时立即检查导航标记，立即显示 Loading，避免白屏
+      (function() {
+        try {
+          // 关键：在qiankun环境下，应用级别loading由qiankun统一管理，不应该显示index.html中的#Loading
+          // 检查是否为qiankun环境（包括__POWERED_BY_QIANKUN__和__USE_LAYOUT_APP__两种情况）
+          const isQiankun = typeof window !== 'undefined' && (
+            window['__POWERED_BY_QIANKUN__'] || 
+            window['__USE_LAYOUT_APP__']
+          );
+          if (isQiankun) {
+            // qiankun环境下，立即隐藏#Loading元素，避免与应用级别loading冲突
+            var loadingEl = document.getElementById('Loading');
+            if (loadingEl) {
+              loadingEl.style.setProperty('display', 'none', 'important');
+              loadingEl.style.setProperty('visibility', 'hidden', 'important');
+              loadingEl.style.setProperty('opacity', '0', 'important');
+              loadingEl.style.setProperty('pointer-events', 'none', 'important');
+              loadingEl.classList.add('is-hide');
+            }
+            // 如果DOM还没加载完成，也监听DOMContentLoaded确保隐藏
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', function() {
+                var loadingEl = document.getElementById('Loading');
+                if (loadingEl) {
+                  loadingEl.style.setProperty('display', 'none', 'important');
+                  loadingEl.style.setProperty('visibility', 'hidden', 'important');
+                  loadingEl.style.setProperty('opacity', '0', 'important');
+                  loadingEl.style.setProperty('pointer-events', 'none', 'important');
+                  loadingEl.classList.add('is-hide');
+                }
+              });
+            }
+            return; // qiankun环境下不显示index.html中的loading
+          }
+          
+          // 特殊情况：在 HTML 内联脚本中，无法等待模块加载，必须直接使用 sessionStorage
+          // 注意：正常情况下应使用 @btc/shared-core/utils/storage/session 中的 sessionStorage 工具
+          const shouldShowLoading = sessionStorage.getItem('__BTC_NAV_LOADING__') === '1';
+          if (shouldShowLoading) {
+            // 使用内联样式立即显示 Loading，不等待 DOMContentLoaded
+            // 在 head 中直接写入样式，确保在 body 解析前就设置好
+            var style = document.createElement('style');
+            style.textContent = '#Loading { display: flex !important; visibility: visible !important; opacity: 1 !important; }';
+            document.head.appendChild(style);
+
+            // 同时监听 DOMContentLoaded，确保 Loading 元素存在后立即显示
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', function() {
+                var loadingEl = document.getElementById('Loading');
+                if (loadingEl) {
+                  loadingEl.style.display = 'flex';
+                  loadingEl.style.visibility = 'visible';
+                  loadingEl.style.opacity = '1';
+                  loadingEl.classList.remove('is-hide');
+                }
+              });
+            } else {
+              // 如果 DOM 已经加载完成，立即显示
+              var loadingEl = document.getElementById('Loading');
+              if (loadingEl) {
+                loadingEl.style.display = 'flex';
+                loadingEl.style.visibility = 'visible';
+                loadingEl.style.opacity = '1';
+                loadingEl.classList.remove('is-hide');
+              }
+            }
+          }
+        } catch (e) {
+          // 静默失败
+        }
+      })();
+    </script>
+    <script>
+      // 关键：在页面加载时立即应用主题类，避免水合不匹配
+      // 必须在 JavaScript 执行前就应用，确保 Vue 组件渲染时主题类已存在
+      (function() {
+        try {
+          // 读取 Cookie 中的设置
+          function getCookie(name) {
+            const nameEQ = name + '=';
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+              let c = ca[i];
+              while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+              if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+          }
+
+          const settingsCookie = getCookie('btc_settings');
+          if (settingsCookie) {
+            try {
+              const settings = JSON.parse(decodeURIComponent(settingsCookie));
+              const systemThemeType = settings?.systemThemeType;
+              const htmlEl = document.documentElement;
+
+              if (systemThemeType === 'dark') {
+                htmlEl.classList.add('dark');
+              } else if (systemThemeType === 'light') {
+                htmlEl.classList.remove('dark');
+              } else if (systemThemeType === 'auto' || !systemThemeType) {
+                // AUTO 模式或未设置：跟随系统偏好
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) {
+                  htmlEl.classList.add('dark');
+                } else {
+                  htmlEl.classList.remove('dark');
+                }
+              }
+            } catch (e) {
+              // 如果解析失败，使用系统偏好
+              const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              if (prefersDark) {
+                document.documentElement.classList.add('dark');
+              }
+            }
+          } else {
+            // 如果没有 Cookie，使用系统偏好
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+              document.documentElement.classList.add('dark');
+            }
+          }
+        } catch (e) {
+          // 静默失败，使用系统偏好作为兜底
+          try {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+              document.documentElement.classList.add('dark');
+            }
+          } catch (e2) {
+            // 完全失败，不做任何操作
+          }
+				}
+			})();
+		</script>
+	</head>
+  <body>
+    <!-- Loading 元素：Vue 组件会挂载到这里 -->
+    <div id="Loading"></div>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,102 @@
+{
+  "description": "日志查询参数 JSON 示例（简化版，供后端开发参考）",
+  "version": "1.0.0",
+  "note": "所有字段均为可选，根据实际查询需求组合使用",
+
+  "example1_basic": {
+    "description": "基础查询：按应用和时间范围",
+    "appId": "btc-shopflow-admin-app",
+    "logLevel": "ERROR",
+    "timeRange": {
+      "startTime": "2026-01-15T10:00:00.000Z",
+      "endTime": "2026-01-15T11:00:00.000Z"
+    },
+    "messageKeyword": "订单"
+  },
+
+  "example2_api_slow": {
+    "description": "API 性能查询：查找慢接口（响应时间 > 2秒）",
+    "appId": "btc-shopflow-admin-app",
+    "eventType": "api:request,api:response",
+    "apiEndpoint": "/api/order/list",
+    "apiResponseTimeRange": {
+      "min": 2000
+    },
+    "timeRange": {
+      "startTime": "2026-01-15T10:00:00.000Z",
+      "endTime": "2026-01-15T11:00:00.000Z"
+    }
+  },
+
+  "example3_page_slow": {
+    "description": "页面性能查询：查找 LCP > 2.5秒的页面",
+    "appId": "btc-shopflow-admin-app",
+    "eventType": "performance:page",
+    "routePath": "/dashboard",
+    "performanceRange": {
+      "lcp": {
+        "min": 2500
+      }
+    },
+    "timeRange": {
+      "startTime": "2026-01-15T10:00:00.000Z",
+      "endTime": "2026-01-15T11:00:00.000Z"
+    }
+  },
+
+  "example4_error_500": {
+    "description": "错误查询：查找所有 500 错误",
+    "appId": "btc-shopflow-admin-app",
+    "eventType": "error:api",
+    "hasError": true,
+    "apiStatusCode": 500,
+    "timeRange": {
+      "startTime": "2026-01-15T10:00:00.000Z",
+      "endTime": "2026-01-15T11:00:00.000Z"
+    }
+  },
+
+  "example5_user_tracking": {
+    "description": "用户行为追踪：查找特定用户的操作",
+    "appId": "btc-shopflow-admin-app",
+    "eventType": "route:navigation,user:action",
+    "userId": "user-12345",
+    "routePath": "/order/create",
+    "timeRange": {
+      "startTime": "2026-01-15T10:00:00.000Z",
+      "endTime": "2026-01-15T11:00:00.000Z"
+    }
+  },
+
+  "example6_business_event": {
+    "description": "业务事件查询：订单创建和支付",
+    "appId": "btc-shopflow-admin-app",
+    "eventType": "business:event",
+    "businessEventName": "order:create,order:pay",
+    "timeRange": {
+      "startTime": "2026-01-15T00:00:00.000Z",
+      "endTime": "2026-01-15T23:59:59.000Z"
+    }
+  },
+
+  "example7_complex": {
+    "description": "复杂组合查询：多条件组合",
+    "appId": "btc-shopflow-admin-app",
+    "eventType": "api:request,api:response,error:api",
+    "apiEndpoint": "/api/order",
+    "apiMethod": "POST",
+    "apiStatusCode": 500,
+    "apiResponseTimeRange": {
+      "min": 1000,
+      "max": 5000
+    },
+    "hasError": true,
+    "routePath": "/order/create",
+    "userId": "user-12345",
+    "deviceType": "mobile",
+    "timeRange": {
+      "startTime": "2026-01-15T10:00:00.000Z",
+      "endTime": "2026-01-15T11:00:00.000Z"
+    }
+  }
+}

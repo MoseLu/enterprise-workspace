@@ -1,0 +1,180 @@
+name: Build App (Reusable)
+
+# ⚠️ 此工作流是可复用的，不会自动触发
+# - 只能通过其他工作流调用（workflow_call）
+# - 不会响应 push 或其他事件
+# - 如需构建应用，请在本地运行 pnpm build:{app} 命令
+on:
+  workflow_call:
+    inputs:
+      app_name:
+        description: 'Application name (e.g., system-app, admin-app)'
+        required: true
+        type: string
+      registry:
+        description: 'Container registry URL'
+        required: true
+        type: string
+      github_repository:
+        description: 'GitHub repository name'
+        required: true
+        type: string
+      github_sha:
+        description: 'GitHub commit SHA'
+        required: true
+        type: string
+    secrets:
+      gh_token:
+        description: 'GitHub token for registry access'
+        required: true
+
+jobs:
+  build-app:
+    name: Build ${{ inputs.app_name }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+    
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+    
+    - name: Cache pnpm store
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+    
+    - name: Cache node_modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          node_modules
+          **/node_modules
+        key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-node-modules-
+    
+    - name: Install dependencies
+      run: |
+        pnpm install --frozen-lockfile --prefer-offline
+    
+    - name: Restore built packages cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          packages/*/dist
+          packages/*/build
+        key: packages-build-${{ github.sha }}
+        restore-keys: |
+          packages-build-
+    
+    - name: Build shared dependencies
+      run: |
+        echo "🔨 构建共享依赖包..."
+        echo "  这确保共享组件包（如 @btc/shared-components）的修改能够生效"
+        echo ""
+        
+        # 始终重新构建共享依赖，确保修改生效
+        # 使用 --force 确保即使缓存存在也重新构建
+        echo "📦 构建 @btc/vite-plugin..."
+        pnpm --filter @btc/vite-plugin run build --force || pnpm --filter @btc/vite-plugin run build
+        
+        echo "📦 构建 @btc/shared-utils..."
+        pnpm --filter @btc/shared-utils run build --force || pnpm --filter @btc/shared-utils run build
+        
+        echo "📦 构建 @btc/shared-core..."
+        pnpm --filter @btc/shared-core run build --force || pnpm --filter @btc/shared-core run build
+        
+        echo "📦 构建 @btc/shared-components..."
+        pnpm --filter @btc/shared-components run build --force || pnpm --filter @btc/shared-components run build
+        
+        echo "📦 构建 @btc/subapp-manifests..."
+        pnpm --filter @btc/subapp-manifests run build --force || pnpm --filter @btc/subapp-manifests run build
+        
+        echo "✅ 共享依赖包构建完成"
+    
+    - name: Build application
+      run: cd apps/${{ inputs.app_name }} && pnpm run build
+    
+    - name: Validate GitHub Token
+      run: |
+        echo "Validating GitHub token for registry access..."
+        
+        # 优先使用传递的 gh_token，如果不存在则使用 GITHUB_TOKEN
+        if [ -n "${{ secrets.gh_token }}" ]; then
+          TOKEN="${{ secrets.gh_token }}"
+          echo "[INFO] Using provided gh_token"
+        elif [ -n "${{ secrets.GITHUB_TOKEN }}" ]; then
+          TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          echo "[INFO] Falling back to GITHUB_TOKEN"
+        else
+          echo "[ERROR] No token available"
+          echo "Please set SERVER_PAT secret with 'write:packages' scope in repository settings"
+          exit 1
+        fi
+        
+        echo "[SUCCESS] Token is available for Docker registry"
+        echo "Token length: $(echo "$TOKEN" | wc -c) characters"
+        
+        # Test token permissions
+        echo "Testing token permissions for ghcr.io..."
+        if echo "$TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin; then
+          echo "[SUCCESS] Token has valid permissions for ghcr.io"
+          # 将 TOKEN 导出为环境变量，供后续步骤使用
+          echo "TOKEN=$TOKEN" >> $GITHUB_ENV
+        else
+          echo "[ERROR] Token authentication failed for ghcr.io"
+          echo "Please ensure SERVER_PAT has 'write:packages' scope"
+          exit 1
+        fi
+
+    - name: Prepare Docker tags
+      id: tags
+      run: |
+        # Convert repository name to lowercase for Docker compatibility
+        REPO_LOWER=$(echo "${{ inputs.github_repository }}" | tr '[:upper:]' '[:lower:]')
+        echo "repository_lower=$REPO_LOWER" >> $GITHUB_OUTPUT
+        echo "[INFO] Docker tags will use: $REPO_LOWER"
+    
+    - name: Login to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ inputs.registry }}
+        username: ${{ github.actor }}
+        password: ${{ env.TOKEN }}
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        build-args: |
+          APP_DIR=apps/${{ inputs.app_name }}
+        push: true
+        tags: |
+          ${{ inputs.registry }}/${{ steps.tags.outputs.repository_lower }}/${{ inputs.app_name }}:latest
+          ${{ inputs.registry }}/${{ steps.tags.outputs.repository_lower }}/${{ inputs.app_name }}:${{ inputs.github_sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+      env:
+        DOCKER_BUILDKIT: 1

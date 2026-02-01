@@ -1,0 +1,51 @@
+// 底部样式
+.verify-form {
+  // 底部区域（固定高度，不收缩）
+  &__footer {
+    flex: 0 0 125px; // 固定高度：分隔线(32+16+1=49) + 提示文本(16+60=76) = 125px
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 125px; // 确保最小高度
+    max-height: 125px; // 确保最大高度
+    box-sizing: border-box;
+  }
+
+  // 分隔线（在按钮和提示文本之间）
+  &__divider {
+    margin-top: 32px;
+    margin-bottom: 16px;
+    width: 100%; // 分隔线与按钮宽度一致
+    border-top: 1px solid var(--el-border-color-lighter);
+    flex-shrink: 0; // 分隔线不收缩
+    height: 1px; // 固定高度
+    box-sizing: content-box; // 包含margin的高度
+  }
+
+  &__item-tip {
+    font-size: 12px;
+    color: var(--el-text-color-placeholder);
+    line-height: 1.8;
+    flex-shrink: 0; // 提示文本不收缩
+    height: 60px; // 固定高度，确保两种验证方式高度一致
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    div {
+      margin-bottom: 6px;
+      flex-shrink: 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &-highlight {
+      color: var(--el-color-primary);
+      font-weight: 500;
+    }
+  }
+}
+

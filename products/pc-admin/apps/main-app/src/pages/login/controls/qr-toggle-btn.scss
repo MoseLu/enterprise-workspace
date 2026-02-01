@@ -1,0 +1,149 @@
+// 二维码切换按钮样式
+.qr-toggle-btn {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	cursor: pointer;
+	user-select: none;
+	z-index: 10;
+	height: 40px; // 与logo和标题高度保持一致
+}
+
+.tips {
+	background-color: #dff0d8;
+	border-radius: 0.4rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 28px;
+	width: 112px;
+	padding: 0 8px;
+	gap: 6px;
+	color: #20a53a;
+	position: relative;
+	transition: all 0.3s ease;
+
+	.account {
+		width: 16px;
+		height: 16px;
+		display: inline-block;
+		background: url('/@/assets/images/scan.png') no-repeat center/contain;
+		filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(120deg) brightness(104%) contrast(97%);
+	}
+
+	.tips-text {
+		font-size: 12px;
+		font-weight: 500;
+		white-space: nowrap;
+	}
+
+	&::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		right: -6px;
+		transform: translateY(-50%);
+		border-left: 6px solid #dff0d8;
+		border-top: 6px solid transparent;
+		border-bottom: 6px solid transparent;
+	}
+
+	// 暗黑模式适配
+	html.dark & {
+		background-color: #2d4a2d;
+		color: #4caf50;
+
+		.account {
+			filter: brightness(0) saturate(100%) invert(64%) sepia(78%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+		}
+
+		&::after {
+			border-left-color: #2d4a2d;
+		}
+	}
+}
+
+/* 2×2 雪碧图：X轴（常规/hover），Y轴（qr/pc） */
+.sprite-icon {
+	width: 48px;
+	height: 48px;
+	flex-shrink: 0;
+	background-image: url('/@/assets/images/login_cut_light.png');
+	background-repeat: no-repeat;
+	background-size: 200% 200%;
+	/* 默认左列（0%），行由根上注入的 --sy 决定 */
+	--sx: 0%;
+	background-position: var(--sx) var(--sy);
+}
+
+/* 暗黑模式使用暗色雪碧图 */
+html.dark .sprite-icon {
+	background-image: url('/@/assets/images/login_cut_dark.png');
+}
+
+/* 悬浮切到右列 */
+.qr-toggle-btn:hover .sprite-icon {
+	--sx: 100%;
+}
+
+.qr-toggle-btn:hover .tips {
+	background-color: #c8e6c9;
+	color: #1b5e20;
+	transform: translateY(-1px);
+
+	&::after {
+		border-left-color: #c8e6c9;
+	}
+
+	// 暗黑模式适配
+	html.dark & {
+		background-color: #3d5a3d;
+		color: #66bb6a;
+
+		.account {
+			filter: brightness(0) saturate(100%) invert(64%) sepia(78%) saturate(2476%) hue-rotate(86deg) brightness(118%) contrast(119%);
+		}
+
+		&::after {
+			border-left-color: #3d5a3d;
+		}
+	}
+}
+
+.qr-toggle-btn:focus-visible {
+	outline: 0;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+	.qr-toggle-btn {
+		gap: 6px;
+	}
+
+	.qr-toggle-btn .tips {
+		width: 100px;
+		height: 24px;
+		padding: 0 8px;
+
+		.account {
+			width: 14px;
+			height: 14px;
+		}
+
+		.tips-text {
+			font-size: 11px;
+		}
+
+		&::after {
+			border-left: 5px solid #dff0d8;
+			border-top: 5px solid transparent;
+			border-bottom: 5px solid transparent;
+			right: -5px;
+		}
+	}
+
+	.qr-toggle-btn .sprite-icon {
+		width: 36px;
+		height: 36px;
+	}
+}

@@ -1,0 +1,147 @@
+.style-preset-settings {
+  .setting-box-wrap {
+    margin-top: 20px;
+    gap: var(--btc-spacing-2-5) var(--btc-spacing-4);
+  }
+
+  .setting-item {
+    flex: 1 1 calc(33.333% - 11px);
+    max-width: calc(33.333% - 11px);
+    min-width: 0;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+
+    &:focus-visible .style-preset-preview {
+      border-color: var(--el-color-primary);
+    }
+
+    &:hover .style-preset-preview {
+      border-color: var(--el-border-color);
+    }
+
+    &.is-active .style-preset-preview {
+      border-color: var(--el-color-primary);
+    }
+
+    &.is-active .style-preview__label {
+      color: var(--el-color-primary);
+      font-weight: 600;
+    }
+  }
+
+  .style-preset-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: calc(var(--btc-spacing-24) + var(--btc-spacing-4));
+    border: 2px solid var(--el-border-color-light);
+    border-radius: var(--btc-spacing-3-5);
+    transition: border-color 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    padding: var(--btc-spacing-3);
+  }
+
+  .style-preview__frame {
+    display: flex;
+    flex-direction: column;
+    gap: var(--btc-spacing-2);
+    width: 100%;
+    height: 100%;
+    border-radius: var(--btc-spacing-2-5);
+    background: var(--preview-surface);
+    border: 1px solid var(--preview-border);
+    box-shadow: var(--preview-shadow);
+    padding: var(--btc-spacing-2-5);
+  }
+
+  .style-preview__header {
+    display: flex;
+    gap: var(--btc-spacing-1);
+    align-items: center;
+  }
+
+  .style-preview__dot {
+    width: var(--btc-spacing-2);
+    height: var(--btc-spacing-2);
+    border-radius: 50%;
+    background: var(--preview-accent);
+    opacity: 0.7;
+  }
+
+  .style-preview__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--btc-spacing-2);
+    flex: 1;
+  }
+
+  .style-preview__card {
+    flex: 1;
+    border-radius: var(--btc-spacing-2);
+    background: var(--preview-panel);
+    border: 1px solid var(--preview-border);
+  }
+
+  .style-preview__card.is-small {
+    flex: 0 0 calc(var(--btc-spacing-6) + var(--btc-spacing-2));
+  }
+
+  .style-preview__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .style-preview__chip {
+    width: calc(var(--btc-spacing-8) + var(--btc-spacing-2));
+    height: var(--btc-spacing-3);
+    border-radius: var(--btc-spacing-3);
+    background: var(--preview-panel);
+    border: 1px solid var(--preview-border);
+  }
+
+  .style-preview__button {
+    width: calc(var(--btc-spacing-6) + var(--btc-spacing-2));
+    height: var(--btc-spacing-3-5);
+    border-radius: var(--btc-spacing-2);
+    background: var(--preview-accent);
+    opacity: 0.75;
+  }
+
+  .style-preview__label {
+    margin-top: var(--btc-spacing-2);
+    text-transform: capitalize;
+    font-size: var(--btc-spacing-3);
+    color: var(--el-text-color-regular);
+    text-align: center;
+  }
+
+  .style-preview--minimal {
+    --preview-surface: var(--btc-style-minimal-surface-card);
+    --preview-panel: var(--btc-style-minimal-surface-panel);
+    --preview-border: var(--btc-style-minimal-border-muted);
+    --preview-shadow: var(--btc-style-minimal-shadow-card);
+    --preview-accent: var(--el-color-primary);
+  }
+
+  .style-preview--glass {
+    --preview-surface: var(--btc-style-glass-surface-card);
+    --preview-panel: var(--btc-style-glass-surface-panel);
+    --preview-border: var(--btc-style-glass-border-muted);
+    --preview-shadow: var(--btc-style-glass-shadow-card);
+    --preview-accent: var(--el-color-primary);
+    backdrop-filter: blur(var(--btc-style-glass-effect-blur));
+  }
+
+  .style-preview--cyber {
+    --preview-surface: var(--btc-style-cyber-surface-card);
+    --preview-panel: var(--btc-style-cyber-surface-panel);
+    --preview-border: var(--btc-style-cyber-border-base);
+    --preview-shadow: var(--btc-style-cyber-shadow-card);
+    --preview-accent: color-mix(in srgb, var(--el-color-primary) 60%, var(--el-color-info));
+  }
+}

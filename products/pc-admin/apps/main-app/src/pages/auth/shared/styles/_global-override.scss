@@ -1,0 +1,70 @@
+@use 'variables' as *;
+
+// 认证页面暗色主题样式补充 - 使用Element Plus CSS变量
+// 现在登录页面同时使用 auth-page 和 page-login 类名，主题插件的样式会自动生效
+// 这里只需要补充一些主题插件没有覆盖的样式
+
+html.dark {
+	.auth-page {
+		// 分割线文本颜色 - 主题插件未覆盖
+		.divider-text {
+			color: $auth-dark-divider-text;
+		}
+
+		// 登录选项文本颜色 - 主题插件未覆盖
+		.login-option span {
+			color: $auth-dark-option-text;
+		}
+
+		// 协议文本颜色 - 现在由主题插件处理，这里可以移除
+		// .agreement-text {
+		// 	color: $auth-dark-text-placeholder;
+		//
+		// 	span {
+		// 		color: $auth-dark-text-placeholder;
+		// 	}
+		//
+		// 	.agreement-link {
+		// 		color: $auth-dark-text-secondary;
+		//
+		// 		&:hover {
+		// 			color: $auth-dark-link-color;
+		// 		}
+		// 	}
+		// }
+
+		// 忘记密码链接颜色 - 主题插件未覆盖
+		.forgot-password-link {
+			color: $auth-dark-text-primary;
+
+			&:hover {
+				color: $auth-dark-link-color;
+			}
+		}
+
+		// Tab 标签颜色 - 主题插件已覆盖，但我们需要确保激活状态更明显
+		.login-tabs {
+			.tab {
+				&.active {
+					font-weight: 700;
+				}
+			}
+		}
+
+		// 底部信息颜色 - 主题插件未覆盖
+		.s-bottom-layer-content {
+			.footer-link {
+				color: $auth-dark-text-placeholder;
+
+				&:hover {
+					color: $auth-dark-text-regular;
+				}
+			}
+
+			.copyright-text {
+				color: $auth-dark-text-placeholder;
+			}
+		}
+
+	}
+}

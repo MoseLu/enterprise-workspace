@@ -1,0 +1,382 @@
+{
+  "description": "日志上报参数完整结构（所有可能字段的最大合集）",
+  "note": "这是前端上报到后端的结构，不包含数据库生成的 id 和 createdAt。批次时间戳使用第一条日志的时间戳",
+
+  "appId": "btc-shopflow-admin-app",
+  "appName": "admin",
+  "timestamp": "2026-01-16T02:04:14.832Z",
+
+  "logs": [
+    {
+      "timestamp": "2026-01-16T02:04:14.832Z",
+      "logLevel": "INFO",
+      "loggerName": "monitor:lifecycle",
+      "microApp": {
+        "microAppType": "sub",
+        "microAppName": "admin-app",
+        "microAppInstanceId": "admin-app-instance-1768529054832",
+        "microAppLifecycle": "mount"
+      },
+      "message": "应用挂载完成",
+      "data": null,
+      "extensions": {
+        "eventType": "app:lifecycle",
+        "sessionId": "session-abc123",
+        "userId": "user-12345",
+        "performance": {
+          "duration": 1234,
+          "startTime": 1768529053600,
+          "endTime": 1768529054834
+        },
+        "system": {
+          "device": {
+            "browser": "Chrome",
+            "browserVersion": "120.0.0.0",
+            "os": "Windows",
+            "osVersion": "10",
+            "screenWidth": 1920,
+            "screenHeight": 1080,
+            "deviceType": "desktop",
+            "userAgent": "Mozilla/5.0..."
+          },
+          "memory": {
+            "heapUsed": 45.2,
+            "heapTotal": 128.0,
+            "jsHeapSizeLimit": 2048.0
+          },
+          "network": {
+            "online": true,
+            "connectionType": "wifi",
+            "effectiveType": "4g",
+            "downlink": 10.0,
+            "rtt": 50
+          }
+        }
+      }
+    },
+    {
+      "timestamp": "2026-01-16T02:04:15.832Z",
+      "logLevel": "INFO",
+      "loggerName": "monitor:route",
+      "microApp": {
+        "microAppType": "sub",
+        "microAppName": "admin-app",
+        "microAppInstanceId": "admin-app-instance-1768529054832",
+        "microAppLifecycle": "mount"
+      },
+      "message": "路由导航完成",
+      "data": null,
+      "extensions": {
+        "eventType": "route:navigation",
+        "sessionId": "session-abc123",
+        "userId": "user-12345",
+        "route": {
+          "from": "/dashboard",
+          "to": "/order/list",
+          "routeName": "OrderList",
+          "routePath": "/order/list",
+          "routeParams": {},
+          "routeQuery": {
+            "page": "1",
+            "size": "10"
+          }
+        },
+        "performance": {
+          "duration": 567,
+          "startTime": 1768529057265,
+          "endTime": 1768529057832
+        }
+      }
+    },
+    {
+      "timestamp": "2026-01-16T02:04:16.832Z",
+      "logLevel": "INFO",
+      "loggerName": "monitor:api",
+      "microApp": {
+        "microAppType": "sub",
+        "microAppName": "admin-app",
+        "microAppInstanceId": "admin-app-instance-1768529054832",
+        "microAppLifecycle": "mount"
+      },
+      "message": "API 请求成功",
+      "data": null,
+      "extensions": {
+        "eventType": "api:request",
+        "sessionId": "session-abc123",
+        "userId": "user-12345",
+        "api": {
+          "url": "https://api.example.com/api/order/list",
+          "endpoint": "/api/order/list",
+          "method": "GET",
+          "statusCode": 200,
+          "responseTime": 2345,
+          "responseSize": 10240,
+          "requestSize": 256,
+          "retryCount": 0
+        },
+        "performance": {
+          "duration": 2345,
+          "startTime": 1768529054500,
+          "endTime": 1768529056845
+        }
+      }
+    },
+    {
+      "timestamp": "2026-01-16T02:04:17.832Z",
+      "logLevel": "ERROR",
+      "loggerName": "monitor:api",
+      "microApp": {
+        "microAppType": "sub",
+        "microAppName": "admin-app",
+        "microAppInstanceId": "admin-app-instance-1768529054832",
+        "microAppLifecycle": "mount"
+      },
+      "message": "API 请求失败",
+      "data": {
+        "name": "HttpError",
+        "message": "Request failed with status code 500",
+        "stack": "Error: Request failed with status code 500\n    at request (http.ts:123:1)"
+      },
+      "extensions": {
+        "eventType": "error:api",
+        "sessionId": "session-abc123",
+        "userId": "user-12345",
+        "error": {
+          "name": "HttpError",
+          "message": "Request failed with status code 500",
+          "stack": "Error: Request failed with status code 500\n    at request (http.ts:123:1)",
+          "errorType": "api",
+          "errorCode": "ERR_500"
+        },
+        "api": {
+          "url": "https://api.example.com/api/order/create",
+          "endpoint": "/api/order/create",
+          "method": "POST",
+          "statusCode": 500,
+          "responseTime": 1234,
+          "responseSize": 512,
+          "requestSize": 1024,
+          "retryCount": 1
+        }
+      }
+    },
+    {
+      "timestamp": "2026-01-16T02:04:18.832Z",
+      "logLevel": "INFO",
+      "loggerName": "monitor:performance",
+      "microApp": {
+        "microAppType": "sub",
+        "microAppName": "admin-app",
+        "microAppInstanceId": "admin-app-instance-1768529054832",
+        "microAppLifecycle": "mount"
+      },
+      "message": "页面性能指标",
+      "data": null,
+      "extensions": {
+        "eventType": "performance:page",
+        "sessionId": "session-abc123",
+        "userId": "user-12345",
+        "route": {
+          "routePath": "/dashboard",
+          "routeName": "Dashboard"
+        },
+        "performance": {
+          "fcp": 1200,
+          "lcp": 2500,
+          "fid": 150,
+          "cls": 0.1,
+          "ttfb": 600,
+          "domReady": 1800,
+          "loadComplete": 3000,
+          "duration": 3000
+        }
+      }
+    },
+    {
+      "timestamp": "2026-01-16T02:04:19.832Z",
+      "logLevel": "INFO",
+      "loggerName": "monitor:resource",
+      "microApp": {
+        "microAppType": "sub",
+        "microAppName": "admin-app",
+        "microAppInstanceId": "admin-app-instance-1768529054832",
+        "microAppLifecycle": "mount"
+      },
+      "message": "资源加载完成",
+      "data": null,
+      "extensions": {
+        "eventType": "performance:resource",
+        "sessionId": "session-abc123",
+        "userId": "user-12345",
+        "resource": {
+          "type": "script",
+          "url": "/static/js/vendor.js",
+          "size": 512000,
+          "loadTime": 1234,
+          "dnsTime": 10,
+          "tcpTime": 50,
+          "sslTime": 100,
+          "requestTime": 1074
+        }
+      }
+    },
+    {
+      "timestamp": "2026-01-16T02:04:20.832Z",
+      "logLevel": "ERROR",
+      "loggerName": "monitor:resource",
+      "microApp": {
+        "microAppType": "sub",
+        "microAppName": "admin-app",
+        "microAppInstanceId": "admin-app-instance-1768529054832",
+        "microAppLifecycle": "mount"
+      },
+      "message": "资源加载失败",
+      "data": {
+        "name": "ResourceLoadError",
+        "message": "Failed to load resource: /static/js/vendor.js",
+        "stack": "Error: Failed to load resource\n    at loadResource (resource.ts:45:1)"
+      },
+      "extensions": {
+        "eventType": "error:resource",
+        "sessionId": "session-abc123",
+        "userId": "user-12345",
+        "error": {
+          "name": "ResourceLoadError",
+          "message": "Failed to load resource: /static/js/vendor.js",
+          "stack": "Error: Failed to load resource\n    at loadResource (resource.ts:45:1)",
+          "errorType": "resource",
+          "errorCode": "ERR_RESOURCE_LOAD"
+        },
+        "resource": {
+          "type": "script",
+          "url": "/static/js/vendor.js",
+          "size": 0,
+          "loadTime": 5000
+        }
+      }
+    },
+    {
+      "timestamp": "2026-01-16T02:04:21.832Z",
+      "logLevel": "INFO",
+      "loggerName": "monitor:user",
+      "microApp": {
+        "microAppType": "sub",
+        "microAppName": "admin-app",
+        "microAppInstanceId": "admin-app-instance-1768529054832",
+        "microAppLifecycle": "mount"
+      },
+      "message": "用户操作",
+      "data": null,
+      "extensions": {
+        "eventType": "user:action",
+        "sessionId": "session-abc123",
+        "userId": "user-12345",
+        "userAction": {
+          "actionType": "click",
+          "elementType": "button",
+          "elementId": "submit-btn",
+          "elementClass": "el-button el-button--primary",
+          "elementText": "提交订单",
+          "scrollDepth": 75
+        },
+        "route": {
+          "routePath": "/order/create"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-01-16T02:04:22.832Z",
+      "logLevel": "INFO",
+      "loggerName": "monitor:business",
+      "microApp": {
+        "microAppType": "sub",
+        "microAppName": "admin-app",
+        "microAppInstanceId": "admin-app-instance-1768529054832",
+        "microAppLifecycle": "mount"
+      },
+      "message": "业务事件",
+      "data": null,
+      "extensions": {
+        "eventType": "business:event",
+        "sessionId": "session-abc123",
+        "userId": "user-12345",
+        "business": {
+          "eventName": "order:create",
+          "eventCategory": "order",
+          "eventValue": 299.99,
+          "eventTags": {
+            "orderId": "ORD-20260116-001",
+            "paymentMethod": "alipay",
+            "productCount": "3"
+          }
+        },
+        "route": {
+          "routePath": "/order/create"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-01-16T02:04:23.832Z",
+      "logLevel": "ERROR",
+      "loggerName": "monitor:runtime",
+      "microApp": {
+        "microAppType": "sub",
+        "microAppName": "admin-app",
+        "microAppInstanceId": "admin-app-instance-1768529054832",
+        "microAppLifecycle": "mount"
+      },
+      "message": "运行时错误",
+      "data": {
+        "name": "TypeError",
+        "message": "Cannot read property 'name' of undefined",
+        "stack": "TypeError: Cannot read property 'name' of undefined\n    at OrderList.vue:123:45"
+      },
+      "extensions": {
+        "eventType": "error:runtime",
+        "sessionId": "session-abc123",
+        "userId": "user-12345",
+        "error": {
+          "name": "TypeError",
+          "message": "Cannot read property 'name' of undefined",
+          "stack": "TypeError: Cannot read property 'name' of undefined\n    at OrderList.vue:123:45",
+          "errorType": "runtime",
+          "errorCode": "ERR_TYPE_ERROR"
+        },
+        "route": {
+          "routePath": "/order/list"
+        }
+      }
+    },
+    {
+      "timestamp": "2026-01-16T02:04:24.832Z",
+      "logLevel": "INFO",
+      "loggerName": "monitor:business",
+      "microApp": {
+        "microAppType": "sub",
+        "microAppName": "admin-app",
+        "microAppInstanceId": "admin-app-instance-1768529054832",
+        "microAppLifecycle": "mount"
+      },
+      "message": "业务事件",
+      "data": null,
+      "extensions": {
+        "eventType": "business:event",
+        "sessionId": "session-abc123",
+        "userId": "user-12345",
+        "business": {
+          "eventName": "order:pay",
+          "eventCategory": "order",
+          "eventValue": 299.99,
+          "eventTags": {
+            "orderId": "ORD-20260116-001",
+            "paymentMethod": "alipay",
+            "transactionId": "TXN-20260116-001"
+          }
+        },
+        "route": {
+          "routePath": "/order/pay"
+        }
+      }
+    }
+  ]
+}

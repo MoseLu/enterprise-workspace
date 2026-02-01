@@ -1,0 +1,9 @@
+# 这是一个提交模板示例文件
+# 实际使用时，Git 会自动加载 .gitmessage 文件作为提交模板
+
+feat(i18n): Fix menu structure for logistics app
+
+- Change procurement_module to procurement with _ key
+- Change warehouse_module to warehouse with _ key
+- Update all manifest and route configurations
+- Empty JSON locale files to use config.ts scanning approach

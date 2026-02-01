@@ -1,0 +1,34 @@
+{
+  "extends": "../../packages/tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "baseUrl": ".",
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@configs": ["../../packages/shared-core/src/configs"],
+      "@configs/*": ["../../packages/shared-core/src/configs/*"],
+      "@btc/shared-core": ["../../packages/shared-core/src", "../../packages/shared-core/dist"],
+      "@btc/shared-core/*": ["../../packages/shared-core/src/*", "../../packages/shared-core/dist/*"],
+      "@btc/shared-components": ["../../packages/shared-components/src", "../../packages/shared-components/dist"],
+      "@btc/shared-components/*": ["../../packages/shared-components/src/*", "../../packages/shared-components/dist/*"],
+      "@btc/shared-utils": ["../../packages/shared-utils/src", "../../packages/shared-utils/dist"],
+      "@btc/shared-utils/*": ["../../packages/shared-utils/src/*", "../../packages/shared-utils/dist/*"],
+      "@btc/subapp-manifests": ["../../packages/subapp-manifests/src", "../../packages/subapp-manifests/dist"],
+      "@btc/auth-shared": ["../../auth/shared"],
+      "@btc/auth-shared/*": ["../../auth/shared/*"],
+      "@workspace/locales/*": ["../../locales/*"]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "src/**/*.tsx",
+    "../../configs/**/*.ts",
+    "../../packages/shared-core/src/btc/plugins/i18n/locales/**/*.ts",
+    "../../packages/shared-components/src/locales/**/*.json",
+    "../../apps/monitor-app/src/app.ts"
+  ],
+  "exclude": ["node_modules", "dist", "../../packages/**/dist/**/*.js", "../../packages/**/dist/**/*.mjs", "**/dist/**/*.js", "**/dist/**/*.mjs"]
+}
+

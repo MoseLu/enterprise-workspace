@@ -1,0 +1,75 @@
+// ===== 认证页面组件样式 =====
+
+.auth-page {
+  // ===== 基础输入框样式 =====
+  :deep(.el-input) {
+    .el-input__inner {
+      // 增强输入框边框可见性
+      border: 1px solid var(--el-border-color);
+      
+      &:hover {
+        border-color: var(--el-border-color-hover);
+      }
+      
+      &:focus {
+        // 确保焦点状态清晰可见
+        border-color: var(--el-color-primary);
+        box-shadow: 0 0 0 2px var(--el-color-primary-light-7);
+      }
+    }
+  }
+  
+  // 暗黑模式下的输入框增强
+  html.dark & {
+    :deep(.el-input) {
+      .el-input__inner {
+        border: 1px solid var(--el-border-color-darker);
+        
+        &:hover {
+          border-color: var(--el-border-color);
+        }
+        
+        &:focus {
+          border-color: var(--el-color-primary);
+        }
+      }
+    }
+  }
+}
+
+// ===== 全局输入框样式重置 =====
+input, textarea {
+  // 重置浏览器默认样式
+  &:focus {
+    outline: none;
+  }
+
+  // 确保占位符文本样式一致
+  &::placeholder {
+    color: var(--el-text-color-placeholder);
+    opacity: 1;
+  }
+}
+
+// ===== 响应式设计 =====
+@media (max-width: 768px) {
+  .auth-page {
+    :deep(.el-input) {
+      .el-input__inner {
+        font-size: 16px; // 防止 iOS Safari 缩放
+      }
+    }
+  }
+}
+
+// ===== 无障碍访问支持 =====
+.auth-page {
+  :deep(.el-input) {
+    .el-input__inner {
+      &:focus {
+        // 确保焦点状态清晰可见
+        box-shadow: 0 0 0 2px var(--el-color-primary-light-7);
+      }
+    }
+  }
+}

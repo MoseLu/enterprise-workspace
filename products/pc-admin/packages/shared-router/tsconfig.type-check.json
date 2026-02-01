@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "skipLibCheck": true,
+    "paths": {
+      "@btc/shared-core": ["../shared-core/src", "../shared-core/dist"],
+      "@btc/shared-core/*": ["../shared-core/src/*", "../shared-core/dist/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
+

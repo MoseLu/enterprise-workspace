@@ -1,0 +1,400 @@
+name: Deploy Static Files
+
+on:
+  # 手动触发
+  workflow_dispatch:
+    inputs:
+      app:
+        description: '应用名称 (单个应用名称或 "all" 部署所有应用)'
+        required: true
+        type: choice
+        options:
+          - all
+          - system-app
+          - admin-app
+          - dashboard-app
+          - engineering-app
+          - finance-app
+          - logistics-app
+          - operations-app
+          - personnel-app
+          - production-app
+          - quality-app
+          - layout-app
+      skip_build:
+        description: '跳过构建步骤（仅部署）'
+        required: false
+        type: boolean
+        default: false
+  # API 触发
+  repository_dispatch:
+    types: [deploy-static]
+  # 构建完成后自动触发（仅当构建成功时）
+  workflow_run:
+    workflows: ["Build-Deploy All Apps"]
+    types:
+      - completed
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  determine-apps:
+    name: Determine Apps
+    runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.apps.outputs.apps }}
+      apps_json: ${{ steps.apps.outputs.apps_json }}
+      build_all: ${{ steps.apps.outputs.build_all }}
+      skip_build: ${{ steps.apps.outputs.skip_build }}
+    steps:
+      - name: Determine apps to build and deploy
+        id: apps
+        run: |
+          # 根据触发方式确定要部署的应用
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            # 手动触发：使用输入参数
+            APP_INPUT="${{ inputs.app }}"
+            SKIP_BUILD="${{ inputs.skip_build }}"
+          elif [ "${{ github.event_name }}" == "workflow_run" ]; then
+            # 构建完成后自动触发：部署所有应用，跳过构建
+            APP_INPUT="all"
+            SKIP_BUILD="true"
+          else
+            # repository_dispatch 或其他：使用 payload 或默认 all
+            APP_INPUT="${{ github.event.client_payload.app || 'all' }}"
+            SKIP_BUILD="${{ github.event.client_payload.skip_build || 'false' }}"
+          fi
+          
+          if [ "$APP_INPUT" = "all" ]; then
+            APPS="system-app admin-app dashboard-app engineering-app finance-app logistics-app operations-app personnel-app production-app quality-app layout-app"
+            BUILD_ALL=true
+          else
+            APPS="$APP_INPUT"
+            BUILD_ALL=false
+          fi
+          
+          # 将应用列表转换为 JSON 数组（用于 matrix）
+          APPS_JSON="["
+          FIRST=true
+          for app in $APPS; do
+            if [ "$FIRST" = true ]; then
+              APPS_JSON="$APPS_JSON\"$app\""
+              FIRST=false
+            else
+              APPS_JSON="$APPS_JSON,\"$app\""
+            fi
+          done
+          APPS_JSON="$APPS_JSON]"
+          
+          echo "apps=$APPS" >> $GITHUB_OUTPUT
+          echo "apps_json=$APPS_JSON" >> $GITHUB_OUTPUT
+          echo "build_all=$BUILD_ALL" >> $GITHUB_OUTPUT
+          echo "skip_build=$SKIP_BUILD" >> $GITHUB_OUTPUT
+          echo "📋 触发方式: ${{ github.event_name }}"
+          echo "📋 将部署的应用: $APPS"
+          echo "📋 跳过构建: $SKIP_BUILD"
+          echo "📋 Matrix JSON: $APPS_JSON"
+
+  build-shared-deps:
+    name: Build Shared Dependencies
+    needs: determine-apps
+    if: needs.determine-apps.outputs.skip_build != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            **/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+      
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile --prefer-offline
+      
+      - name: Restore built packages cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            packages/*/dist
+            packages/*/build
+          key: packages-build-${{ github.sha }}
+          restore-keys: |
+            packages-build-
+      
+      - name: Build shared dependencies
+        continue-on-error: true
+        run: |
+          echo "🔨 构建共享依赖包..."
+          pnpm --filter @btc/vite-plugin run build --force || pnpm --filter @btc/vite-plugin run build || true
+          pnpm --filter @btc/shared-utils run build --force || pnpm --filter @btc/shared-utils run build || true
+          pnpm --filter @btc/shared-core run build --force || pnpm --filter @btc/shared-core run build || true
+          pnpm --filter @btc/shared-components run build --force || pnpm --filter @btc/shared-components run build || true
+          pnpm --filter @btc/subapp-manifests run build --force || pnpm --filter @btc/subapp-manifests run build || true
+
+  build-apps:
+    name: Build Applications (Parallel)
+    needs: [determine-apps, build-shared-deps]
+    if: always()
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        app: ${{ fromJson(needs.determine-apps.outputs.apps_json) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      
+      - name: Cache pnpm store
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            **/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+      
+      - name: Install dependencies
+        run: |
+          pnpm install --frozen-lockfile --prefer-offline
+      
+      - name: Restore built packages cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            packages/*/dist
+            packages/*/build
+          key: packages-build-${{ github.sha }}
+          restore-keys: |
+            packages-build-
+      
+      - name: Check if build is needed
+        id: check_build
+        run: |
+          SKIP_BUILD="${{ needs.determine-apps.outputs.skip_build }}"
+          echo "skip_build=$SKIP_BUILD" >> $GITHUB_OUTPUT
+          if [ "$SKIP_BUILD" = "true" ]; then
+            echo "⏭️ 跳过构建（使用已有构建产物）"
+            echo "skipped=true" >> $GITHUB_OUTPUT
+          else
+            echo "skipped=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Build application
+        if: steps.check_build.outputs.skipped != 'true'
+        run: |
+          set -e
+          APP_NAME="${{ matrix.app }}"
+          echo "🔨 构建 $APP_NAME..."
+          
+          cd apps/$APP_NAME
+          if [ ! -f "package.json" ]; then
+            echo "❌ 错误: $APP_NAME/package.json 不存在"
+            exit 1
+          fi
+          
+          pnpm run build
+          cd ../..
+          
+          # 验证构建产物
+          if [ ! -d "apps/$APP_NAME/dist" ] || [ -z "$(ls -A apps/$APP_NAME/dist 2>/dev/null)" ]; then
+            echo "❌ 错误: $APP_NAME/dist 目录不存在或为空"
+            exit 1
+          fi
+          
+          echo "✅ $APP_NAME 构建完成"
+          echo "📦 构建产物统计:"
+          find apps/$APP_NAME/dist -type f | wc -l | xargs echo "  总文件数:"
+          du -sh apps/$APP_NAME/dist | awk '{print "  总大小: " $1}'
+      
+      - name: Upload build artifacts
+        if: steps.check_build.outputs.skipped != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ matrix.app }}
+          path: apps/${{ matrix.app }}/dist
+          retention-days: 1
+
+  deploy:
+    name: Deploy Static Files
+    # 总是等待 determine-apps 和 build-apps（如果跳过构建，build-apps 会立即完成）
+    needs: [determine-apps, build-apps]
+    # 如果是 workflow_run 触发，仅在原工作流成功时执行
+    # 如果跳过构建，build-apps 会成功完成（跳过构建步骤）
+    if: |
+      (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') &&
+      (needs.determine-apps.outputs.skip_build == 'true' || needs.build-apps.result == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SERVER_HOST: ${{ secrets.SERVER_HOST }}
+      SERVER_USER: ${{ secrets.SERVER_USER || 'root' }}
+      SERVER_PORT: ${{ secrets.SERVER_PORT || '22' }}
+      SSH_KEY: ${{ secrets.SERVER_KEY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Download build artifacts
+        if: needs.determine-apps.outputs.skip_build != 'true'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: dist-*
+          merge-multiple: false
+          path: artifacts
+      
+      - name: Move artifacts to correct location
+        if: needs.determine-apps.outputs.skip_build != 'true'
+        run: |
+          echo "📦 移动构建产物到正确位置..."
+          APPS="${{ needs.determine-apps.outputs.apps }}"
+          for app in $APPS; do
+            if [ -d "artifacts/dist-$app" ]; then
+              mkdir -p "apps/$app"
+              mv "artifacts/dist-$app" "apps/$app/dist"
+              echo "✅ $app: 构建产物已移动到 apps/$app/dist"
+            else
+              echo "❌ $app: 未找到构建产物 artifacts/dist-$app"
+              exit 1
+            fi
+          done
+          # 清理临时目录
+          rm -rf artifacts
+      
+      - name: Verify build artifacts
+        if: needs.determine-apps.outputs.skip_build != 'true'
+        run: |
+          echo "🔍 验证构建产物..."
+          APPS="${{ needs.determine-apps.outputs.apps }}"
+          for app in $APPS; do
+            if [ -d "apps/$app/dist" ] && [ -n "$(ls -A apps/$app/dist 2>/dev/null)" ]; then
+              echo "✅ $app: 构建产物存在"
+              find apps/$app/dist -type f | wc -l | xargs echo "  文件数:"
+              du -sh apps/$app/dist | awk '{print "  大小: " $1}'
+            else
+              echo "❌ $app: 构建产物不存在或为空"
+              exit 1
+            fi
+          done
+      
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          
+          # 处理 SSH 密钥
+          if [ -n "${{ secrets.SERVER_KEY }}" ]; then
+            SERVER_KEY="${{ secrets.SERVER_KEY }}"
+            # 检查是否是 base64 编码
+            if echo "$SERVER_KEY" | grep -q "^[A-Za-z0-9+/]*={0,2}$" && [ ${#SERVER_KEY} -gt 100 ]; then
+              echo "$SERVER_KEY" | base64 -d > ~/.ssh/id_rsa
+            else
+              echo "$SERVER_KEY" > ~/.ssh/id_rsa
+            fi
+            chmod 600 ~/.ssh/id_rsa
+          else
+            echo "❌ SERVER_KEY 未设置"
+            exit 1
+          fi
+          
+          # 添加服务器到 known_hosts
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+          
+          # 测试 SSH 连接
+          ssh -i ~/.ssh/id_rsa -p ${{ secrets.SERVER_PORT || '22' }} \
+            -o ConnectTimeout=5 -o StrictHostKeyChecking=no \
+            ${{ secrets.SERVER_USER || 'root' }}@${{ secrets.SERVER_HOST }} \
+            "echo 'SSH connection successful'" || {
+            echo "❌ SSH 连接失败"
+            exit 1
+          }
+      
+      - name: Deploy static files
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER || 'root' }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT || '22' }}
+          SSH_KEY: ~/.ssh/id_rsa
+        run: |
+          set -e
+          chmod +x scripts/deploy-static.sh
+          
+          APPS="${{ needs.determine-apps.outputs.apps }}"
+          
+          if [ "${{ needs.determine-apps.outputs.build_all }}" = "true" ]; then
+            # 批量部署
+            ./scripts/deploy-static.sh --all
+          else
+            # 单个应用部署
+            for app in $APPS; do
+              ./scripts/deploy-static.sh --app "$app"
+            done
+          fi
+      
+      - name: Deployment summary
+        if: always()
+        run: |
+          echo "## 📊 部署结果" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **触发方式**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **部署模式**: ${{ needs.determine-apps.outputs.build_all == 'true' && '批量部署' || '单应用部署' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **部署应用**: ${{ needs.determine-apps.outputs.apps }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **服务器**: ${{ secrets.SERVER_HOST }}" >> $GITHUB_STEP_SUMMARY
+          SKIP_BUILD_VAL="${{ needs.determine-apps.outputs.skip_build }}"
+          if [ "$SKIP_BUILD_VAL" = "true" ]; then
+            echo "- **构建**: 已跳过（使用已有构建产物）" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **构建**: 已完成（并行构建）" >> $GITHUB_STEP_SUMMARY
+          fi
+

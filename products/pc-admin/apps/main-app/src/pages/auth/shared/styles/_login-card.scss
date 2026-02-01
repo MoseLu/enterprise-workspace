@@ -1,0 +1,4 @@
+@use 'variables' as *;
+
+// 注意：.auth-page .login-card 和 .card-header 的样式已移至 _auth-card.scss，避免重复定义
+// 此文件保留为空，或可以删除，因为所有样式都在 _auth-card.scss 中统一管理

@@ -1,0 +1,15 @@
+﻿*.ico
+*.webmanifest
+
+node_modules/
+# dist/  # 注释掉，允许查看构建产物
+.git/
+
+*.log
+
+package-lock.json
+pnpm-lock.yaml
+
+*.map
+*.min.js
+*.min.css

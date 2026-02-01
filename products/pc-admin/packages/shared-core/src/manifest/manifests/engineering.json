@@ -1,0 +1,53 @@
+{
+  "app": {
+    "id": "engineering",
+    "basePath": "/engineering",
+    "nameKey": "menu.engineering.overview",
+    "app-name": "domain.type.engineering"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "labelKey": "menu.engineering.overview",
+      "tab": {
+        "enabled": false
+      },
+      "breadcrumbs": []
+    },
+    {
+      "path": "/projects",
+      "labelKey": "menu.engineering.projects",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.engineering.projects"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.engineering.projects", "icon": "Folder" }
+      ]
+    },
+    {
+      "path": "/progress",
+      "labelKey": "menu.engineering.progress",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.engineering.progress"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.engineering.progress", "icon": "TrendCharts" }
+      ]
+    },
+    {
+      "path": "/monitoring",
+      "labelKey": "menu.engineering.monitoring",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.engineering.monitoring"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.engineering.monitoring", "icon": "Monitor" }
+      ]
+    }
+  ],
+  "menus": []
+}
+

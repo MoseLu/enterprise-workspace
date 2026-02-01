@@ -1,0 +1,340 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  /* 移动端优化 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* 防止 iOS Safari 双击缩放 */
+  touch-action: manipulation;
+  /* 优化触摸滚动性能 */
+  -webkit-overflow-scrolling: touch;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(229, 229, 229, 0.5);
+  min-height: 70px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: background-color 0.3s ease, border-bottom-color 0.3s ease,
+    box-shadow 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  padding: 0 60px;
+}
+
+.header.header-scrolled {
+  background-color: rgba(255, 255, 255, 0.98);
+  border-bottom-color: #e5e5e5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 0;
+  padding-right: 20px;
+  max-width: 100%;
+  width: 100%;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 5rem;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.logo {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+}
+
+.nav {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.nav-link.home-link {
+  font-size: 1rem;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #409eff;
+}
+
+/* 移动端响应式样式 */
+@media (max-width: 768px) {
+  .header {
+    padding: 0 16px;
+    min-height: 60px;
+  }
+
+  .header .container {
+    padding-right: 0;
+    flex-wrap: nowrap;
+  }
+
+  .header-left {
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .logo {
+    height: 40px;
+  }
+
+  .nav {
+    gap: 0.75rem;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .nav-link {
+    font-size: 0.875rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .nav-link.home-link {
+    font-size: 0.875rem;
+  }
+}
+
+/* 超小屏幕（手机竖屏） */
+@media (max-width: 480px) {
+  .header {
+    padding: 0 12px;
+    min-height: 56px;
+  }
+
+  .header-left {
+    gap: 0.5rem;
+  }
+
+  .logo {
+    height: 36px;
+  }
+
+  .nav {
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    font-size: 0.75rem;
+    padding: 0 4px;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+}
+
+/* 自定义滚动条样式 - 圆形头滚动条（类似 QQ 和 Element Plus） */
+/* Webkit 浏览器（Chrome、Safari、Edge） */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(144, 147, 153, 0.5);
+  border-radius: 7px;
+  transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(144, 147, 153, 0.7);
+}
+
+/* Firefox 浏览器 */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(144, 147, 153, 0.5) transparent;
+}
+
+/* 首页：允许内容超出，可以滚动 */
+.home-page {
+  min-height: 100%;
+}
+
+/* 其他页面：内容在视口内，不超出 */
+/* 通过设置页面容器为100%高度并隐藏溢出，配合main的overflow控制实现无滚动条 */
+.about-page,
+.news-page,
+.terms-page,
+.help-page {
+  height: 100%;
+  overflow: hidden;
+}
+
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  opacity: 0.9;
+}
+
+.content {
+  padding: 4rem 0;
+}
+
+.content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.content h3 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #666;
+}
+
+.content p {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+.footer {
+  background-color: #f5f5f5;
+  padding: 0.75rem 0;
+  text-align: center;
+  color: #666;
+  border-top: 1px solid #e5e5e5;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* 登录页 footer 样式 - 参考百度布局 */
+.s-bottom-layer-content {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.footer-link {
+  color: #909399;
+  font-size: 12px;
+  text-decoration: none;
+  user-select: none;
+  margin: 0 8px;
+  transition: color 0.3s;
+}
+
+.footer-link:hover {
+  color: #606266;
+}
+
+.footer-link.beian-link {
+  position: relative;
+}
+
+.footer-link.beian-link::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYgMEMyLjY4NjI5IDAgMCAyLjY4NjI5IDAgNkMwIDkuMzEzNzEgMi42ODYyOSAxMiA2IDEyQzkuMzEzNzEgMTIgMTIgOS4zMTM3MSAxMiA2QzEyIDIuNjg2MjkgOS4zMTM3MSAwIDYgMFpNNiAxMC44QzMuMzQ4NTcgMTAuOCAxLjIgOC42NTE0MyAxLjIgNkMxLjIgMy4zNDg1NyAzLjM0ODU3IDEuMiA2IDEuMkM4LjY1MTQzIDEuMiAxMC44IDMuMzQ4NTcgMTAuOCA2QzEwLjggOC42NTE0MyA4LjY1MTQzIDEwLjggNiAxMC44WiIgZmlsbD0iIzk5OTk5OSIvPgo8cGF0aCBkPSJNNiAzLjZDNS42Njg2MyAzLjYgNS40IDMuODY4NjMgNS40IDQuMlY3LjJDNS40IDcuNTMxMzcgNS42Njg2MyA3LjggNiA3LjhDNi4zMzEzNyA3LjggNi42IDcuNTMxMzcgNi42IDcuMlY0LjJDNi42IDMuODY4NjMgNi4zMzEzNyAzLjYgNiAzLjZaIiBmaWxsPSIjOTk5OTk5Ii8+CjxwYXRoIGQ9Ik02IDlDNS42Njg2MyA5IDUuNCA5LjI2ODYzIDUuNCA5LjZDNS40IDkuOTMxMzcgNS42Njg2MyAxMC4yIDYgMTAuMkM2LjMzMTM3IDEwLjIgNi42IDkuOTMxMzcgNi42IDkuNkM2LjYgOS4yNjg2MyA2LjMzMTM3IDkgNiA5WiIgZmlsbD0iIzk5OTk5OSIvPgo8L3N2Zz4K');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+  margin-right: 3px;
+}
+
+.copyright-text {
+  color: #909399;
+  font-size: 12px;
+  user-select: none;
+  margin-left: 16px;
+}
+
+/* 响应式处理 - 小屏幕时换行 */
+@media (max-width: 768px) {
+  .s-bottom-layer-content {
+    white-space: normal;
+    line-height: 1.5;
+  }
+
+  .footer-link {
+    margin: 0 6px;
+  }
+
+  .copyright-text {
+    display: block;
+    margin: 8px 0 0 0;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  /* 移除暗色背景，保持明亮背景 */
+  /* 仅保留必要的文字颜色调整以确保可读性 */
+}
+

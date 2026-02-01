@@ -1,0 +1,62 @@
+# Verdaccio 配置文件
+# 仅作为私有包仓库，不代理公共包
+
+# 存储路径
+storage: ./storage
+
+# Web UI 配置
+web:
+  title: BTC ShopFlow Private Registry
+  # 启用搜索功能
+  enable: true
+  # 禁用 Gravatar
+  gravatar: false
+
+# 认证配置
+auth:
+  htpasswd:
+    file: ./htpasswd
+    # 最大用户数
+    max_users: 1000
+    # 加密算法
+    algorithm: bcrypt
+
+# 上游源配置（不配置，因为仅作为私有包仓库）
+uplinks: {}
+
+# 包访问权限配置
+packages:
+  # @btc scope 的包：仅认证用户可访问和发布
+  '@btc/*':
+    access: $authenticated
+    publish: $authenticated
+    unpublish: $authenticated
+
+  # 其他所有包：不允许访问（因为不代理公共包）
+  '**':
+    access: $all
+    publish: $all
+    unpublish: $all
+
+# 日志配置
+logs:
+  - { type: stdout, format: pretty, level: http }
+
+# 监听配置
+listen: 0.0.0.0:4873
+
+# 安全配置
+security:
+  api:
+    legacy: true
+    jwt:
+      sign:
+        expiresIn: 7d
+      verify:
+        someProp: [test]
+  web:
+    sign:
+      expiresIn: 7d
+    verify:
+      someProp: [test]
+

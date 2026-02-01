@@ -1,0 +1,34 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "文档 Lint 配置",
+  "description": "文档系统规则的机器可读版本",
+  "rules": {
+    "allowed_doc_types": ["adr", "rfc", "sop", "runbook", "readme"],
+    "required_frontmatter_fields": [
+      "doc_type",
+      "title",
+      "owner",
+      "status",
+      "last_review_at",
+      "next_review_at",
+      "canonical_url"
+    ],
+    "allowed_status": ["active", "draft", "deprecated"],
+    "length_limits": {
+      "adr": 200,
+      "rfc": 500,
+      "sop": 7,
+      "runbook": 7
+    },
+    "naming_patterns": {
+      "adr": "^\\d{4}-\\d{2}-\\d{2}-.+\\.md$",
+      "rfc": "^\\d{4}-\\d{2}-\\d{2}-.+\\.md$",
+      "sop": "^[a-z]+-[a-z-]+\\.md$",
+      "runbook": "^(fix|recover)-[a-z-]+\\.md$"
+    }
+  },
+  "deprecation": {
+    "retention_versions": 3,
+    "archive_path": "/docs/archive/"
+  }
+}

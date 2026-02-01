@@ -1,0 +1,46 @@
+// 帮助中心页面样式
+@use '@/styles/geometric-background.scss' as *;
+
+.help-page {
+  background-color: #ffffff;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+
+  .main-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    z-index: 10;
+    overflow: hidden;
+  }
+
+  .content {
+    position: relative;
+    z-index: 11;
+    padding: 4rem 2rem;
+    height: 100%;
+    overflow-y: auto;
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      line-height: 1.8;
+      color: #666;
+    }
+  }
+}
+

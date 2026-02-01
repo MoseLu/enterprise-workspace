@@ -1,0 +1,48 @@
+﻿name: Manual Deploy (DEPRECATED)
+
+# ⚠️ 此工作流已废弃，不再推荐使用
+# - 本地构建已完成，此工作流不应再执行构建步骤
+# - 推荐使用各个应用的 deploy-{app-name}.yml 工作流进行部署
+# - 或使用 pnpm deploy:{app} 命令进行本地构建和部署
+# 
+# 此工作流保留仅用于向后兼容，但默认禁用所有构建步骤
+
+on:
+  workflow_dispatch:
+    inputs:
+      apps:
+        description: '⚠️ DEPRECATED: 使用 deploy-{app-name}.yml 或 pnpm deploy:{app}'
+        required: false
+        default: ''
+        type: string
+      environment:
+        description: '部署环境'
+        required: false
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+permissions:
+  contents: read
+
+jobs:
+  deprecated-notice:
+    name: Deprecated Workflow Notice
+    runs-on: ubuntu-latest
+    steps:
+    - name: Show deprecation notice
+      run: |
+        echo "## ⚠️ 此工作流已废弃" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**请使用以下方式之一进行部署：**" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "1. **使用应用特定的部署工作流**: \`deploy-{app-name}.yml\`" >> $GITHUB_STEP_SUMMARY
+        echo "   - 例如: \`deploy-system-app.yml\`, \`deploy-admin-app.yml\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "2. **使用本地命令进行构建和部署**: \`pnpm deploy:{app}\`" >> $GITHUB_STEP_SUMMARY
+        echo "   - 例如: \`pnpm deploy:system\`, \`pnpm deploy:admin\`" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "这些新方式将自动执行本地构建、上传和部署，无需手动触发此工作流。" >> $GITHUB_STEP_SUMMARY
+        exit 1

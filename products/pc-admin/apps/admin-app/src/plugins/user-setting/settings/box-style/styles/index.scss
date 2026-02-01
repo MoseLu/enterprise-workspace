@@ -1,0 +1,73 @@
+/**
+ * 盒子样式设置样式
+ */
+
+.box-style-settings {
+  .box-style {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+    margin-top: 20px;
+    // 浅色模式：使用更明显的背景色增强对比度
+    background-color: rgba(0, 0, 0, 0.06);
+    border-radius: 7px;
+
+    .button {
+      width: calc(50% - 3px);
+      height: 34px;
+      font-size: 14px;
+      line-height: 34px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 6px;
+      transition: all 0.2s !important;
+      // 未选中状态：使用较浅的文字颜色
+      color: rgba(0, 0, 0, 0.65);
+      background-color: transparent;
+
+      &.is-active {
+        // 选中状态：使用深色文字和纯白背景，增强对比度
+        color: rgba(0, 0, 0, 0.85);
+        background-color: #ffffff;
+        font-weight: 500;
+      }
+
+      &:hover:not(.is-active) {
+        // hover 状态：稍微加深文字和背景
+        color: rgba(0, 0, 0, 0.75);
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+  }
+}
+
+.dark {
+  .box-style-settings {
+    .box-style {
+      // 深色模式：使用更明显的背景色
+      background-color: rgba(255, 255, 255, 0.1);
+
+      .button {
+        // 未选中状态：使用较浅的文字颜色
+        color: rgba(255, 255, 255, 0.7);
+
+        &.is-active {
+          // 选中状态：使用白色文字和更深的背景，增强对比度
+          color: #fff !important;
+          background-color: rgba(255, 255, 255, 0.15);
+          font-weight: 500;
+        }
+
+        &:hover:not(.is-active) {
+          // hover 状态：稍微加深文字和背景
+          color: rgba(255, 255, 255, 0.85);
+          background-color: rgba(255, 255, 255, 0.08);
+        }
+      }
+    }
+  }
+}
+

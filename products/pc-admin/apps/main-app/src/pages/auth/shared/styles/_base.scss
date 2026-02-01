@@ -1,0 +1,153 @@
+@use 'variables' as *;
+
+// 认证页面基础样式
+.auth-page {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	width: 100%;
+	position: relative;
+	background-color: $auth-light-bg;
+	overflow: hidden;
+
+	// 暗黑模式适配
+	html.dark & {
+		background-color: $auth-dark-bg;
+	}
+}
+
+// 背景装饰
+.auth-page .bg {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 90%;
+	pointer-events: none;
+	transform: rotate(180deg) scaleY(-1);
+	z-index: 1;
+	overflow: hidden;
+}
+
+// 拜里斯品牌主题色配色
+// SVG 文件中的 path 已经直接设置了拜里斯品牌色（#404040 和 #DA281C）
+// 这里可以为暗黑模式添加透明度调整（如果需要的话）
+// 注意：由于 SVG sprite 通过 <use> 引用，CSS 无法直接修改 symbol 内部的 fill 属性
+// 如果需要在暗黑模式下调整颜色，需要修改 SVG 文件本身或使用 JavaScript 动态修改
+
+// 版权信息
+.auth-page .copyright-container {
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	text-align: center;
+	z-index: 10;
+
+	.copyright-main {
+		margin-bottom: 8px;
+
+		.copyright {
+			color: var(--el-text-color-regular);
+			font-size: 14px;
+			user-select: none;
+			text-decoration: none;
+
+			&:hover {
+				color: var(--el-color-primary);
+			}
+		}
+	}
+
+	.beian-info {
+		.beian-link {
+			color: var(--el-text-color-placeholder);
+			font-size: 12px;
+			text-decoration: none;
+			user-select: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+
+			&:hover {
+				color: var(--el-text-color-regular);
+			}
+
+			&::before {
+				content: '';
+				display: inline-block;
+				width: 14px;
+				height: 14px;
+				background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQiIGhlaWdodD0iMTQiIHZpZXdCb3g9IjAgMCAxNCAxNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTcgMEMzLjEzNDAxIDAgMCAzLjEzNDAxIDAgN0MwIDEwLjg2NiAzLjEzNDAxIDE0IDcgMTRDMTAuODY2IDE0IDE0IDEwLjg2NiAxNCA3QzE0IDMuMTM0MDEgMTAuODY2IDAgNyAwWk03IDEyLjZDMy45MDY5OSAxMi42IDEuNCA5LjA5MzAxIDEuNCA3QzEuNCA0LjkwNjk5IDMuOTA2OTkgMS40IDcgMS40QzEwLjA5MyAxLjQgMTIuNiA0LjkwNjk5IDEyLjYgN0MxMi42IDkuMDkzMDEgMTAuMDkzIDEyLjYgNyAxMi42WiIgZmlsbD0iIzk5OTk5OSIvPgo8cGF0aCBkPSJNNyA0LjJDNi42MTM0IDQuMiA2LjMgNC41MTM0IDYuMyA0LjlWOC40QzYuMyA4Ljc4NjYgNi42MTM0IDkuMSA3IDkuMUM3LjM4NjYgOS4xIDcuNyA4Ljc4NjYgNy43IDguNFY0LjlDNy43IDQuNTEzNCA3LjM4NjYgNC4yIDcgNC4yWiIgZmlsbD0iIzk5OTk5OSIvPgo8cGF0aCBkPSJNNyAxMC41QzYuNjEzNCAxMC41IDYuMyAxMC44MTM0IDYuMyAxMS4yQzYuMyAxMS41ODY2IDYuNjEzNCAxMS45IDcgMTEuOUM3LjM4NjYgMTEuOSA3LjcgMTEuNTg2NiA3LjcgMTEuMkM3LjcgMTAuODEzNCA3LjM4NjYgMTAuNSA3IDEwLjVaIiBmaWxsPSIjOTk5OTk5Ii8+Cjwvc3ZnPgo=');
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				vertical-align: middle;
+			}
+		}
+	}
+}
+
+// 底部信息 - 参考百度布局
+.auth-page .s-bottom-layer-content {
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	text-align: center;
+	z-index: 10;
+	white-space: nowrap;
+
+	.footer-link {
+		color: var(--el-text-color-placeholder);
+		font-size: 12px;
+		text-decoration: none;
+		user-select: none;
+		margin: 0 8px;
+
+		&:hover {
+			color: var(--el-text-color-regular);
+		}
+
+		&.beian-link {
+			position: relative;
+
+			&::before {
+				content: '';
+				display: inline-block;
+				width: 12px;
+				height: 12px;
+				background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYgMEMyLjY4NjI5IDAgMCAyLjY4NjI5IDAgNkMwIDkuMzEzNzEgMi42ODYyOSAxMiA2IDEyQzkuMzEzNzEgMTIgMTIgOS4zMTM3MSAxMiA2QzEyIDIuNjg2MjkgOS4zMTM3MSAwIDYgMFpNNiAxMC44QzMuMzQ4NTcgMTAuOCAxLjIgOC42NTE0MyAxLjIgNkMxLjIgMy4zNDg1NyAzLjM0ODU3IDEuMiA2IDEuMkM4LjY1MTQzIDEuMiAxMC44IDMuMzQ4NTcgMTAuOCA2QzEwLjggOC42NTE0MyA4LjY1MTQzIDEwLjggNiAxMC44WiIgZmlsbD0iIzk5OTk5OSIvPgo8cGF0aCBkPSJNNiAzLjZDNS42Njg2MyAzLjYgNS40IDMuODY4NjMgNS40IDQuMlY3LjJDNS40IDcuNTMxMzcgNS42Njg2MyA3LjggNiA3LjhDNi4zMzEzNyA3LjggNi42IDcuNTMxMzcgNi42IDcuMlY0LjJDNi42IDMuODY4NjMgNi4zMzEzNyAzLjYgNiAzLjZaIiBmaWxsPSIjOTk5OTk5Ii8+CjxwYXRoIGQ9Ik02IDlDNS42Njg2MyA5IDUuNCA5LjI2ODYzIDUuNCA5LjZDNS40IDkuOTMxMzcgNS42Njg2MyAxMC4yIDYgMTAuMkM2LjMzMTM3IDEwLjIgNi42IDkuOTMxMzcgNi42IDkuNkM2LjYgOS4yNjg2MyA2LjMzMTM3IDkgNiA5WiIgZmlsbD0iIzk5OTk5OSIvPgo8L3N2Zz4K');
+				background-size: contain;
+				background-repeat: no-repeat;
+				background-position: center;
+				vertical-align: middle;
+				margin-right: 3px;
+			}
+		}
+	}
+
+	.copyright-text {
+		color: var(--el-text-color-placeholder);
+		font-size: 12px;
+		user-select: none;
+		margin-left: 16px;
+	}
+
+	// 响应式处理 - 小屏幕时换行
+	@media (max-width: 768px) {
+		white-space: normal;
+		line-height: 1.5;
+
+		.footer-link {
+			margin: 0 6px;
+		}
+
+		.copyright-text {
+			display: block;
+			margin: 8px 0 0 0;
+		}
+	}
+}
+

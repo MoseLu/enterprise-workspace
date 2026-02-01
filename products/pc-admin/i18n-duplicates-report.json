@@ -1,0 +1,70 @@
+{
+  "summary": {
+    "totalFiles": 59,
+    "totalKeys": 743,
+    "duplicateKeys": 4,
+    "duplicatePrefixes": 1,
+    "estimatedRedundantLines": 40
+  },
+  "duplicates": [
+    {
+      "key": "app.description",
+      "value": "质量检测、标准管理、质量报告",
+      "count": 6,
+      "files": [
+        "apps\\quality-app\\src\\locales\\zh-CN.json",
+        "apps\\production-app\\src\\locales\\zh-CN.json",
+        "apps\\personnel-app\\src\\locales\\zh-CN.json",
+        "apps\\operations-app\\src\\locales\\zh-CN.json",
+        "apps\\engineering-app\\src\\locales\\zh-CN.json",
+        "apps\\dashboard-app\\src\\locales\\zh-CN.json"
+      ]
+    },
+    {
+      "key": "app.title",
+      "value": "质量管理系统",
+      "count": 6,
+      "files": [
+        "apps\\quality-app\\src\\locales\\zh-CN.json",
+        "apps\\production-app\\src\\locales\\zh-CN.json",
+        "apps\\personnel-app\\src\\locales\\zh-CN.json",
+        "apps\\operations-app\\src\\locales\\zh-CN.json",
+        "apps\\engineering-app\\src\\locales\\zh-CN.json",
+        "apps\\dashboard-app\\src\\locales\\zh-CN.json"
+      ]
+    },
+    {
+      "key": "app.version",
+      "value": "版本 1.0.0",
+      "count": 6,
+      "files": [
+        "apps\\quality-app\\src\\locales\\zh-CN.json",
+        "apps\\production-app\\src\\locales\\zh-CN.json",
+        "apps\\personnel-app\\src\\locales\\zh-CN.json",
+        "apps\\operations-app\\src\\locales\\zh-CN.json",
+        "apps\\engineering-app\\src\\locales\\zh-CN.json",
+        "apps\\dashboard-app\\src\\locales\\zh-CN.json"
+      ]
+    },
+    {
+      "key": "app.welcome",
+      "value": "欢迎使用质量管理系统",
+      "count": 6,
+      "files": [
+        "apps\\quality-app\\src\\locales\\zh-CN.json",
+        "apps\\production-app\\src\\locales\\zh-CN.json",
+        "apps\\personnel-app\\src\\locales\\zh-CN.json",
+        "apps\\operations-app\\src\\locales\\zh-CN.json",
+        "apps\\engineering-app\\src\\locales\\zh-CN.json",
+        "apps\\dashboard-app\\src\\locales\\zh-CN.json"
+      ]
+    }
+  ],
+  "recommendations": [
+    {
+      "prefix": "app",
+      "count": 4,
+      "suggestion": "将 app.* 相关翻译提取到 locales/shared/app.ts"
+    }
+  ]
+}

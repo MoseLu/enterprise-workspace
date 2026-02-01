@@ -1,0 +1,24 @@
+// ==================== 基础样式和重置 ====================
+
+.btc-table-dict-cell {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	line-height: 1.4;
+}
+
+// 重置 ul/li 默认样式，确保顶栏和 tabbar 按钮间距一致
+// 防止浏览器默认样式在组件样式加载前生效，导致按钮间距先大后小
+ul.app-process__op,
+ul.topbar__tools,
+ul.topbar__left {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	> li {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+}

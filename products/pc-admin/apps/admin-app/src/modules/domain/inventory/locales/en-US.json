@@ -1,0 +1,23 @@
+﻿{
+  "inventory.common.stock_in_success": "Stock in successful",
+  "inventory.common.stock_out_success": "Stock out successful",
+  "inventory.common.stock_check_success": "Stock check completed",
+  "inventory.warehouse.title": "Warehouse Management",
+  "inventory.warehouse.location.code": "Location Code",
+  "inventory.warehouse.location.name": "Location Name",
+  "inventory.warehouse.location.zone": "Zone",
+  "inventory.warehouse.location.shelf": "Shelf",
+  "inventory.warehouse.location.level": "Level",
+  "inventory.warehouse.capacity": "Capacity",
+  "inventory.warehouse.occupied": "Occupied",
+  "inventory.warehouse.available": "Available",
+  "inventory.stock.title": "Stock Management",
+  "inventory.stock.item.name": "Item Name",
+  "inventory.stock.item.code": "Item Code",
+  "inventory.stock.quantity": "Stock Quantity",
+  "inventory.stock.safety_stock": "Safety Stock",
+  "inventory.stock.max_stock": "Max Stock",
+  "inventory.stock.min_stock": "Min Stock",
+  "inventory.stock.unit_cost": "Unit Cost",
+  "inventory.stock.total_value": "Total Value"
+}

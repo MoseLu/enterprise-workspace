@@ -1,0 +1,52 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+.env.local
+.env.*.local
+.env.oss
+.env.oss.local
+.k8s-config
+.turbo/
+build/
+# 但保留 build/eps 目录中的 EPS 数据文件（构建时需要）
+!build/eps/
+!build/eps/eps.json
+!build/eps/eps.d.ts
+# 主应用使用 src/build/eps 目录
+!**/src/build/eps/
+!**/src/build/eps/eps.json
+!**/src/build/eps/eps.d.ts
+coverage/
+*.tsbuildinfo
+.turbo
+
+# VitePress cache
+**/.vitepress/cache/
+.vitepress/cache/
+
+# Vite cache
+**/node_modules/.vite/
+node_modules/.vite/
+**/.vite/
+.vite/
+
+# Vite 临时产物（Vite 运行时生成的 timestamp 配置快照，不应提交）
+**/*.timestamp-*.mjs
+**/*.timestamp-*.js
+
+# 部署配置文件（包含敏感信息）
+scripts/deploy-config.sh
+
+# src 目录下的构建产物（TypeScript 编译后的 .js 和 .map 文件）
+# 注意：排除配置文件和脚本文件
+**/src/**/*.js
+!**/vite.config.js
+!**/*.config.js
+!**/scripts/**/*.js
+**/src/**/*.map
+
+# 堆快照文件（OOM 诊断）
+.heap-snapshots/
+**/.heap-snapshots/
+*.heapsnapshot

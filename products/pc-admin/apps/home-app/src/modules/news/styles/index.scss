@@ -1,0 +1,109 @@
+// 新闻动态页面样式
+@use '@/styles/geometric-background.scss' as *;
+
+.news-page {
+  background-color: #ffffff;
+  height: 100%;
+  max-height: 100%; // 确保不超过父容器高度
+  position: relative;
+  overflow: hidden;
+
+
+  .main-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    z-index: 10;
+    overflow: hidden;
+  }
+
+  .content {
+    position: relative;
+    z-index: 11;
+    padding: 0 2rem 4rem 2rem;
+    height: 100%;
+    overflow: auto; // 允许内容滚动
+    box-sizing: border-box;
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .gallery-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 40px;
+    }
+
+    .gallery-title {
+      font-family: 'Source Han Sans CN', '思源黑体', sans-serif;
+      font-size: 36px;
+      font-weight: bold;
+      color: #c70000;
+      text-align: center;
+      margin: 0 0 8px 0;
+    }
+
+    .gallery-subtitle {
+      font-family: 'Roboto', sans-serif;
+      font-size: 18px;
+      color: #666666;
+      text-align: center;
+      margin: 0;
+    }
+
+    .gallery-section {
+      margin-top: 0;
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    .content {
+      padding: 0 1rem 2rem 1rem;
+
+
+      .gallery-title {
+        font-size: 28px;
+      }
+
+      .gallery-subtitle {
+        font-size: 16px;
+      }
+
+      .gallery-section {
+        margin-top: 0;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .content {
+      padding: 0 1rem 1.5rem 1rem;
+
+
+      .gallery-title {
+        font-size: 24px;
+      }
+
+      .gallery-subtitle {
+        font-size: 14px;
+      }
+
+      .gallery-section {
+        margin-top: 0;
+      }
+    }
+  }
+}
+

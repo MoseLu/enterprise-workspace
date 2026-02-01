@@ -1,0 +1,21 @@
+﻿{
+  "procurement.common.create_po_success": "Created {count} purchase orders",
+  "procurement.common.create_po_failed": "Failed to create purchase order",
+  "procurement.aux.title": "Auxiliary Materials Management",
+  "procurement.aux.po.create.success": "Created {count} auxiliary material purchase orders",
+  "procurement.aux.request.empty": "No auxiliary material requests, create one?",
+  "procurement.aux.supplier.name": "Supplier Name",
+  "procurement.aux.supplier.code": "Supplier Code",
+  "procurement.aux.material.name": "Material Name",
+  "procurement.aux.material.spec": "Specification",
+  "procurement.aux.material.unit": "Unit",
+  "procurement.aux.quantity": "Quantity",
+  "procurement.aux.price": "Unit Price",
+  "procurement.aux.total_amount": "Total Amount",
+  "procurement.packaging.title": "Packaging Management",
+  "procurement.packaging.create_success": "Packaging solution created successfully",
+  "procurement.packaging.material.name": "Packaging Material",
+  "procurement.packaging.dimension": "Dimension",
+  "procurement.packaging.weight": "Weight",
+  "procurement.packaging.cost": "Cost"
+}

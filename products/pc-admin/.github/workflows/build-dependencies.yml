@@ -1,0 +1,67 @@
+name: Build Dependencies
+
+on:
+  workflow_call:
+
+jobs:
+  build-dependencies:
+    name: Build Dependencies
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+    
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+    
+    - name: Setup pnpm cache
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+    
+    - name: Cache node_modules
+      uses: actions/cache@v3
+      with:
+        path: |
+          node_modules
+          **/node_modules
+        key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-node-modules-
+    
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile --prefer-offline
+    
+    - name: Build packages
+      run: |
+        echo "Building packages sequentially (ensuring dependencies)..."
+        # 顺序构建，确保依赖关系正确
+        pnpm --filter @btc/vite-plugin run build
+        pnpm --filter @btc/shared-utils run build
+        pnpm --filter @btc/shared-core run build
+        pnpm --filter @btc/shared-components run build
+        pnpm --filter @btc/subapp-manifests run build
+    
+    - name: Cache built packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          packages/*/dist
+          packages/*/build
+        key: packages-build-${{ github.sha }}
+        restore-keys: |
+          packages-build-

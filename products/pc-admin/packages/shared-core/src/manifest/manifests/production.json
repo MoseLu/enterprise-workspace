@@ -1,0 +1,53 @@
+{
+  "app": {
+    "id": "production",
+    "basePath": "/production",
+    "nameKey": "menu.production.overview",
+    "app-name": "domain.type.production"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "labelKey": "menu.production.overview",
+      "tab": {
+        "enabled": false
+      },
+      "breadcrumbs": []
+    },
+    {
+      "path": "/plans",
+      "labelKey": "menu.production.plans",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.production.plans"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.production.plans", "icon": "List" }
+      ]
+    },
+    {
+      "path": "/schedule",
+      "labelKey": "menu.production.schedule",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.production.schedule"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.production.schedule", "icon": "Clock" }
+      ]
+    },
+    {
+      "path": "/materials",
+      "labelKey": "menu.production.materials",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.production.materials"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.production.materials", "icon": "Box" }
+      ]
+    }
+  ],
+  "menus": []
+}
+

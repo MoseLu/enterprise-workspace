@@ -1,0 +1,292 @@
+@use 'variables' as *;
+
+// 登录模式切换标签页样式
+.login-tabs {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 24px;
+	margin: 0 0 16px 0; // 底部留出间距，与登录表单保持距离
+	width: 100%;
+	box-sizing: border-box;
+
+	.tabs-wrapper {
+		flex: 1;
+		
+		// 移除 btc-tabs__nav 的 padding-left，让下划线可以从 btc-tabs__header 的最左侧开始
+		// 使用更高优先级的选择器来覆盖 scoped 样式
+		:deep(.btc-tabs__header),
+		:deep(.btc-tabs__header .btc-tabs__nav) {
+			padding-left: 0 !important;
+		}
+		
+		// 当第一个 tab 激活时，强制下划线从左边开始（覆盖 JavaScript 计算的位置）
+		:deep(.btc-tabs__nav:has(.btc-tabs__item:first-child.is-active) .btc-tabs__ink) {
+			left: 0 !important; // 下划线从 btc-tabs__nav 最左侧开始（即 btc-tabs__header 最左侧）
+		}
+	}
+
+	.register-link {
+		display: flex;
+		align-items: center;
+		height: $auth-tab-height;
+
+		.register-link-a {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			font-size: 14px;
+			font-weight: 600;
+			line-height: 1;
+			color: var(--el-text-color-primary);
+			text-decoration: none;
+			transition: color 0.2s ease;
+
+			&:hover {
+				color: var(--el-color-primary);
+
+				.arrow-right {
+					color: var(--el-color-primary);
+				}
+			}
+
+			.arrow-right {
+				width: 12px;
+				height: 12px;
+				color: var(--el-text-color-primary);
+				transition: all 0.2s ease;
+				margin: 0; // 确保没有额外的 margin
+				padding: 0; // 确保没有额外的 padding
+			}
+
+			// 确保 el-icon 没有额外的间距
+			:deep(.el-icon) {
+				margin: 0;
+				padding: 0;
+			}
+
+			&:hover .arrow-right {
+				transform: translateX(2px);
+			}
+		}
+	}
+}
+
+// 忘记密码页面的返回登录链接样式 - 与登录页面的"前往注册"链接保持一致
+.auth-page .login-card .card-content .back-to-login-wrapper {
+	display: flex;
+	justify-content: flex-end;
+	margin: 0 0 16px 0; // 与登录页面的 login-tabs 保持一致
+	width: 100%;
+	box-sizing: border-box;
+
+	.back-to-login {
+		display: flex;
+		align-items: center;
+		height: $auth-tab-height; // 与 auth-tab-height 一致
+
+		.back-to-login-link {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			font-size: 14px;
+			font-weight: 600;
+			line-height: 1;
+			color: var(--el-text-color-primary);
+			text-decoration: none;
+			transition: color 0.2s ease;
+
+			&:hover {
+				color: var(--el-color-primary);
+
+				.arrow-right {
+					color: var(--el-color-primary);
+				}
+			}
+
+			.arrow-right {
+				width: 12px;
+				height: 12px;
+				color: var(--el-text-color-primary);
+				transition: all 0.2s ease;
+				margin: 0; // 确保没有额外的 margin
+				padding: 0; // 确保没有额外的 padding
+			}
+
+			// 确保 el-icon 没有额外的间距
+			:deep(.el-icon) {
+				margin: 0;
+				padding: 0;
+			}
+
+			&:hover .arrow-right {
+				transform: translateX(2px);
+			}
+		}
+	}
+
+	// 响应式设计
+	@media (max-width: $auth-mobile-breakpoint) {
+		.back-to-login {
+			.back-to-login-link {
+				font-size: 13px;
+
+				.arrow-right {
+					width: 11px;
+					height: 11px;
+				}
+			}
+		}
+	}
+}
+
+// 忘记密码链接样式
+.forgot-password-link {
+	display: flex;
+	justify-content: flex-start;
+	margin-top: 16px; // 增加与登录按钮的间距
+
+	.link {
+		display: flex;
+		align-items: center;
+		font-size: 14px;
+		font-weight: 600;
+		line-height: 1;
+		color: var(--el-text-color-primary);
+		text-decoration: none;
+		transition: color 0.2s ease;
+
+		&:hover {
+			color: var(--el-color-primary);
+
+			.arrow-right {
+				color: var(--el-color-primary);
+			}
+		}
+
+		.arrow-right {
+			width: 12px;
+			height: 12px;
+			color: var(--el-text-color-primary);
+			transition: all 0.2s ease;
+			margin: 0; // 确保没有额外的 margin
+			padding: 0; // 确保没有额外的 padding
+		}
+
+		// 确保 el-icon 没有额外的间距
+		:deep(.el-icon) {
+			margin: 0;
+			padding: 0;
+		}
+
+		&:hover .arrow-right {
+			transform: translateX(2px);
+		}
+	}
+}
+
+// 第三方登录组件样式
+.third-party-login {
+	.divider {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		width: 100%;
+		margin: 24px 0 16px 0; // 顶部间距增加，底部间距保持
+
+		.divider-line {
+			flex: 1;
+			height: 1px;
+			// 移除背景色，让箭头装饰组件自己控制样式
+		}
+
+		.divider-text {
+			color: var(--el-text-color-placeholder);
+			font-size: 14px;
+			white-space: nowrap;
+		}
+	}
+
+	.login-options {
+		display: flex;
+		justify-content: center;
+		gap: 24px;
+		width: 100%;
+		margin-bottom: 16px; // 与协议文本的间距
+
+		.login-option {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			cursor: pointer;
+			padding: 12px;
+			border-radius: 8px;
+			transition: all 0.3s ease;
+
+			&:hover {
+				background: var(--el-fill-color-light);
+			}
+
+			svg {
+				padding-bottom: 8px;
+				transition: transform 0.2s ease;
+			}
+
+			.wechat-icon {
+				color: var(--el-color-success);
+			}
+
+			.app-icon {
+				color: var(--el-color-primary);
+			}
+
+			&:hover svg {
+				transform: scale(1.1);
+			}
+
+			span {
+				font-size: 12px;
+				color: var(--el-text-color-secondary);
+			}
+		}
+	}
+
+	// 响应式设计
+	@media (max-width: $auth-mobile-breakpoint) {
+		.divider {
+			gap: 8px;
+		}
+
+		.login-options {
+			gap: 16px;
+		}
+	}
+}
+
+// 协议文本组件样式
+.agreement-text {
+	text-align: left;
+	font-size: 12px;
+	color: var(--el-text-color-placeholder);
+	line-height: 1.6;
+	margin: 0;
+	padding: 0 0 24px 0; // 底部留出间距，与卡片边框保持距离
+
+	span {
+		color: var(--el-text-color-placeholder);
+	}
+
+	.agreement-link {
+		color: var(--el-color-primary);
+		text-decoration: none;
+		cursor: pointer;
+		transition: color 0.2s;
+
+		&:hover {
+			color: var(--el-color-primary-light-3);
+			text-decoration: underline;
+		}
+	}
+}
+

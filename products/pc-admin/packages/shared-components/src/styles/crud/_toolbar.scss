@@ -1,0 +1,128 @@
+// ==================== CRUD 工具栏样式 ====================
+
+.btc-table-toolbar,
+.btc-table-toolbar--inline,
+.btc-table-toolbar-host {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 0;
+	margin-bottom: 0;
+
+	&__left,
+	&__right {
+		display: inline-flex;
+		align-items: center;
+		gap: var(--btc-crud-gap);
+	}
+
+	&__columns,
+	&__style {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		max-height: 260px;
+		padding: 4px 0;
+		overflow: auto;
+	}
+
+	&__dropdown {
+		.el-dropdown-menu__item {
+			padding: 6px 16px;
+		}
+
+		.is-selected {
+			color: var(--el-color-primary);
+			background-color: rgba(64, 158, 255, 0.08);
+		}
+	}
+}
+
+.btc-table-toolbar__icon-btn {
+	display: inline-flex;
+
+	.btc-table-button {
+		width: 32px;
+		height: 32px;
+		margin: 0;
+		border-radius: 6px;
+
+		.btc-svg {
+			width: 18px;
+			height: 18px;
+		}
+	}
+}
+
+.btc-table-toolbar-host,
+.btc-table-toolbar--inline {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--btc-crud-gap);
+	margin-bottom: 0;
+}
+
+.btc-table-toolbar__right {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--btc-crud-gap);
+}
+
+.btc-flex1 {
+	flex: 1;
+	font-size: 12px;
+}
+
+// 基础样式：.btc-crud-actions 和 .btc-crud-right-group 共享
+.btc-crud-actions {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--btc-crud-gap);
+	margin-left: auto;
+	flex: 0 0 var(--btc-crud-op-width, 220px);
+	width: var(--btc-crud-op-width, 220px);
+	min-width: 0;
+	justify-content: flex-end;
+	margin-bottom: 0;
+
+	> .btc-export-btn,
+	> .btc-table-toolbar {
+		flex: 0 0 auto;
+	}
+}
+
+.btc-crud-right-group {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--btc-crud-gap);
+	margin-left: auto;
+	flex: 0 0 var(--btc-crud-op-width, 220px);
+	width: var(--btc-crud-op-width, 220px);
+	min-width: 0;
+	justify-content: flex-end;
+	margin-bottom: 0;
+
+	> .btc-search-key {
+		flex: 1 1 auto;
+		margin-left: 0;
+		width: auto;
+		max-width: none;
+
+		&.is-collapsible:not(.is-expanded) {
+			flex: 0 0 34px;
+			width: 34px;
+		}
+	}
+
+	> .btc-export-btn,
+	> .btc-table-toolbar,
+	> .btc-table-toolbar-host {
+		flex: 0 0 auto;
+	}
+
+	> .btc-crud-toolbar-placeholder {
+		flex: 0 0 auto;
+		opacity: 0.6;
+	}
+}

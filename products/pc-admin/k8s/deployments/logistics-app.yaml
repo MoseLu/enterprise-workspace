@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-logistics-app
+  namespace: btc-shopflow
+  labels:
+    app: btc-logistics-app
+    component: frontend
+    tier: web
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: btc-logistics-app
+  template:
+    metadata:
+      labels:
+        app: btc-logistics-app
+        component: frontend
+        tier: web
+    spec:
+      # 注意：镜像地址会在部署时被动态替换为私有仓库地址
+      # 格式：<PRIVATE_REGISTRY>/logistics-app:<GIT_SHA>
+      containers:
+      - name: logistics-app
+        image: btc-shopflow/logistics-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+          name: http
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: btc-shopflow-config
+              key: NODE_ENV
+        - name: API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: btc-shopflow-config
+              key: API_BASE_URL
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-logistics-app-service
+  namespace: btc-shopflow
+  labels:
+    app: btc-logistics-app
+spec:
+  selector:
+    app: btc-logistics-app
+  ports:
+  - name: http
+    port: 8082
+    targetPort: 80
+    protocol: TCP
+  type: ClusterIP

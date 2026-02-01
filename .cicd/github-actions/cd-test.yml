@@ -1,0 +1,167 @@
+# ========================================
+# GitHub Actions CD 测试环境部署工作流
+# 用于将代码部署到测试环境
+# ========================================
+
+name: CD - Test Environment
+
+# 触发条件：
+# - 主分支或开发分支的代码合并
+# - 手动触发部署
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+    description: 手动触发测试环境部署
+    inputs:
+      commit_sha:
+        description: '指定部署的提交 SHA（留空则使用最新提交）'
+        required: false
+        default: ''
+      skip_tests:
+        description: '跳过测试直接部署'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+# 环境变量配置
+env:
+  # 环境名称
+  ENV_NAME: test
+  # 环境标识
+  ENVIRONMENT: testing
+  # 部署目标
+  DEPLOY_TARGET: test-server
+  # 项目名称
+  PROJECT_NAME: enterprise-workspace
+  # 容器镜像仓库地址
+  REGISTRY: ghcr.io
+  # 镜像仓库命名空间
+  NAMESPACE: enterprise-workspace
+
+# 作业定义
+jobs:
+  # 部署到测试环境
+  deploy-to-test:
+    name: 部署到测试环境
+    runs-on: ubuntu-latest
+    environment:
+      name: test
+      url: https://test.example.com
+    steps:
+      # 检出代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.commit_sha || github.ref }}
+
+      # 设置 Docker Buildx
+      - name: 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 登录容器仓库
+      - name: 登录容器仓库
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      # 构建并推送 Docker 镜像
+      - name: 构建 Docker 镜像
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.NAMESPACE }}:${{ github.sha }}
+            ${{ env.REGISTRY }}/${{ env.NAMESPACE }}:test-latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # 配置 Kubernetes 集群访问
+      - name: 配置 Kubernetes 集群
+        uses: azure/k8s-set-context@v4
+        with:
+          kubeconfig: ${{ secrets.KUBECONFIG_TEST }}
+
+      # 部署到 Kubernetes 集群
+      - name: 部署到测试环境
+        uses: azure/k8s-deploy@v5
+        with:
+          manifests: |
+            k8s/test/namespace.yaml
+            k8s/test/deployment.yaml
+            k8s/test/service.yaml
+          images: |
+            ${{ env.REGISTRY }}/${{ env.NAMESPACE }}:${{ github.sha }}
+          pull-images: true
+          kubectl-version: latest
+
+      # 等待部署完成
+      - name: 等待部署完成
+        run: |
+          kubectl rollout status deployment/app --namespace=${{ env.ENVIRONMENT }} --timeout=300s
+
+      # 执行健康检查
+      - name: 健康检查
+        run: |
+          curl -f http://test.example.com/health || exit 1
+
+      # 部署通知
+      - name: 发送部署通知
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "🚀 测试环境部署成功",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🎉 *测试环境部署成功*\n\n*项目*: ${{ env.PROJECT_NAME }}\n*环境*: 测试环境\n*提交*: ${{ github.sha }}\n*部署人*: ${{ github.actor }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # 集成测试（在部署后执行）
+  integration-test:
+    name: 集成测试
+    runs-on: ubuntu-latest
+    needs: deploy-to-test
+    steps:
+      # 检出代码
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      # 设置 Node.js 环境
+      - name: 设置 Node.js 环境
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # 安装测试依赖
+      - name: 安装测试工具
+        run: npm install -g newman
+
+      # 运行 Newman 测试集合
+      - name: 执行 API 测试
+        run: |
+          newman run tests/api/test-collection.json \
+            --environment tests/api/test-env.json \
+            --reporters cli,junit \
+            --reporter-junit-export results/test-results.xml
+
+      # 上传测试报告
+      - name: 上传测试报告
+        uses: actions/upload-artifact@v3
+        with:
+          name: integration-test-results
+          path: results/

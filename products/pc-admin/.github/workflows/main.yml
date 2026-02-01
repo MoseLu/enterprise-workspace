@@ -1,0 +1,60 @@
+name: BTC ShopFlow CI/CD Pipeline
+
+# ⚠️ 重要说明：
+# - 此工作流不会自动触发（已移除所有 push 触发）
+# - 仅用于手动触发特定应用的部署
+# - 所有自动部署由独立的 deploy-{app-name}.yml 工作流处理
+# - 每个应用工作流只监听对应的 .deploy/{app-name}/** 路径
+#
+# 使用方式：
+# - 手动触发：在 GitHub Actions 页面选择此工作流，选择要部署的应用
+# - 自动触发：运行 pnpm deploy:{app} 命令，会触发对应的 deploy-{app}-app.yml 工作流
+on:
+  workflow_dispatch:
+    inputs:
+      app_name:
+        description: 'Application name to deploy (e.g., system-app)'
+        required: true
+        type: choice
+        options:
+          - system-app
+          - admin-app
+          - logistics-app
+          - quality-app
+          - production-app
+          - engineering-app
+          - finance-app
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  # Manual trigger: Dispatch the corresponding app-specific workflow
+  trigger-deploy:
+    name: Trigger App Deployment
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger deployment workflow
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const appName = '${{ inputs.app_name }}';
+          const workflowFile = `deploy-${appName}.yml`;
+          
+          console.log(`Triggering ${workflowFile} workflow...`);
+          
+          try {
+            const response = await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: workflowFile,
+              ref: 'develop',
+            });
+            
+            console.log(`✅ Successfully triggered ${workflowFile}`);
+          } catch (error) {
+            console.error(`❌ Failed to trigger ${workflowFile}:`, error.message);
+            core.setFailed(`Failed to trigger deployment workflow: ${error.message}`);
+          }

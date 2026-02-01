@@ -1,0 +1,39 @@
+.inventory-ticket-print-page {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.ticket-print-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  min-height: 0;
+  max-height: 100%;
+}
+
+/* 确保 BtcViewGroup 右侧内容区域正确限制高度 */
+:deep(.btc-view-group__right .content.page) {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* BtcCrud 不需要 padding，因为外层已经有 padding 了 */
+:deep(.btc-crud) {
+  padding: 0 !important;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* BtcRow 之间需要 10px 间距 */
+:deep(.btc-crud-row + .btc-crud-row) {
+  margin-top: 10px !important;
+}
+

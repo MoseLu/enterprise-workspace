@@ -1,0 +1,440 @@
+// 品质应用（quality-app）单独构建部署 Jenkinsfile
+// 使用方法：
+// 1. 创建一个 Job（如 btc-shopflow-deploy-quality-app）
+// 2. 在 Job 配置中，Pipeline 部分选择 "Pipeline script from SCM"
+// 3. 设置 Script Path 为 "jenkins/Jenkinsfile.quality-app"
+
+pipeline {
+    agent any
+    
+    environment {
+        NODE_VERSION = '20'
+        PNPM_VERSION = '8.15.0'
+        APP_NAME = 'quality-app'
+        DEPLOY_CONFIG = 'deploy.config.json'
+    }
+    
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timestamps()
+    }
+    
+    // 配置构建触发器
+    // 使用 Poll SCM 自动轮询（每 2 分钟检查一次代码变更）
+    // 优点：无需配置 Webhook，适合本地 Jenkins，自动触发构建
+    // 流程：修改代码 → 提交推送 → 自动构建（2分钟内） → 查看结果
+    triggers {
+        pollSCM('H/2 * * * *')  // 每 2 分钟检查一次代码变更
+    }
+    
+    parameters {
+        string(name: 'SERVER_HOST', defaultValue: '47.112.31.96', description: '服务器地址')
+        string(name: 'SERVER_USER', defaultValue: 'root', description: '服务器用户名')
+        string(name: 'SERVER_PORT', defaultValue: '22', description: 'SSH 端口')
+        string(name: 'SSH_KEY_PATH', defaultValue: '/var/jenkins_home/.ssh/id_rsa', description: 'SSH 私钥路径')
+        booleanParam(name: 'SKIP_TESTS', defaultValue: true, description: '是否跳过测试')
+        booleanParam(name: 'CLEAN_BUILD', defaultValue: true, description: '是否清理构建缓存')
+        booleanParam(name: 'BUILD_SHARED_DEPS', defaultValue: false, description: '是否构建共享依赖包')
+    }
+    
+    stages {
+        stage('Check Changes') {
+            steps {
+                script {
+                    // 检查变更文件，只有 quality-app 相关变更时才构建
+                    echo "🔍 检查代码变更..."
+                    
+                    def changedFiles = ""
+                    if (isUnix()) {
+                        changedFiles = sh(
+                            script: '''
+                                if git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
+                                    git diff --name-only HEAD~1 HEAD
+                                else
+                                    git diff --name-only HEAD
+                                fi
+                            ''',
+                            returnStdout: true
+                        ).trim()
+                    } else {
+                        changedFiles = bat(
+                            script: '''
+                                @echo off
+                                git rev-parse --verify HEAD~1 >nul 2>&1
+                                if %errorlevel% equ 0 (
+                                    git diff --name-only HEAD~1 HEAD
+                                ) else (
+                                    git diff --name-only HEAD
+                                )
+                            ''',
+                            returnStdout: true
+                        ).trim()
+                    }
+                    
+                    if (!changedFiles) {
+                        echo "⏭️  没有检测到变更，跳过构建"
+                        currentBuild.result = 'ABORTED'
+                        return
+                    }
+                    
+                    def triggerPaths = [
+                        "apps/${env.APP_NAME}/",
+                        "jenkins/Jenkinsfile.${env.APP_NAME}"
+                    ]
+                    
+                    def sharedPaths = ["packages/", "configs/", "scripts/"]
+                    
+                    def shouldBuild = false
+                    def isSharedChange = false
+                    def changedFileList = changedFiles.split('\n')
+                    
+                    echo "📋 变更文件列表："
+                    for (file in changedFileList) {
+                        echo "  - ${file}"
+                        for (path in triggerPaths) {
+                            if (file.contains(path)) {
+                                shouldBuild = true
+                                echo "    ✅ 匹配应用路径: ${path}"
+                                break
+                            }
+                        }
+                        if (!shouldBuild) {
+                            for (path in sharedPaths) {
+                                if (file.contains(path)) {
+                                    isSharedChange = true
+                                    echo "    ⚠️  检测到共享依赖变更: ${path}"
+                                    echo "    💡 提示：共享依赖变更应该触发全量构建（btc-shopflow-deploy-all）"
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (!shouldBuild && isSharedChange) {
+                        echo "⏭️  只检测到共享依赖变更，应该触发全量构建而非单个应用构建"
+                        echo "💡 建议：共享包或配置变更时，使用 btc-shopflow-deploy-all Job"
+                        currentBuild.result = 'ABORTED'
+                        return
+                    }
+                    
+                    if (!shouldBuild) {
+                        echo "⏭️  变更文件不相关，跳过构建"
+                        echo "💡 提示：只有 ${env.APP_NAME} 相关变更才会触发此构建"
+                        currentBuild.result = 'ABORTED'
+                        return
+                    }
+                    
+                    echo "✅ 检测到 ${env.APP_NAME} 相关变更，继续构建"
+                }
+            }
+        }
+        
+        stage('Checkout') {
+            steps {
+                script {
+                    echo "📦 检出代码..."
+                    checkout scm
+                    if (isUnix()) {
+                        sh '''
+                            echo "Git 信息:"
+                            echo "  分支: $(git branch --show-current)"
+                            echo "  提交: $(git rev-parse --short HEAD)"
+                            echo "  作者: $(git log -1 --pretty=format:'%an <%ae>')"
+                            echo "  消息: $(git log -1 --pretty=format:'%s')"
+                        '''
+                    } else {
+                        bat '''
+                            @echo off
+                            echo Git 信息:
+                            for /f "delims=" %%i in ('git branch --show-current') do echo   分支: %%i
+                            for /f "delims=" %%i in ('git rev-parse --short HEAD') do echo   提交: %%i
+                            for /f "delims=" %%i in ('git log -1 --pretty=format:"%%an ^<%%ae^>"') do echo   作者: %%i
+                            for /f "delims=" %%i in ('git log -1 --pretty=format:"%%s"') do echo   消息: %%i
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Setup Environment') {
+            steps {
+                script {
+                    echo "🔧 设置构建环境..."
+                    
+                    // 尝试使用 NodeJS Plugin（如果已安装）
+                    try {
+                        def nodejs = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                        env.PATH = "${nodejs}/bin:${env.PATH}"
+                        echo "✅ 使用 NodeJS Plugin 安装的 Node.js: ${nodejs}"
+                    } catch (Exception e) {
+                        echo "ℹ️ NodeJS Plugin 未配置或未找到，尝试使用系统 Node.js"
+                    }
+                    
+                    if (isUnix()) {
+                        sh '''
+                            # 检查 Node.js（优先使用 NodeJS Plugin 设置的 PATH）
+                            if command -v node >/dev/null 2>&1; then
+                                # 验证 Node.js 是否能正常运行
+                                if node --version >/dev/null 2>&1; then
+                                    echo "✅ Node.js 已安装: $(node --version)"
+                                else
+                                    echo "❌ Node.js 命令存在但无法运行"
+                                    echo "错误信息: $(node --version 2>&1 || true)"
+                                    echo ""
+                                    echo "💡 可能的原因："
+                                    echo "   1. 缺少系统库（如 libatomic.so.1）"
+                                    echo "   2. Node.js 二进制文件损坏或不兼容"
+                                    echo ""
+                                    echo "💡 解决方案："
+                                    echo "   如果使用 NodeJS Plugin，可能需要在 Jenkins 容器中安装缺失的库："
+                                    echo "   docker exec -u root jenkins bash -c 'apt-get update && apt-get install -y libatomic1'"
+                                    echo ""
+                                    echo "   或者使用系统安装的 Node.js（如果容器中已安装）"
+                                    exit 1
+                                fi
+                            else
+                                echo "❌ Node.js 未找到"
+                                echo "💡 请确保："
+                                echo "   1. 如果使用 NodeJS Plugin：在 Jenkins 全局配置中配置 Node.js 工具，名称为 'NodeJS'"
+                                echo "   2. 如果使用系统安装：确保 Node.js 已安装在系统 PATH 中"
+                                exit 1
+                            fi
+                            
+                            if ! command -v pnpm >/dev/null 2>&1; then
+                                echo "📦 安装 pnpm ${PNPM_VERSION}..."
+                                npm install -g pnpm@${PNPM_VERSION} || exit 1
+                            else
+                                echo "✅ pnpm 已安装: $(pnpm --version)"
+                            fi
+                        '''
+                    } else {
+                        bat '''
+                            @echo off
+                            where node >nul 2>&1
+                            if %errorlevel% neq 0 (exit /b 1)
+                            node --version
+                            where pnpm >nul 2>&1
+                            if %errorlevel% neq 0 (call npm install -g pnpm@%PNPM_VERSION%)
+                            pnpm --version
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    echo "📚 安装依赖..."
+                    if (isUnix()) {
+                        sh '''
+                            pnpm install --frozen-lockfile --prefer-offline
+                            echo "✅ 依赖安装完成"
+                        '''
+                    } else {
+                        bat '''call pnpm install --frozen-lockfile --prefer-offline'''
+                    }
+                }
+            }
+        }
+        
+        stage('Build Shared Dependencies') {
+            when { expression { params.BUILD_SHARED_DEPS } }
+            steps {
+                script {
+                    echo "🔨 构建共享依赖包..."
+                    if (isUnix()) {
+                        sh '''
+                            pnpm --filter @btc/vite-plugin run build --force || true
+                            pnpm --filter @btc/shared-utils run build --force || true
+                            pnpm --filter @btc/shared-core run build --force || true
+                            pnpm --filter @btc/shared-components run build --force || true
+                            pnpm --filter @btc/subapp-manifests run build --force || true
+                            echo "✅ 共享依赖包构建完成"
+                        '''
+                    } else {
+                        bat '''
+                            call pnpm --filter @btc/vite-plugin run build --force || echo.
+                            call pnpm --filter @btc/shared-utils run build --force || echo.
+                            call pnpm --filter @btc/shared-core run build --force || echo.
+                            call pnpm --filter @btc/shared-components run build --force || echo.
+                            call pnpm --filter @btc/subapp-manifests run build --force || echo.
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script {
+                    def appName = env.APP_NAME
+                    def scriptName = appName.replace('-app', '')
+                    echo "🔨 构建应用: ${appName}..."
+                    def enableCdn = 'true'
+                    def enableCdnUpload = 'true'
+                    if (isUnix()) {
+                        sh """
+                            export ENABLE_CDN_ACCELERATION=${enableCdn}
+                            export ENABLE_CDN_UPLOAD=${enableCdnUpload}
+                            echo "构建应用: ${appName}..."
+                            echo "CDN 加速: ${enableCdn}"
+                            echo "CDN 上传: ${enableCdnUpload}"
+                            pnpm build:${scriptName} && node scripts/build-to-dist.mjs --app ${appName}
+                            echo "✅ ${appName} 构建完成，产物在 dist 目录"
+                        """
+                    } else {
+                        bat """
+                            @echo off
+                            set ENABLE_CDN_ACCELERATION=${enableCdn}
+                            set ENABLE_CDN_UPLOAD=${enableCdnUpload}
+                            echo 构建应用: ${appName}...
+                            echo CDN 加速: ${enableCdn}
+                            echo CDN 上传: ${enableCdnUpload}
+                            call pnpm build:${scriptName} && node scripts/build-to-dist.mjs --app ${appName}
+                            echo ✅ ${appName} 构建完成
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Verify Build Artifacts') {
+            steps {
+                script {
+                    def appName = env.APP_NAME
+                    echo "✅ 验证构建产物: ${appName}..."
+                    if (isUnix()) {
+                        sh """
+                            DOMAIN="quality.bellis.com.cn"
+                            APP_DIR="dist/\$DOMAIN"
+                            
+                            if [ -d "\$APP_DIR" ] && [ -n "\$(ls -A \$APP_DIR 2>/dev/null)" ]; then
+                                echo "✅ ${appName}: 构建产物验证通过 (目录: \$APP_DIR)"
+                                du -sh \$APP_DIR | awk '{print "大小: " \$1}'
+                                if [ -f "\$APP_DIR/index.html" ]; then
+                                    echo "✅ index.html 存在"
+                                fi
+                                if [ -d "\$APP_DIR/assets" ]; then
+                                    echo "✅ assets 目录存在"
+                                    echo "   JS 文件数量: \$(find \$APP_DIR/assets -name '*.js' | wc -l)"
+                                    echo "   CSS 文件数量: \$(find \$APP_DIR/assets -name '*.css' | wc -l)"
+                                fi
+                            else
+                                echo "❌ ${appName}: 构建产物不存在或为空 (预期目录: \$APP_DIR)"
+                                exit 1
+                            fi
+                        """
+                    } else {
+                        bat """
+                            @echo off
+                            set DOMAIN=quality.bellis.com.cn
+                            set APP_DIR=dist\\%DOMAIN%
+                            if exist "%APP_DIR%" (
+                                echo ✅ ${appName}: 构建产物验证通过
+                            ) else (
+                                echo ❌ ${appName}: 构建产物不存在
+                                exit /b 1
+                            )
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                script {
+                    def appName = env.APP_NAME
+                    def serverHost = params.SERVER_HOST
+                    def serverUser = params.SERVER_USER
+                    def serverPort = params.SERVER_PORT
+                    def sshKeyPath = params.SSH_KEY_PATH
+                    
+                    echo "🚀 部署应用: ${appName}..."
+                    if (isUnix()) {
+                        sh """
+                            echo "🚀 部署配置:"
+                            echo "  服务器: ${serverUser}@${serverHost}:${serverPort}"
+                            echo "  SSH 密钥: ${sshKeyPath}"
+                            echo "  应用: ${appName}"
+                            
+                            if [ ! -f "${sshKeyPath}" ]; then
+                                echo "❌ SSH 密钥文件不存在: ${sshKeyPath}"
+                                exit 1
+                            fi
+                            
+                            chmod 600 "${sshKeyPath}" || true
+                            export SERVER_HOST="${serverHost}"
+                            export SERVER_USER="${serverUser}"
+                            export SERVER_PORT="${serverPort}"
+                            export SSH_KEY="${sshKeyPath}"
+                            
+                            echo "测试 SSH 连接..."
+                            if ssh -i "${sshKeyPath}" -p "${serverPort}" \
+                                -o ConnectTimeout=10 -o StrictHostKeyChecking=no \
+                                "${serverUser}@${serverHost}" "echo 'SSH connection successful'" 2>&1; then
+                                echo "✅ SSH 连接成功"
+                            else
+                                echo "❌ SSH 连接失败，请检查配置"
+                                exit 1
+                            fi
+                            
+                            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                            echo "部署应用: ${appName}..."
+                            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                            
+                            bash scripts/deploy-static.sh --app ${appName}
+                        """
+                    } else {
+                        bat """
+                            @echo off
+                            echo 🚀 部署配置:
+                            echo   服务器: ${serverUser}@${serverHost}:${serverPort}
+                            echo   SSH 密钥: ${sshKeyPath}
+                            echo   应用: ${appName}
+                            if not exist "${sshKeyPath}" (
+                                echo ❌ SSH 密钥文件不存在: ${sshKeyPath}
+                                exit /b 1
+                            )
+                            where bash >nul 2>&1
+                            if !errorlevel! equ 0 (
+                                bash -c "export SERVER_HOST='${serverHost}' SERVER_USER='${serverUser}' SERVER_PORT='${serverPort}' SSH_KEY='${sshKeyPath}' && bash scripts/deploy-static.sh --app ${appName}"
+                            ) else (
+                                echo ❌ 未找到 bash
+                                exit /b 1
+                            )
+                        """
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            script {
+                echo """
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ 应用构建和部署成功！
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+应用: ${env.APP_NAME}
+域名: quality.bellis.com.cn
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"""
+            }
+        }
+        failure {
+            script {
+                echo """
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ 应用构建或部署失败
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+请检查构建日志以确定失败原因
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"""
+            }
+        }
+    }
+}

@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# 设置错误时退出
+set -e
+
+echo "🔍 Running pre-commit checks..."
+
+# 运行 lint-staged
+npx lint-staged
+
+echo "✅ Pre-commit checks passed!"

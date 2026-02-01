@@ -1,0 +1,84 @@
+{
+  "app": {
+    "id": "finance",
+    "basePath": "/finance",
+    "nameKey": "menu.finance.overview",
+    "app-name": "domain.type.finance"
+  },
+  "routes": [
+    {
+      "path": "/",
+      "labelKey": "menu.finance.overview",
+      "tab": {
+        "enabled": false
+      },
+      "breadcrumbs": []
+    },
+    {
+      "path": "/receivables",
+      "labelKey": "menu.finance.receivables",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.finance.receivables"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.finance.receivables", "icon": "Money" }
+      ]
+    },
+    {
+      "path": "/payables",
+      "labelKey": "menu.finance.payables",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.finance.payables"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.finance.payables", "icon": "CreditCard" }
+      ]
+    },
+    {
+      "path": "/reports",
+      "labelKey": "menu.finance.reports",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.finance.reports"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.finance.reports", "icon": "DataAnalysis" }
+      ]
+    },
+    {
+      "path": "/inventory",
+      "labelKey": "menu.finance.inventory_management",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.finance.inventory_management"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.finance.inventory_management", "icon": "Box" }
+      ]
+    },
+    {
+      "path": "/inventory/result",
+      "labelKey": "menu.finance.inventory_management.result",
+      "tab": {
+        "enabled": true,
+        "labelKey": "menu.finance.inventory_management.result"
+      },
+      "breadcrumbs": [
+        { "labelKey": "menu.finance.inventory_management", "icon": "Box" },
+        { "labelKey": "menu.finance.inventory_management.result", "icon": "List" }
+      ]
+    }
+  ],
+  "menus": [
+    {
+      "index": "/inventory",
+      "labelKey": "menu.finance.inventory_management",
+      "children": [
+        { "index": "/inventory/result", "labelKey": "menu.finance.inventory_management.result" }
+      ]
+    }
+  ]
+}
+

@@ -1,0 +1,499 @@
+// ========================================
+// Jenkins CD 生产环境部署流水线
+// 用于将代码部署到生产环境
+// 需要手动审批
+// ========================================
+
+// 流水线代理配置
+pipeline {
+    agent any
+    
+    // 流水线参数配置
+    parameters {
+        // 部署版本
+        string(
+            name: 'VERSION',
+            defaultValue: '',
+            description: '部署版本号（如 v1.0.0，必填）',
+            trim: true
+        )
+        // 回滚模式
+        booleanParam(
+            name: 'ROLLBACK',
+            defaultValue: false,
+            description: '是否执行回滚操作'
+        )
+        // 数据库迁移
+        booleanParam(
+            name: 'RUN_MIGRATION',
+            defaultValue: true,
+            description: '是否执行数据库迁移'
+        )
+    }
+    
+    // 流水线环境变量
+    environment {
+        // 环境名称
+        ENV_NAME = 'prod'
+        // 环境标识
+        ENVIRONMENT = 'production'
+        // 项目名称
+        PROJECT_NAME = 'enterprise-workspace'
+        // 部署目标
+        DEPLOY_TARGET = 'prod-server'
+        // Docker 镜像仓库
+        REGISTRY = 'ghcr.io'
+        // 镜像仓库命名空间
+        NAMESPACE = 'enterprise-workspace'
+        // Kubernetes 命名空间
+        K8S_NAMESPACE = 'production'
+    }
+    
+    // 流水线触发器（仅手动触发）
+    triggers {
+        // 禁用自动触发，仅手动触发
+    }
+    
+    // 流水线选项
+    options {
+        // 禁用并发构建
+        disableConcurrentBuilds()
+        // 构建超时：30分钟
+        timeout(time: 30, unit: 'MINUTES')
+        // 跳过默认 checkout
+        skipDefaultCheckout()
+    }
+    
+    // 流水线阶段定义
+    stages {
+        // 阶段一：部署审批
+        stage('部署审批') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段一：部署审批'
+                    echo '======================================'
+                }
+                
+                // 显示部署信息，等待审批
+                echo """
+                    ======================================
+                    生产环境部署审批
+                    ======================================
+                    项目: ${PROJECT_NAME}
+                    环境: 生产环境
+                    版本: ${params.VERSION ?: '未指定'}
+                    构建号: ${BUILD_NUMBER}
+                    部署人: ${currentBuild.userId ?: '未知'}
+                    ======================================
+                """
+                
+                // 部署审批检查
+                script {
+                    if (params.ROLLBACK) {
+                        echo "执行回滚操作，跳过审批"
+                    } else {
+                        // 要求手动审批
+                        timeout(activity: true, unit: 'HOURS') {
+                            input(
+                                message: '确认部署到生产环境？',
+                                ok: '确认部署',
+                                submitter: 'admin,devops-team'
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        
+        // 阶段二：预部署检查
+        stage('预部署检查') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段二：预部署检查'
+                    echo '======================================'
+                }
+                
+                // 回滚模式
+                script {
+                    if (params.ROLLBACK) {
+                        echo "执行回滚模式"
+                        return
+                    }
+                }
+                
+                // 检出代码
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/example/enterprise-workspace.git',
+                        credentialsId: 'github-credentials'
+                    ]]
+                ])
+                
+                // 验证版本标签
+                script {
+                    if (params.VERSION) {
+                        def tagExists = sh(
+                            script: "git tag | grep -q '^${params.VERSION}$'",
+                            returnStatus: true
+                        )
+                        if (tagExists != 0) {
+                            error "版本标签 ${params.VERSION} 不存在"
+                        }
+                        echo "版本标签验证通过: ${params.VERSION}"
+                    }
+                }
+                
+                // 获取最近提交
+                sh 'git log --oneline -5'
+                
+                // 检查磁盘空间
+                sh 'df -h'
+            }
+        }
+        
+        // 阶段三：构建 Docker 镜像
+        stage('构建 Docker 镜像') {
+            when {
+                expression { return !params.ROLLBACK }
+            }
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段三：构建 Docker 镜像'
+                    echo '======================================'
+                }
+                
+                // 设置 Docker 构建环境
+                script {
+                    def imageTag = params.VERSION ?: env.BUILD_NUMBER
+                    docker.build("${REGISTRY}/${NAMESPACE}:${imageTag}", '--build-arg VERSION=${imageTag} .')
+                }
+            }
+        }
+        
+        // 阶段四：推送镜像
+        stage('推送镜像') {
+            when {
+                expression { return !params.ROLLBACK }
+            }
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段四：推送到镜像仓库'
+                    echo '======================================'
+                }
+                
+                docker.withRegistry("https://${REGISTRY}", 'ghcr-credentials') {
+                    script {
+                        def imageTag = params.VERSION ?: env.BUILD_NUMBER
+                        def image = docker.image("${REGISTRY}/${NAMESPACE}:${imageTag}")
+                        
+                        // 推送指定版本标签
+                        image.push()
+                        
+                        // 推送 prod-latest 标签
+                        image.push('prod-latest')
+                        
+                        // 推送版本号标签
+                        if (params.VERSION) {
+                            image.push(params.VERSION)
+                        }
+                    }
+                }
+            }
+        }
+        
+        // 阶段五：执行数据库迁移
+        stage('数据库迁移') {
+            when {
+                expression { return !params.ROLLBACK && params.RUN_MIGRATION }
+            }
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段五：执行数据库迁移'
+                    echo '======================================'
+                }
+                
+                withKubeConfig([
+                    credentialsId: 'kubeconfig-prod',
+                    serverUrl: 'https://kubernetes.prod.example.com'
+                ]) {
+                    // 执行数据库迁移
+                    sh '''
+                        kubectl exec -it deployment/app -n ${K8S_NAMESPACE} -- npm run db:migrate
+                    '''
+                    
+                    // 验证迁移完成
+                    sh '''
+                        echo "数据库迁移完成"
+                    '''
+                }
+            }
+        }
+        
+        // 阶段六：滚动更新部署
+        stage('滚动更新部署') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段六：滚动更新部署'
+                    echo '======================================'
+                }
+                
+                withKubeConfig([
+                    credentialsId: 'kubeconfig-prod',
+                    serverUrl: 'https://kubernetes.prod.example.com'
+                ]) {
+                    // 应用配置
+                    sh '''
+                        kubectl apply -f k8s/prod/namespace.yaml
+                        kubectl apply -f k8s/prod/deployment.yaml
+                        kubectl apply -f k8s/prod/service.yaml
+                        kubectl apply -f k8s/prod/hpa.yaml
+                        kubectl apply -f k8s/prod/ingress.yaml
+                        kubectl apply -f k8s/prod/cert.yaml
+                    '''
+                    
+                    // 设置镜像版本
+                    script {
+                        def imageTag = params.VERSION ?: env.BUILD_NUMBER
+                        sh "kubectl set image deployment/app app=${REGISTRY}/${NAMESPACE}:${imageTag} -n ${K8S_NAMESPACE}"
+                    }
+                }
+            }
+        }
+        
+        // 阶段七：等待滚动更新
+        stage('等待更新完成') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段七：等待滚动更新完成'
+                    echo '======================================'
+                }
+                
+                withKubeConfig([
+                    credentialsId: 'kubeconfig-prod',
+                    serverUrl: 'https://kubernetes.prod.example.com'
+                ]) {
+                    // 等待滚动更新完成
+                    script {
+                        timeout(time: 10, unit: 'MINUTES') {
+                            sh 'kubectl rollout status deployment/app -n ${K8S_NAMESPACE}'
+                        }
+                    }
+                    
+                    // 显示部署状态
+                    sh "kubectl get pods -n ${K8S_NAMESPACE}"
+                    sh "kubectl get svc -n ${K8S_NAMESPACE}"
+                    sh "kubectl get ingress -n ${K8S_NAMESPACE}"
+                }
+            }
+        }
+        
+        // 阶段八：健康检查
+        stage('健康检查') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段八：健康检查'
+                    echo '======================================'
+                }
+                
+                // 多次健康检查
+                script {
+                    def maxRetries = 10
+                    def retryInterval = 15
+                    
+                    for (int i = 1; i <= maxRetries; i++) {
+                        echo "健康检查尝试 ${i}/${maxRetries}"
+                        
+                        def healthCheck = sh(
+                            script: 'curl -sf -o /dev/null -w "%{http_code}" https://prod.example.com/health',
+                            returnStatus: true
+                        )
+                        
+                        if (healthCheck == 200) {
+                            echo "健康检查通过"
+                            break
+                        }
+                        
+                        if (i == maxRetries) {
+                            error "健康检查失败，已达到最大重试次数"
+                        }
+                        
+                        sleep(retryInterval)
+                    }
+                }
+                
+                // API 端点验证
+                sh '''
+                    curl -sf https://prod.example.com/api/health
+                    curl -sf https://prod.example.com/api/version
+                '''
+            }
+        }
+        
+        // 阶段九：验证服务状态
+        stage('验证服务状态') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段九：验证服务状态'
+                    echo '======================================'
+                }
+                
+                withKubeConfig([
+                    credentialsId: 'kubeconfig-prod',
+                    serverUrl: 'https://kubernetes.prod.example.com'
+                ]) {
+                    // 检查 Pod 资源使用
+                    sh "kubectl top pods -n ${K8S_NAMESPACE}"
+                    
+                    // 检查 Service Endpoints
+                    sh "kubectl get endpoints -n ${K8S_NAMESPACE}"
+                    
+                    // 检查 Events
+                    sh "kubectl get events -n ${K8S_NAMESPACE} --sort-by='.lastTimestamp'"
+                }
+            }
+        }
+        
+        // 阶段十：部署完成
+        stage('部署完成') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '✅ 生产环境部署成功！'
+                    echo '======================================'
+                    
+                    // 显示部署信息
+                    echo """
+                        ======================================
+                        生产环境部署信息
+                        ======================================
+                        项目: ${PROJECT_NAME}
+                        环境: 生产环境
+                        版本: ${params.VERSION ?: env.BUILD_NUMBER}
+                        构建号: ${BUILD_NUMBER}
+                        访问地址: https://prod.example.com
+                        健康检查: https://prod.example.com/health
+                        API 文档: https://prod.example.com/api-docs
+                        监控面板: https://grafana.prod.example.com
+                        ======================================
+                    """
+                }
+            }
+        }
+    }
+    
+    // 流水线后置处理
+    post {
+        // 成功时执行
+        success {
+            script {
+                echo '======================================'
+                echo '✅ 生产环境部署成功！'
+                echo '======================================'
+                
+                // 发送部署成功通知
+                slackSend(
+                    channel: '#devops-notifications',
+                    color: 'good',
+                    message: """✅ 生产环境部署成功
+                        *项目*: ${PROJECT_NAME}
+                        *环境*: 生产环境
+                        *版本*: ${params.VERSION ?: env.BUILD_NUMBER}
+                        *构建号*: ${BUILD_NUMBER}
+                        *部署人*: ${currentBuild.userId ?: '未知'}
+                        <https://prod.example.com|访问生产环境>
+                    """
+                )
+                
+                // 发送邮件通知
+                mail(
+                    to: 'admin@example.com,devops-team@example.com',
+                    subject: "✅ 生产环境部署成功: ${PROJECT_NAME} v${params.VERSION ?: 'latest'}",
+                    body: """生产环境部署成功
+                        项目: ${PROJECT_NAME}
+                        环境: 生产环境
+                        版本: ${params.VERSION ?: 'latest'}
+                        构建号: ${BUILD_NUMBER}
+                        部署人: ${currentBuild.userId ?: '未知'}
+                        访问地址: https://prod.example.com
+                    """
+                )
+                
+                // 更新部署记录
+                echo "部署记录已保存"
+            }
+        }
+        
+        // 失败时执行
+        failure {
+            script {
+                echo '======================================'
+                echo '❌ 生产环境部署失败！'
+                echo '======================================'
+                
+                // 发送部署失败通知
+                slackSend(
+                    channel: '#devops-notifications',
+                    color: 'danger',
+                    message: """❌ 生产环境部署失败
+                        *项目*: ${PROJECT_NAME}
+                        *环境*: 生产环境
+                        *版本*: ${params.VERSION ?: env.BUILD_NUMBER}
+                        *构建号*: ${BUILD_NUMBER}
+                        *部署人*: ${currentBuild.userId ?: '未知'}
+                        ⚠️ *请立即检查系统状态*
+                        <${env.BUILD_URL}|查看构建详情>
+                    """
+                )
+                
+                // 发送紧急邮件通知
+                mail(
+                    to: 'admin@example.com,devops-team@example.com',
+                    subject: "🚨 紧急：生产环境部署失败: ${PROJECT_NAME}",
+                    body: """生产环境部署失败
+                        项目: ${PROJECT_NAME}
+                        环境: 生产环境
+                        版本: ${params.VERSION ?: env.BUILD_NUMBER}
+                        构建号: ${BUILD_NUMBER}
+                        部署人: ${currentBuild.userId ?: '未知'}
+                        查看详情: ${env.BUILD_URL}
+                        
+                        ⚠️ 请立即检查系统状态！
+                    """
+                )
+            }
+        }
+        
+        // 总是执行
+        always {
+            script {
+                echo '======================================'
+                echo '后置处理'
+                echo '======================================'
+                
+                // 清理 Docker 缓存
+                sh 'docker system prune -f'
+                
+                // 清理工作空间
+                cleanWs(
+                    cleanWhenAborted: true,
+                    cleanWhenFailure: true,
+                    cleanWhenNotBuilt: true,
+                    cleanWhenSuccess: true,
+                    cleanWhenUnstable: true,
+                    deleteDirs: true
+                )
+            }
+        }
+    }
+}

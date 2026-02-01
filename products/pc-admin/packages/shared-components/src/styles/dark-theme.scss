@@ -1,0 +1,192 @@
+// 暗色模式下的布局背景色样式（共享样式）
+// 确保所有应用（包括系统域主应用）都应用统一的暗色背景色 #0a0a0a
+// 注意：CSS 变量不支持 !important，需要通过选择器优先级来覆盖
+// 使用高优先级选择器确保在所有场景下都能正确应用，包括预览服务器
+
+// 使用更高优先级的选择器覆盖 Element Plus 的默认 CSS 变量
+// 注意：CSS 变量不支持 !important，需要通过选择器优先级和加载顺序来覆盖
+// 在预览服务器上，确保样式在 Element Plus 的 dark/css-vars.css 之后加载
+// 使用多个选择器组合提高优先级，确保覆盖 Element Plus 的样式
+html.dark,
+html.dark:root,
+html.dark html,
+html.dark body,
+html.dark #app {
+  // Element Plus 组件背景色使用 #0a0a0a
+  --el-bg-color: #0a0a0a;
+  // Element Plus 页面背景色使用 #141414（较浅的深色背景，作为整体背景）
+  --el-bg-color-page: #141414;
+}
+
+// body/html 整体背景使用较浅的深色背景 #141414
+html.dark body,
+html.dark html {
+  background-color: #141414 !important;
+}
+
+html.dark {
+  // 所有布局成员使用更深的背景 #0a0a0a，在较浅的 body 背景上形成对比
+  // 顶栏背景色
+  .app-layout__topbar,
+  .topbar {
+    background-color: #0a0a0a !important;
+  }
+
+  // 面包屑背景色
+  .app-breadcrumb {
+    background-color: #0a0a0a !important;
+  }
+
+  // Tabbar 背景色
+  .app-process,
+  .app-process.tab-default {
+    background-color: #0a0a0a !important;
+  }
+
+  // 内容区域背景色
+  // 使用更高优先级的选择器，确保覆盖子应用可能设置的样式
+  .app-layout__content,
+  .app-layout__main .app-layout__content {
+    background-color: #0a0a0a !important;
+  }
+
+  // 子应用挂载点背景色（确保不被子应用样式覆盖）
+  #subapp-viewport {
+    background-color: #0a0a0a !important;
+  }
+
+  // 侧边栏容器背景色
+  .app-layout__sidebar,
+  .app-layout__sidebar.has-dark-menu {
+    background-color: #0a0a0a !important;
+  }
+
+  // 深色菜单风格在深色系统主题下，背景色使用更深的背景 #0a0a0a（与侧边栏一致）
+  .el-menu-dark {
+    background-color: #0a0a0a !important;
+
+    .el-sub-menu .el-menu {
+      background-color: #0a0a0a !important;
+    }
+  }
+
+  // 确保侧边栏容器内的深色菜单也使用正确的背景色（最高优先级）
+  .app-layout__sidebar {
+    .sidebar__menu.el-menu-dark,
+    .el-menu-dark {
+      background-color: #0a0a0a !important;
+
+      .el-sub-menu .el-menu {
+        background-color: #0a0a0a !important;
+      }
+    }
+
+    // 确保子菜单的背景色也被覆盖
+    .sidebar__menu.el-menu-dark .el-sub-menu .el-menu,
+    .el-menu-dark .el-sub-menu .el-menu {
+      background-color: #0a0a0a !important;
+    }
+  }
+
+  // ========== 组件级别的暗色主题样式（共享样式） ==========
+  // 这些样式需要放在共享组件库中，确保在 qiankun 样式隔离环境下也能正确应用
+  // 关键：qiankun 的 experimentalStyleIsolation 会给子应用的样式添加作用域前缀
+  // 但是主应用加载的样式是全局的，不会被隔离
+  // 使用 html.dark 作为最外层选择器，确保样式能够穿透 qiankun 的样式隔离
+  // 同时使用 #subapp-viewport 和 [data-qiankun] 选择器，确保能够匹配到子应用容器
+
+  // 调整暗黑模式下的表格背景色
+  // 注意：选择器必须足够具体，确保能够匹配到子应用内的元素
+  .el-table,
+  #subapp-viewport .el-table,
+  #subapp-viewport [data-qiankun] .el-table,
+  [data-qiankun] .el-table {
+    --el-table-bg-color: var(--el-bg-color);
+    --el-table-tr-bg-color: var(--el-bg-color);
+    --el-table-row-hover-bg-color: var(--el-fill-color-light);
+
+    &__header {
+      .el-table__cell {
+        background-color: var(--el-bg-color) !important;
+      }
+    }
+  }
+
+  // 优化暗黑模式下的遮罩层
+  .el-overlay,
+  #subapp-viewport .el-overlay,
+  #subapp-viewport [data-qiankun] .el-overlay,
+  [data-qiankun] .el-overlay {
+    background-size: 4px 4px;
+    backdrop-filter: saturate(50%) blur(4px);
+  }
+
+  // CRUD 容器背景
+  .crud-container,
+  #subapp-viewport .crud-container,
+  #subapp-viewport [data-qiankun] .crud-container,
+  [data-qiankun] .crud-container {
+    background-color: var(--el-bg-color) !important;
+  }
+
+  // btc-crud 组件背景
+  .btc-crud,
+  #subapp-viewport .btc-crud,
+  #subapp-viewport [data-qiankun] .btc-crud,
+  [data-qiankun] .btc-crud {
+    background-color: var(--el-bg-color) !important;
+  }
+
+  // 优化菜单在暗黑模式下的显示
+  // 关键：对于 sidebar__menu，不设置 --el-menu-text-color，让菜单组件自己控制文本颜色
+  // 这样可以避免覆盖 dynamic-menu 组件通过内联样式设置的文本颜色
+  .el-menu:not(.sidebar__menu),
+  #subapp-viewport .el-menu:not(.sidebar__menu),
+  #subapp-viewport [data-qiankun] .el-menu:not(.sidebar__menu),
+  [data-qiankun] .el-menu:not(.sidebar__menu) {
+    --el-menu-bg-color: var(--el-bg-color);
+    --el-menu-hover-bg-color: var(--el-fill-color-light);
+    --el-menu-text-color: var(--el-text-color-primary);
+    --el-menu-active-color: var(--el-color-primary);
+  }
+
+  // 对于 sidebar__menu，只设置背景色和激活色，不设置文本颜色
+  // 让 dynamic-menu 组件通过内联样式控制文本颜色
+  .sidebar__menu.el-menu,
+  #subapp-viewport .sidebar__menu.el-menu,
+  #subapp-viewport [data-qiankun] .sidebar__menu.el-menu,
+  [data-qiankun] .sidebar__menu.el-menu {
+    --el-menu-bg-color: var(--el-bg-color);
+    --el-menu-hover-bg-color: var(--el-fill-color-light);
+    --el-menu-active-color: var(--el-color-primary);
+    // 不设置 --el-menu-text-color，让组件自己控制
+  }
+
+  // 优化下拉菜单
+  .el-dropdown-menu,
+  #subapp-viewport .el-dropdown-menu,
+  #subapp-viewport [data-qiankun] .el-dropdown-menu,
+  [data-qiankun] .el-dropdown-menu {
+    --el-dropdown-menu-box-shadow: var(--el-box-shadow-light);
+  }
+
+  // 优化抽屉
+  .el-drawer,
+  #subapp-viewport .el-drawer,
+  #subapp-viewport [data-qiankun] .el-drawer,
+  [data-qiankun] .el-drawer {
+    --el-drawer-bg-color: var(--el-bg-color);
+  }
+
+  // 确保子应用根容器使用正确的背景色
+  // 使用多个选择器确保能够匹配到子应用的根容器
+  // 注意：qiankun 会在 #subapp-viewport 内创建 [data-qiankun] 元素，子应用的 #app 在这个元素内
+  #app,
+  #subapp-viewport #app,
+  #subapp-viewport [data-qiankun],
+  #subapp-viewport [data-qiankun] #app,
+  [data-qiankun] #app {
+    background-color: var(--el-bg-color) !important;
+  }
+}
+

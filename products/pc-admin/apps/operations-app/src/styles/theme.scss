@@ -1,0 +1,146 @@
+// View Transition API 样式 - 支持主题切换动画（参考 cool-admin-vue-8.x）
+// 注意：在微前端场景下，view-transition-name 应该由主应用统一设置
+// 子应用不应该设置全局的 view-transition-name，避免与主应用冲突
+// 禁用默认动画，完全使用 JavaScript animate() API 控制
+::view-transition-new(root),
+::view-transition-old(root) {
+  animation: none !important;
+}
+
+// 全局设置 --el-bg-color，确保子应用加载时就能使用正确的背景色
+// 注意：--el-bg-color-page 应该保持为 #141414（较浅的深色背景），以实现双重背景效果
+// 只有 --el-bg-color（组件背景）使用 #0a0a0a（较深的深色背景）
+// 注意：CSS 变量不支持 !important，但可以通过选择器优先级覆盖
+// 使用 html.dark:root 选择器（比 :root 优先级更高）确保覆盖 Element Plus 的样式
+// 在预览服务器上，确保样式优先级足够高，能够覆盖 Element Plus 的 dark/css-vars.css
+html.dark:root,
+html.dark,
+html.dark :root,
+html.dark html {
+  --el-bg-color: #0a0a0a;
+  // 保持 --el-bg-color-page 为 #141414，实现双重背景效果（外层较浅，内层较深）
+  // --el-bg-color-page: #141414; // 由 dark-theme.css 统一设置，这里不覆盖
+}
+
+// 暗黑模式样式
+// 同时支持 html.dark 和 .dark，确保在 qiankun 样式隔离环境下也能正确应用
+html.dark:root,
+html.dark,
+.dark {
+  // Element Plus 组件背景色使用 #0a0a0a
+  --el-bg-color: #0a0a0a;
+  // Element Plus 页面背景色保持为 #141414（较浅的深色背景），实现双重背景效果
+  // --el-bg-color-page: #141414; // 由 dark-theme.css 统一设置，这里不覆盖
+
+  // View Transition 遮罩层 z-index 设置（参考 cool-admin-vue-8.x）
+  // 当切换到暗黑模式时，旧视图（亮色）需要在上层显示
+  &::view-transition-old(root) {
+    z-index: 100;
+  }
+
+  // 暗黑模式下的背景色层次
+  // 布局区域（顶栏、面包屑、tabbar、内容区域、侧边栏）使用 #0a0a0a
+  // 组件背景使用 Element Plus 的 --el-bg-color #0a0a0a
+  // 全局背景使用 Element Plus 默认的暗色背景（不修改）
+  // 注意：布局背景色样式已移至共享组件 @btc/shared-components/styles/dark-theme.css
+  // 组件级别的暗色主题样式也已移至共享组件库，确保在 qiankun 样式隔离环境下也能正确应用
+  // 这里只保留 operations-app 特有的样式
+
+  // 优化暗黑模式下的遮罩层（排除偏好设置抽屉）
+  .el-overlay:not(.user-preferences-modal) {
+    background-size: 4px 4px;
+    backdrop-filter: saturate(50%) blur(4px);
+  }
+
+  // 抽屉背景色
+  .el-drawer {
+    --el-drawer-bg-color: var(--el-bg-color);
+  }
+
+  // 对话框背景色
+  .el-dialog {
+    background-color: var(--el-bg-color) !important;
+  }
+
+  // 消息框背景色
+  .el-message-box {
+    background-color: var(--el-bg-color) !important;
+  }
+
+  // 下拉菜单背景色
+  .el-dropdown-menu {
+    background: var(--el-bg-color) !important;
+    border-color: var(--el-border-color) !important;
+
+    .el-dropdown-menu__item {
+      color: var(--el-text-color-primary) !important;
+
+      &:hover {
+        background-color: var(--el-fill-color-light) !important;
+      }
+    }
+  }
+
+  // 选择器下拉菜单背景色
+  .el-select-dropdown {
+    background-color: var(--el-bg-color) !important;
+
+    .el-select-dropdown__item {
+      background-color: var(--el-bg-color) !important;
+      color: var(--el-text-color-primary) !important;
+
+      &:hover {
+        background-color: var(--el-fill-color-light) !important;
+      }
+
+      &.selected {
+        background-color: var(--el-bg-color) !important;
+        color: var(--el-text-color-primary) !important;
+        border-bottom-color: var(--el-border-color) !important;
+      }
+    }
+
+    .el-select-dropdown__empty {
+      background-color: var(--el-bg-color) !important;
+      color: var(--el-text-color-primary) !important;
+    }
+  }
+
+  // 表格下拉菜单背景色
+  .el-table-filter {
+    border-bottom-color: var(--el-border-color) !important;
+
+    .el-table-filter__list-item {
+      color: var(--el-text-color-secondary) !important;
+    }
+  }
+
+  // 日期选择器下拉菜单背景色
+  .el-picker-panel {
+    background-color: var(--el-bg-color) !important;
+    color: var(--el-text-color-primary) !important;
+  }
+}
+
+// 确保暗黑模式下的文本颜色正确
+.dark {
+  color-scheme: dark;
+}
+
+// ========== 关键：在文件末尾再次覆盖 CSS 变量，确保在预览服务器上也能生效 ==========
+// 在预览服务器上，样式可能被合并或压缩，导致加载顺序改变
+// 通过在文件末尾再次定义，确保覆盖样式在最后加载，优先级最高
+// 使用多个选择器组合，确保覆盖 Element Plus 的 dark/css-vars.css
+html.dark:root,
+html.dark,
+html.dark :root,
+html.dark html,
+html.dark body,
+html.dark #app,
+html.dark #subapp-viewport {
+  // 再次覆盖，确保在预览服务器上也能生效
+  --el-bg-color: #0a0a0a;
+  // 保持 --el-bg-color-page 为 #141414，实现双重背景效果（外层较浅，内层较深）
+  // --el-bg-color-page: #141414; // 由 dark-theme.css 统一设置，这里不覆盖
+}
+

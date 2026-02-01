@@ -1,0 +1,100 @@
+.profile-card {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+
+  &__content {
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+  }
+
+  &__avatar-section {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__info-section {
+    flex: 1;
+    min-width: 0;
+  }
+
+}
+
+.profile-info-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+
+  &__key {
+    width: 100px;
+    flex-shrink: 0;
+    color: var(--el-text-color-regular);
+    font-size: 14px;
+    padding-right: 16px;
+  }
+
+  &__value {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  &__content {
+    flex: 1;
+    color: var(--el-text-color-primary);
+    font-size: 14px;
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  &__edit-icon,
+  &__copy-icon {
+    flex-shrink: 0;
+    font-size: 16px;
+    color: var(--el-color-primary);
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--el-color-primary-light-3);
+    }
+  }
+}
+
+
+
+// 响应式设计
+@media (max-width: 768px) {
+  .profile-card {
+    &__content {
+      flex-direction: column;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    &__avatar-section {
+      text-align: center;
+    }
+  }
+
+  .profile-info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    &__key {
+      width: 100%;
+    }
+
+    &__value {
+      width: 100%;
+    }
+  }
+}
+

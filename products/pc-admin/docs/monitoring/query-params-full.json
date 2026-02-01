@@ -1,0 +1,86 @@
+{
+  "description": "日志查询参数完整结构（所有可能字段的最大合集）",
+  "note": "所有字段均为可选，根据实际查询需求使用。查询逻辑：先按批次级别字段（appId, timeRange）过滤批次，再在批次内的 logs 数组中按日志级别和 extensions 字段过滤",
+  "query_logic": {
+    "batch_level": ["appId", "timeRange"],
+    "log_level": ["logLevel", "loggerName", "messageKeyword", "microAppType", "microAppName", "microAppLifecycle"],
+    "extensions_level": ["eventType", "sessionId", "userId", "routePath", "apiEndpoint", "errorType", "performanceRange", "resourceType", "userActionType", "businessEventName", "deviceType", "browser", "os"]
+  },
+
+  "appId": "btc-shopflow-admin-app",
+  "logLevel": "ERROR",
+  "loggerName": "log-reporter-test",
+  "messageKeyword": "测试",
+
+  "timeRange": {
+    "startTime": "2026-01-15T10:00:00.000Z",
+    "endTime": "2026-01-15T11:00:00.000Z"
+  },
+
+  "microAppType": "sub",
+  "microAppName": "admin-app",
+  "microAppInstanceId": "admin-app-instance-123456",
+  "microAppLifecycle": "mount",
+
+  "eventType": "api:request,api:response,route:navigation,performance:page,error:runtime,user:action,business:event",
+
+  "sessionId": "session-abc123",
+  "userId": "user-12345",
+
+  "routePath": "/order/list",
+  "routeName": "OrderList",
+
+  "apiEndpoint": "/api/order/list",
+  "apiMethod": "POST",
+  "apiStatusCode": 500,
+  "apiResponseTimeRange": {
+    "min": 1000,
+    "max": 5000
+  },
+
+  "errorType": "api",
+  "errorCode": "ERR_500",
+  "hasError": true,
+
+  "performanceRange": {
+    "duration": {
+      "min": 1000,
+      "max": 5000
+    },
+    "fcp": {
+      "min": 1800,
+      "max": 3000
+    },
+    "lcp": {
+      "min": 2500,
+      "max": 4000
+    },
+    "fid": {
+      "min": 100,
+      "max": 300
+    },
+    "cls": {
+      "min": 0.1,
+      "max": 0.25
+    },
+    "ttfb": {
+      "min": 600,
+      "max": 1200
+    }
+  },
+
+  "resourceType": "script",
+  "resourceUrl": "/static/js/vendor.js",
+
+  "userActionType": "click",
+  "userActionElement": "button",
+
+  "businessEventName": "order:create,order:pay",
+  "businessEventCategory": "order",
+
+  "deviceType": "mobile",
+  "browser": "Chrome",
+  "os": "iOS",
+
+  "action": "submit"
+}

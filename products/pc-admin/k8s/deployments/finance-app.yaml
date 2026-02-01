@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-finance-app
+  namespace: btc-shopflow
+  labels:
+    app: btc-finance-app
+    component: frontend
+    tier: web
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: btc-finance-app
+  template:
+    metadata:
+      labels:
+        app: btc-finance-app
+        component: frontend
+        tier: web
+    spec:
+      # 注意：镜像地址会在部署时被动态替换为私有仓库地址
+      # 格式：<PRIVATE_REGISTRY>/finance-app:<GIT_SHA>
+      containers:
+      - name: finance-app
+        image: btc-shopflow/finance-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: btc-shopflow-config
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: VITE_APP_TITLE
+          value: "BTC车间管理-财务系统"
+        - name: VITE_BASE_API
+          value: "/api"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      restartPolicy: Always
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-finance-app-service
+  namespace: btc-shopflow
+  labels:
+    app: btc-finance-app
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30086
+    protocol: TCP
+    name: http
+  selector:
+    app: btc-finance-app

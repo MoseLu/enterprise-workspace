@@ -1,0 +1,317 @@
+# Quality App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-quality-app
+  namespace: btc-shopflow
+  labels:
+    app: btc-quality-app
+    component: frontend
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-quality-app
+  template:
+    metadata:
+      labels:
+        app: btc-quality-app
+        component: frontend
+        tier: web
+    spec:
+      # 注意：镜像地址会在部署时被动态替换为私有仓库地址
+      # 格式：<PRIVATE_REGISTRY>/quality-app:<GIT_SHA>
+      containers:
+      - name: quality-app
+        image: btc-shopflow/quality-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: btc-shopflow-config
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-quality-app-service
+  namespace: btc-shopflow
+spec:
+  selector:
+    app: btc-quality-app
+  ports:
+  - port: 8083
+    targetPort: 80
+  type: ClusterIP
+
+---
+# Production App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-production-app
+  namespace: btc-shopflow
+  labels:
+    app: btc-production-app
+    component: frontend
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-production-app
+  template:
+    metadata:
+      labels:
+        app: btc-production-app
+        component: frontend
+        tier: web
+    spec:
+      # 注意：镜像地址会在部署时被动态替换为私有仓库地址
+      # 格式：<PRIVATE_REGISTRY>/production-app:<GIT_SHA>
+      containers:
+      - name: production-app
+        image: btc-shopflow/production-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: btc-shopflow-config
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-production-app-service
+  namespace: btc-shopflow
+spec:
+  selector:
+    app: btc-production-app
+  ports:
+  - port: 8084
+    targetPort: 80
+  type: ClusterIP
+
+---
+# Engineering App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-engineering-app
+  namespace: btc-shopflow
+  labels:
+    app: btc-engineering-app
+    component: frontend
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-engineering-app
+  template:
+    metadata:
+      labels:
+        app: btc-engineering-app
+        component: frontend
+        tier: web
+    spec:
+      # 注意：镜像地址会在部署时被动态替换为私有仓库地址
+      # 格式：<PRIVATE_REGISTRY>/engineering-app:<GIT_SHA>
+      containers:
+      - name: engineering-app
+        image: btc-shopflow/engineering-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: btc-shopflow-config
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-engineering-app-service
+  namespace: btc-shopflow
+spec:
+  selector:
+    app: btc-engineering-app
+  ports:
+  - port: 8085
+    targetPort: 80
+  type: ClusterIP
+
+---
+# Finance App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-finance-app
+  namespace: btc-shopflow
+  labels:
+    app: btc-finance-app
+    component: frontend
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-finance-app
+  template:
+    metadata:
+      labels:
+        app: btc-finance-app
+        component: frontend
+        tier: web
+    spec:
+      # 注意：镜像地址会在部署时被动态替换为私有仓库地址
+      # 格式：<PRIVATE_REGISTRY>/finance-app:<GIT_SHA>
+      containers:
+      - name: finance-app
+        image: btc-shopflow/finance-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: btc-shopflow-config
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-finance-app-service
+  namespace: btc-shopflow
+spec:
+  selector:
+    app: btc-finance-app
+  ports:
+  - port: 8086
+    targetPort: 80
+  type: ClusterIP
+
+---
+# Docs App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: btc-docs-app
+  namespace: btc-shopflow
+  labels:
+    app: btc-docs-app
+    component: frontend
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: btc-docs-app
+  template:
+    metadata:
+      labels:
+        app: btc-docs-app
+        component: frontend
+        tier: web
+    spec:
+      containers:
+      - name: docs-app
+        image: btc-shopflow/docs-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: btc-shopflow-config
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: btc-docs-app-service
+  namespace: btc-shopflow
+spec:
+  selector:
+    app: btc-docs-app
+  ports:
+  - port: 8087
+    targetPort: 80
+  type: ClusterIP
+

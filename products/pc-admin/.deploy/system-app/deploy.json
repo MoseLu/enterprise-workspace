@@ -1,0 +1,7 @@
+{
+  "app_name": "system-app",
+  "image_path": "/www/wwwroot/btc-shopflow-monorepo/tmp/docker-images/system-app.tar.gz",
+  "environment": "production",
+  "deployed_at": "2025-11-25T08:16:45Z",
+  "git_sha": "c094b2c"
+}

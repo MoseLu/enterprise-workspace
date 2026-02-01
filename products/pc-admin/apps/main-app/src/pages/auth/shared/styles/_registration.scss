@@ -1,0 +1,140 @@
+@use 'variables' as *;
+
+// 注册表单样式
+.auth-page .login-card .card-content {
+	// 注册表单样式
+	:deep(.registration-form) {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		overflow: hidden;
+		
+		// 顶部进度条区域
+		.progress-header {
+			flex-shrink: 0;
+			padding-bottom: 20px;
+			border-bottom: 1px solid var(--el-border-color-light);
+			margin-bottom: 20px;
+			
+			.step-description {
+				margin-top: 16px;
+				text-align: center;
+				
+				p {
+					font-size: 14px;
+					color: $auth-light-text-regular;
+					margin: 0;
+					line-height: 1.4;
+				}
+			}
+		}
+		
+		// 暗黑模式适配
+		html.dark & {
+			.progress-header {
+				.step-description p {
+					color: $auth-dark-text-regular;
+				}
+			}
+		}
+
+		// 步骤导航样式 - 使用自定义btc-steps组件
+		:deep(.btc-steps) {
+			margin-bottom: 16px;
+			max-width: 400px;
+			margin-left: auto;
+			margin-right: auto;
+			
+			.el-step__title {
+				font-size: 14px;
+				font-weight: 500;
+			}
+			
+			.el-step__description {
+				font-size: 12px;
+				margin-top: 4px;
+			}
+		}
+
+		// 中间表单区域 - 自适应高度
+		.registration-form-content {
+			flex: 1;
+			width: 100%;
+			max-width: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: stretch;
+			justify-content: center;
+			overflow: hidden;
+			padding: 0 4px;
+			min-height: 0;
+			
+			.el-form {
+				width: 100%;
+				max-width: 100%;
+				margin: 0;
+				
+				.el-form-item {
+					margin-bottom: 12px;
+					
+					.el-form-item__label {
+						font-size: 13px;
+						font-weight: 500;
+						color: $auth-light-text-primary;
+					}
+					
+					.el-input {
+						.el-input__inner {
+							height: 32px;
+							font-size: 13px;
+						}
+					}
+				}
+				
+				// 暗黑模式适配
+				html.dark & {
+					.el-form-item {
+						.el-form-item__label {
+							color: $auth-dark-text-primary;
+						}
+					}
+				}
+			}
+		}
+		
+		// 底部按钮区域
+		.form-actions:not(.step-actions) {
+			flex-shrink: 0;
+			padding: 20px 0;
+			border-top: 1px solid var(--el-border-color-light);
+			margin-top: auto;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			.el-button {
+				height: $auth-button-height;
+				font-size: $auth-button-font-size;
+				width: 100%;
+				max-width: 200px;
+				border-radius: $auth-button-border-radius;
+				letter-spacing: 1px;
+			}
+
+			// 当有多个按钮时的布局
+			> div {
+				display: flex;
+				gap: 16px;
+				width: 100%;
+				justify-content: center;
+
+				.el-button {
+					flex: 1;
+					max-width: 200px;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,112 @@
+{
+    "compilerOptions":  {
+                            "target":  "ES2020",
+                            "useDefineForClassFields":  true,
+                            "module":  "ESNext",
+                            "lib":  [
+                                        "ES2020",
+                                        "DOM",
+                                        "DOM.Iterable"
+                                    ],
+                            "skipLibCheck":  true,
+                            "moduleResolution":  "bundler",
+                            "allowImportingTsExtensions":  true,
+                            "resolveJsonModule":  true,
+                            "isolatedModules":  true,
+                            "noEmit":  true,
+                            "jsx":  "preserve",
+                            "strict":  true,
+                            "noImplicitAny":  false,
+                            "noUnusedLocals":  false,
+                            "noUnusedParameters":  false,
+                            "noFallthroughCasesInSwitch":  true,
+                            "types":  [
+                                          "vite/client",
+                                          "node"
+                                      ],
+                            "baseUrl":  ".",
+                            "paths":  {
+                                          "@/*":  [
+                                                      "src/*"
+                                                  ],
+                                          "@modules/*":  [
+                                                             "src/modules/*"
+                                                         ],
+                                          "@services/*":  [
+                                                              "src/services/*"
+                                                          ],
+                                          "@components/*":  [
+                                                                "src/components/*"
+                                                            ],
+                                          "@utils/*":  [
+                                                           "src/utils/*"
+                                                       ],
+                                          "@configs":  [
+                                                           "../../packages/shared-core/src/configs"
+                                                       ],
+                                          "@configs/*":  [
+                                                             "../../packages/shared-core/src/configs/*"
+                                                         ],
+                                          "@btc/shared-core":  [
+                                                                       "../../packages/shared-core/src",
+                                                                       "../../packages/shared-core/dist"
+                                                                   ],
+                                          "@btc/shared-core/*":  [
+                                                                       "../../packages/shared-core/src/*",
+                                                                       "../../packages/shared-core/dist/*"
+                                                                   ],
+                                          "@btc/shared-components":  [
+                                                                       "../../packages/shared-components/src",
+                                                                       "../../packages/shared-components/dist"
+                                                                   ],
+                                          "@btc/shared-components/*":  [
+                                                                       "../../packages/shared-components/src/*",
+                                                                       "../../packages/shared-components/dist/*"
+                                                                   ],
+                                          "@btc/shared-router":  [
+                                                                       "../../packages/shared-router/src",
+                                                                       "../../packages/shared-router/dist/src"
+                                                                   ],
+                                          "@btc/shared-router/*":  [
+                                                                       "../../packages/shared-router/src/*",
+                                                                       "../../packages/shared-router/dist/src/*"
+                                                                   ],
+                                          "@btc/shared-utils":  [
+                                                                       "../../packages/shared-utils/src",
+                                                                       "../../packages/shared-utils/dist"
+                                                                   ],
+                                          "@btc/shared-utils/*":  [
+                                                                       "../../packages/shared-utils/src/*",
+                                                                       "../../packages/shared-utils/dist/*"
+                                                                   ],
+                                          "@btc/subapp-manifests":  [
+                                                                       "../../packages/subapp-manifests/src",
+                                                                       "../../packages/subapp-manifests/dist"
+                                                                   ],
+                                          "@btc/auth-shared":  [
+                                                                       "../../auth/shared"
+                                                                   ],
+                                          "@btc/auth-shared/*":  [
+                                                                       "../../auth/shared/*"
+                                                                   ],
+                                          "@workspace/locales/*":  [
+                                                                       "../../locales/*"
+                                                                   ]
+                                      }
+                        },
+    "include":  [
+                    "src/**/*.ts",
+                    "src/**/*.d.ts",
+                    "src/**/*.tsx",
+                    "src/**/*.vue",
+                    "src/env.d.ts",
+                    "../../configs/**/*.ts",
+                    "../../types/**/*.d.ts"
+                ],
+    "exclude": ["node_modules", "dist", "../../packages/**/dist/**/*.js", "../../packages/**/dist/**/*.mjs"],
+    "references":  [
+                       {
+                           "path":  "./tsconfig.node.json"
+                       }
+                   ]
+}

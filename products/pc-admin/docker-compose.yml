@@ -1,0 +1,105 @@
+version: "3.9"
+
+services:
+  admin-app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        APP_DIR: apps/admin-app
+    image: btc-shopflow/admin-app:latest
+    container_name: btc-admin-app
+    ports:
+      - "8081:80"
+    restart: unless-stopped
+
+  system-app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        APP_DIR: apps/system-app
+    image: btc-shopflow/system-app:latest
+    container_name: btc-system-app
+    ports:
+      - "8080:80"
+    environment:
+      - DOCKER_ENV=production
+      - NODE_ENV=production
+      - DOCKER=true
+    restart: unless-stopped
+
+  # 可按需取消注释以启用更多子应用
+  engineering-app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        APP_DIR: apps/engineering-app
+    image: btc-shopflow/engineering-app:latest
+    container_name: btc-engineering-app
+    ports:
+      - "8085:80"
+    restart: unless-stopped
+
+  finance-app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        APP_DIR: apps/finance-app
+    image: btc-shopflow/finance-app:latest
+    container_name: btc-finance-app
+    ports:
+      - "8086:80"
+    restart: unless-stopped
+
+  logistics-app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        APP_DIR: apps/logistics-app
+    image: btc-shopflow/logistics-app:latest
+    container_name: btc-logistics-app
+    ports:
+      - "8082:80"
+    restart: unless-stopped
+
+  production-app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        APP_DIR: apps/production-app
+    image: btc-shopflow/production-app:latest
+    container_name: btc-production-app
+    ports:
+      - "8084:80"
+    restart: unless-stopped
+
+  quality-app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        APP_DIR: apps/quality-app
+    image: btc-shopflow/quality-app:latest
+    container_name: btc-quality-app
+    ports:
+      - "8083:80"
+    restart: unless-stopped
+
+  docs-app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        APP_DIR: apps/docs-app
+    image: btc-shopflow/docs-app:latest
+    container_name: btc-docs-app
+    ports:
+      - "8087:80"
+    restart: unless-stopped
+
+

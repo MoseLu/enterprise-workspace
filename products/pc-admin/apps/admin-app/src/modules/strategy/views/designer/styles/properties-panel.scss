@@ -1,0 +1,194 @@
+// 属性面板样式
+.properties-panel {
+  width: 100%; // 改为 100%，宽度由父容器控制
+  height: 100%; // 添加高度 100%
+  background: var(--el-bg-color);
+  display: flex;
+  flex-direction: column;
+
+  .panel-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 16px;
+    border-bottom: none;
+
+    .panel-actions {
+      display: flex;
+      gap: 8px;
+    }
+  }
+
+  .panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px;
+
+    // 节点属性表单
+    .node-properties-form {
+      .el-form-item {
+        margin-bottom: 16px;
+
+        .el-form-item__label {
+          font-weight: 500;
+        }
+      }
+
+      // 配置项分组
+      .config-group {
+        margin-bottom: 24px;
+        padding: 16px;
+        background: var(--el-bg-color-page);
+        border-radius: 6px;
+
+        .group-title {
+          font-weight: 600;
+          margin-bottom: 12px;
+          color: var(--el-text-color-primary);
+        }
+      }
+
+      // 动态配置项
+      .dynamic-config {
+        .config-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 8px;
+
+          .config-input {
+            flex: 1;
+          }
+
+          .config-remove {
+            flex-shrink: 0;
+          }
+        }
+
+        .add-config {
+          width: 100%;
+          margin-top: 8px;
+          border-style: dashed;
+        }
+      }
+    }
+
+    // 连接属性表单
+    .connection-properties-form {
+      .connection-preview {
+        padding: 12px;
+        background: var(--el-bg-color-page);
+        border-radius: 6px;
+        margin-bottom: 16px;
+        text-align: center;
+
+        .preview-line {
+          width: 100%;
+          height: 2px;
+          background: var(--el-color-primary);
+          margin: 8px 0;
+          position: relative;
+
+          &::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid var(--el-color-primary);
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+          }
+        }
+      }
+    }
+
+    // 空状态
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--el-text-color-placeholder);
+
+      .empty-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+
+      .empty-text {
+        font-size: 14px;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+// 文本配置区域样式
+.text-config-section {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--el-bg-color-page);
+  border-radius: 6px;
+  border: 1px solid var(--el-border-color-light);
+
+  h4 {
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--el-text-color-primary);
+  }
+
+  .el-form {
+    .el-form-item {
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // 字体预览样式
+  .font-preview {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--el-border-color-light);
+
+    h5 {
+      margin: 0 0 8px 0;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--el-text-color-regular);
+    }
+
+    .preview-text {
+      padding: 8px 12px;
+      background: var(--el-bg-color);
+      border: 1px solid var(--el-border-color);
+      border-radius: 4px;
+      text-align: center;
+      color: var(--el-text-color-primary);
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+// 属性面板动画
+.panel-slide-enter-active,
+.panel-slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.panel-slide-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.panel-slide-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}

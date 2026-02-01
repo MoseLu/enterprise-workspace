@@ -1,0 +1,599 @@
+// 首页应用（home-app）Docker 部署 Jenkinsfile
+// 使用 Docker 方式部署：构建 Docker 镜像 → 推送到服务器 → docker-compose 部署
+// 使用方法：
+// 1. 创建一个 Job（如 btc-shopflow-deploy-home-app-docker）
+// 2. 在 Job 配置中，Pipeline 部分选择 "Pipeline script from SCM"
+// 3. 设置 Script Path 为 "jenkins/Jenkinsfile.home-app.docker"
+
+pipeline {
+    agent any
+    
+    environment {
+        NODE_VERSION = '20'
+        PNPM_VERSION = '8.15.0'
+        APP_NAME = 'home-app'
+        DOCKER_REGISTRY = 'btc-shopflow'
+        DOCKER_IMAGE = "btc-shopflow/${APP_NAME}"
+    }
+    
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timestamps()
+    }
+    
+    // 配置构建触发器
+    // 使用 Poll SCM 自动轮询（每 2 分钟检查一次代码变更）
+    // 优点：无需配置 Webhook，适合本地 Jenkins，自动触发构建
+    // 流程：修改代码 → 提交推送 → 自动构建（2分钟内） → 查看结果
+    triggers {
+        pollSCM('H/2 * * * *')  // 每 2 分钟检查一次代码变更
+    }
+    
+    parameters {
+        string(
+            name: 'SERVER_HOST',
+            defaultValue: '47.112.31.96',
+            description: '服务器地址'
+        )
+        string(
+            name: 'SERVER_USER',
+            defaultValue: 'root',
+            description: '服务器用户名'
+        )
+        string(
+            name: 'SERVER_PORT',
+            defaultValue: '22',
+            description: 'SSH 端口'
+        )
+        string(
+            name: 'SSH_KEY_PATH',
+            defaultValue: '/var/jenkins_home/.ssh/id_rsa',
+            description: 'SSH 私钥路径'
+        )
+        string(
+            name: 'REMOTE_PATH',
+            defaultValue: '/www/wwwroot/btc-shopflow-monorepo',
+            description: '服务器上的项目路径'
+        )
+        booleanParam(
+            name: 'SKIP_TESTS',
+            defaultValue: true,
+            description: '是否跳过测试'
+        )
+        booleanParam(
+            name: 'CLEAN_BUILD',
+            defaultValue: true,
+            description: '是否清理构建缓存'
+        )
+        booleanParam(
+            name: 'BUILD_SHARED_DEPS',
+            defaultValue: false,
+            description: '是否构建共享依赖包'
+        )
+    }
+    
+    stages {
+        stage('Check Changes') {
+            steps {
+                script {
+                    // 检查变更文件，只有 home-app 相关变更时才构建
+                    echo "🔍 检查代码变更..."
+                    
+                    def changedFiles = ""
+                    if (isUnix()) {
+                        changedFiles = sh(
+                            script: '''
+                                if git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
+                                    git diff --name-only HEAD~1 HEAD
+                                else
+                                    git diff --name-only HEAD
+                                fi
+                            ''',
+                            returnStdout: true
+                        ).trim()
+                    } else {
+                        changedFiles = bat(
+                            script: '''
+                                @echo off
+                                git rev-parse --verify HEAD~1 >nul 2>&1
+                                if %errorlevel% equ 0 (
+                                    git diff --name-only HEAD~1 HEAD
+                                ) else (
+                                    git diff --name-only HEAD
+                                )
+                            ''',
+                            returnStdout: true
+                        ).trim()
+                    }
+                    
+                    if (!changedFiles) {
+                        echo "⏭️  没有检测到变更，跳过构建"
+                        currentBuild.result = 'ABORTED'
+                        return
+                    }
+                    
+                    def triggerPaths = [
+                        "apps/${env.APP_NAME}/",
+                        "jenkins/Jenkinsfile.${env.APP_NAME}.docker"
+                    ]
+                    
+                    def sharedPaths = ["packages/", "configs/", "scripts/"]
+                    
+                    def shouldBuild = false
+                    def isSharedChange = false
+                    def changedFileList = changedFiles.split('\n')
+                    
+                    echo "📋 变更文件列表："
+                    for (file in changedFileList) {
+                        echo "  - ${file}"
+                        for (path in triggerPaths) {
+                            if (file.contains(path)) {
+                                shouldBuild = true
+                                echo "    ✅ 匹配应用路径: ${path}"
+                                break
+                            }
+                        }
+                        if (!shouldBuild) {
+                            for (path in sharedPaths) {
+                                if (file.contains(path)) {
+                                    isSharedChange = true
+                                    echo "    ⚠️  检测到共享依赖变更: ${path}"
+                                    echo "    💡 提示：共享依赖变更应该触发全量构建（btc-shopflow-deploy-all）"
+                                    break
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (!shouldBuild && isSharedChange) {
+                        echo "⏭️  只检测到共享依赖变更，应该触发全量构建而非 Docker 应用构建"
+                        currentBuild.result = 'ABORTED'
+                        return
+                    }
+                    
+                    if (!shouldBuild) {
+                        echo "⏭️  变更文件不相关，跳过构建"
+                        echo "💡 提示：只有 ${env.APP_NAME} 相关变更才会触发此 Docker 构建"
+                        currentBuild.result = 'ABORTED'
+                        return
+                    }
+                    
+                    echo "✅ 检测到 ${env.APP_NAME} 相关变更，继续 Docker 构建"
+                }
+            }
+        }
+        
+        stage('Checkout') {
+            steps {
+                script {
+                    echo "📦 检出代码..."
+                    checkout scm
+                    if (isUnix()) {
+                        sh '''
+                            echo "Git 信息:"
+                            echo "  分支: $(git branch --show-current)"
+                            echo "  提交: $(git rev-parse --short HEAD)"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Setup Environment') {
+            steps {
+                script {
+                    echo "🔧 设置构建环境..."
+                    
+                    // 尝试使用 NodeJS Plugin（如果已安装）
+                    try {
+                        def nodejs = tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                        env.PATH = "${nodejs}/bin:${env.PATH}"
+                        echo "✅ 使用 NodeJS Plugin 安装的 Node.js: ${nodejs}"
+                    } catch (Exception e) {
+                        echo "ℹ️ NodeJS Plugin 未配置或未找到，尝试使用系统 Node.js"
+                    }
+                    
+                    if (isUnix()) {
+                        sh '''
+                            # 检查 Node.js（优先使用 NodeJS Plugin 设置的 PATH）
+                            if command -v node >/dev/null 2>&1; then
+                                # 验证 Node.js 是否能正常运行
+                                if node --version >/dev/null 2>&1; then
+                                    echo "✅ Node.js 已安装: $(node --version)"
+                                else
+                                    echo "❌ Node.js 命令存在但无法运行"
+                                    echo "错误信息: $(node --version 2>&1 || true)"
+                                    echo ""
+                                    echo "💡 可能的原因："
+                                    echo "   1. 缺少系统库（如 libatomic.so.1）"
+                                    echo "   2. Node.js 二进制文件损坏或不兼容"
+                                    echo ""
+                                    echo "💡 解决方案："
+                                    echo "   如果使用 NodeJS Plugin，可能需要在 Jenkins 容器中安装缺失的库："
+                                    echo "   docker exec -u root jenkins bash -c 'apt-get update && apt-get install -y libatomic1'"
+                                    echo ""
+                                    echo "   或者使用系统安装的 Node.js："
+                                    echo "   docker exec -u root jenkins bash -c 'curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs'"
+                                    exit 1
+                                fi
+                            else
+                                echo "❌ Node.js 未找到"
+                                echo "💡 请确保："
+                                echo "   1. 如果使用 NodeJS Plugin：在 Jenkins 全局配置中配置 Node.js 工具，名称为 'NodeJS'"
+                                echo "   2. 如果使用系统安装：在 Jenkins 容器中安装 Node.js"
+                                echo "      安装方法：docker exec -u root jenkins bash -c 'curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs'"
+                                exit 1
+                            fi
+                            
+                            # 检查 pnpm
+                            if command -v pnpm >/dev/null 2>&1; then
+                                echo "✅ pnpm 已安装: $(pnpm --version)"
+                            else
+                                echo "📦 安装 pnpm..."
+                                npm install -g pnpm@${PNPM_VERSION}
+                                echo "✅ pnpm 安装完成: $(pnpm --version)"
+                            fi
+                            
+                            # 检查 Docker
+                            if command -v docker >/dev/null 2>&1; then
+                                if docker --version >/dev/null 2>&1; then
+                                    echo "✅ Docker 已安装: $(docker --version)"
+                                    # 测试 Docker 权限（使用 docker ps 需要实际权限）
+                                    if docker ps >/dev/null 2>&1; then
+                                        echo "✅ Docker 权限正常"
+                                    else
+                                        echo "❌ Docker 权限被拒绝，无法访问 Docker daemon"
+                                        echo "💡 调试信息："
+                                        echo "   当前用户: \$(whoami)"
+                                        echo "   用户组: \$(groups)"
+                                        echo "   Docker socket 权限: \$(ls -l /var/run/docker.sock 2>&1 || echo 'not found')"
+                                        echo ""
+                                        echo "💡 解决方案："
+                                        echo "   如果在容器中运行 Jenkins，需要重新配置 Docker 权限："
+                                        echo ""
+                                        echo "   方法 1（推荐）：停止并重新启动 Jenkins 容器"
+                                        echo "   Linux/Mac (bash)："
+                                        echo "     docker stop jenkins"
+                                        echo "     docker rm jenkins"
+                                        echo "     docker run -d -p 9000:8080 -p 50000:50000 \\"
+                                        echo "       -v jenkins_home:/var/jenkins_home \\"
+                                        echo "       -v /var/run/docker.sock:/var/run/docker.sock \\"
+                                        echo "       --group-add \$(stat -c %g /var/run/docker.sock) \\"
+                                        echo "       --name jenkins jenkins/jenkins:lts"
+                                        echo ""
+                                        echo "   Windows PowerShell："
+                                        echo "     docker stop jenkins"
+                                        echo "     docker rm jenkins"
+                                        echo "     \$gid = (Get-ItemProperty -Path '\\\\.\\pipe\\docker_engine' -ErrorAction SilentlyContinue | Select-Object -ExpandProperty GroupId -ErrorAction SilentlyContinue); if (-not \$gid) { \$gid = 999 }; docker run -d -p 9000:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock --group-add \$gid --name jenkins jenkins/jenkins:lts"
+                                        echo ""
+                                        echo "   或者更简单的方法（适用于 Windows Docker Desktop）："
+                                        echo "     docker stop jenkins; docker rm jenkins; docker run -d -p 9000:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v //var/run/docker.sock:/var/run/docker.sock --name jenkins jenkins/jenkins:lts"
+                                        echo ""
+                                        echo "   然后安装 Docker CLI："
+                                        echo "     docker exec -u root jenkins bash -c 'apt-get update && apt-get install -y docker.io'"
+                                        echo ""
+                                        echo "   方法 2（临时方案，不推荐）：使用 root 用户运行"
+                                        echo "     docker exec -u root jenkins bash -c 'chmod 666 /var/run/docker.sock'"
+                                        exit 1
+                                    fi
+                                else
+                                    echo "⚠️ Docker 命令存在但无法执行"
+                                    exit 1
+                                fi
+                            else
+                                # 检查 Docker socket 是否存在（可能挂载了 socket 但没有 Docker CLI）
+                                if [ -S /var/run/docker.sock ]; then
+                                    echo "❌ Docker socket 已挂载，但 Docker CLI 未安装"
+                                    echo "💡 解决方案：在 Jenkins 容器中安装 Docker CLI"
+                                    echo "   docker exec -u root jenkins bash -c 'apt-get update && apt-get install -y docker.io'"
+                                    exit 1
+                                else
+                                    echo "❌ Docker 未安装或不在 PATH 中"
+                                    echo "💡 调试信息："
+                                    echo "   PATH: \$PATH"
+                                    echo "   which docker: \$(which docker 2>&1 || echo 'not found')"
+                                    echo "   Docker socket: \$([ -S /var/run/docker.sock ] && echo '已挂载' || echo '未挂载')"
+                                    echo ""
+                                    echo "💡 解决方案："
+                                    echo "   如果在容器中运行 Jenkins："
+                                    echo "     1. 挂载 Docker socket: -v /var/run/docker.sock:/var/run/docker.sock"
+                                    echo "     2. 安装 Docker CLI（如果镜像中没有）"
+                                    echo "     3. 将 Jenkins 用户添加到 docker 组：--group-add \$(stat -c %g /var/run/docker.sock)"
+                                    exit 1
+                                fi
+                            fi
+                            
+                            echo "✅ 环境检查完成"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    echo "📥 安装依赖..."
+                    if (isUnix()) {
+                        sh '''
+                            if [ "${CLEAN_BUILD}" = "true" ]; then
+                                echo "🧹 清理 node_modules..."
+                                rm -rf node_modules
+                            fi
+                            
+                            pnpm install --frozen-lockfile --prefer-offline
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Build Shared Dependencies') {
+            when {
+                expression { params.BUILD_SHARED_DEPS }
+            }
+            steps {
+                script {
+                    echo "📦 构建共享依赖包..."
+                    if (isUnix()) {
+                        sh '''
+                            pnpm --filter @btc/vite-plugin run build || true
+                            pnpm --filter @btc/shared-utils run build || true
+                            pnpm --filter @btc/shared-core run build || true
+                            pnpm --filter @btc/shared-components run build || true
+                            pnpm --filter @btc/subapp-manifests run build || true
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Build Application') {
+            steps {
+                script {
+                    echo "🔨 构建应用: ${APP_NAME}..."
+                    if (isUnix()) {
+                        sh '''
+                            echo "构建应用: ${APP_NAME}..."
+                            pnpm --filter ${APP_NAME} build
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo "🐳 构建 Docker 镜像..."
+                    if (isUnix()) {
+                        sh """
+                            # 构建 Docker 镜像（使用通用 Dockerfile）
+                            if ! docker build -t ${DOCKER_IMAGE}:latest --build-arg APP_DIR=apps/${APP_NAME} .; then
+                                echo ""
+                                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                                echo "❌ Docker 构建失败"
+                                echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                                echo ""
+                                echo "如果是权限错误（permission denied），请执行以下步骤："
+                                echo ""
+                                echo "1. 停止并删除 Jenkins 容器："
+                                echo "   docker stop jenkins"
+                                echo "   docker rm jenkins"
+                                echo ""
+                                echo "2. 重新启动 Jenkins 容器（添加 docker 组权限）："
+                                echo "   docker run -d \\"
+                                echo "     -p 9000:8080 -p 50000:50000 \\"
+                                echo "     -v jenkins_home:/var/jenkins_home \\"
+                                echo "     -v /var/run/docker.sock:/var/run/docker.sock \\"
+                                echo "     --group-add \$(stat -c %g /var/run/docker.sock) \\"
+                                echo "     --name jenkins jenkins/jenkins:lts"
+                                echo ""
+                                echo "3. 安装 Docker CLI（如果镜像中没有）："
+                                echo "   docker exec -u root jenkins bash -c 'apt-get update && apt-get install -y docker.io'"
+                                echo ""
+                                exit 1
+                            fi
+                            
+                            # 显示镜像信息
+                            docker images ${DOCKER_IMAGE}:latest
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Save Docker Image') {
+            steps {
+                script {
+                    echo "💾 保存 Docker 镜像..."
+                    if (isUnix()) {
+                        sh """
+                            # 创建临时目录
+                            mkdir -p /tmp/docker-images
+                            
+                            # 保存镜像为 tar.gz
+                            docker save ${DOCKER_IMAGE}:latest | gzip > /tmp/docker-images/${APP_NAME}.tar.gz
+                            
+                            # 显示文件大小
+                            ls -lh /tmp/docker-images/${APP_NAME}.tar.gz
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Upload to Server') {
+            steps {
+                script {
+                    echo "📤 上传镜像到服务器..."
+                    if (isUnix()) {
+                        sh """
+                            # 检查 SSH 密钥
+                            if [ ! -f "${params.SSH_KEY_PATH}" ]; then
+                                echo "❌ SSH 密钥文件不存在: ${params.SSH_KEY_PATH}"
+                                exit 1
+                            fi
+                            
+                            chmod 600 "${params.SSH_KEY_PATH}" || true
+                            
+                            # 测试 SSH 连接
+                            ssh -i "${params.SSH_KEY_PATH}" -p ${params.SERVER_PORT} \
+                                -o ConnectTimeout=10 -o StrictHostKeyChecking=no \
+                                ${params.SERVER_USER}@${params.SERVER_HOST} \
+                                "echo 'SSH connection successful'" || {
+                                echo "❌ SSH 连接失败"
+                                exit 1
+                            }
+                            
+                            # 在服务器上创建临时目录
+                            ssh -i "${params.SSH_KEY_PATH}" -p ${params.SERVER_PORT} \
+                                -o StrictHostKeyChecking=no \
+                                ${params.SERVER_USER}@${params.SERVER_HOST} \
+                                "mkdir -p ${params.REMOTE_PATH}/tmp/docker-images"
+                            
+                            # 上传镜像
+                            scp -i "${params.SSH_KEY_PATH}" -P ${params.SERVER_PORT} \
+                                -o StrictHostKeyChecking=no \
+                                /tmp/docker-images/${APP_NAME}.tar.gz \
+                                ${params.SERVER_USER}@${params.SERVER_HOST}:${params.REMOTE_PATH}/tmp/docker-images/
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy on Server') {
+            steps {
+                script {
+                    echo "🚀 在服务器上部署..."
+                    if (isUnix()) {
+                        sh """
+                            # 在服务器上执行部署脚本
+                            ssh -i "${params.SSH_KEY_PATH}" -p ${params.SERVER_PORT} \
+                                -o StrictHostKeyChecking=no \
+                                ${params.SERVER_USER}@${params.SERVER_HOST} << 'REMOTE_SCRIPT'
+set -e
+
+REMOTE_PATH="${params.REMOTE_PATH}"
+APP_NAME="${APP_NAME}"
+DOCKER_IMAGE="${DOCKER_IMAGE}"
+
+cd "\$REMOTE_PATH"
+
+# 加载 Docker 镜像
+echo "[INFO] 加载 Docker 镜像..."
+docker load < "tmp/docker-images/\${APP_NAME}.tar.gz"
+
+# 确保 docker-compose 可用
+if ! command -v docker-compose &> /dev/null && command -v docker &> /dev/null; then
+    # 尝试使用 docker compose (v2)
+    DOCKER_COMPOSE="docker compose"
+else
+    DOCKER_COMPOSE="docker-compose"
+fi
+
+# 创建或更新 docker-compose.yml
+echo "[INFO] 创建 Docker Compose 配置..."
+cat > docker-compose.prod.yml << EOF
+version: '3.8'
+
+services:
+  \${APP_NAME}:
+    image: \${DOCKER_IMAGE}:latest
+    container_name: btc-\${APP_NAME}
+    ports:
+      - "30087:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - btc-network
+
+networks:
+  btc-network:
+    driver: bridge
+EOF
+
+# 停止并启动容器
+echo "[INFO] 启动容器..."
+\$DOCKER_COMPOSE -f docker-compose.prod.yml down 2>/dev/null || true
+\$DOCKER_COMPOSE -f docker-compose.prod.yml up -d
+
+# 清理临时文件
+echo "[INFO] 清理临时文件..."
+rm -rf tmp/docker-images/\${APP_NAME}.tar.gz
+
+# 等待容器启动
+echo "[INFO] 等待容器启动..."
+sleep 10
+
+# 健康检查
+if curl -f -s --max-time 10 "http://localhost:30087" > /dev/null 2>&1; then
+    echo "[SUCCESS] 容器运行正常"
+else
+    echo "[WARNING] 容器可能仍在启动中"
+fi
+
+echo "[SUCCESS] 部署完成！"
+REMOTE_SCRIPT
+                        """
+                    }
+                }
+            }
+        }
+        
+        stage('Cleanup') {
+            steps {
+                script {
+                    echo "🧹 清理临时文件..."
+                    if (isUnix()) {
+                        sh '''
+                            rm -rf /tmp/docker-images/${APP_NAME}.tar.gz
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            script {
+                echo """
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Docker 部署成功！
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+应用: ${APP_NAME}
+镜像: ${DOCKER_IMAGE}:latest
+服务器: ${params.SERVER_HOST}
+访问地址: http://${params.SERVER_HOST}:30087
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"""
+            }
+        }
+        failure {
+            script {
+                echo """
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❌ Docker 部署失败
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+请检查构建日志以确定失败原因
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"""
+            }
+        }
+        always {
+            script {
+                if (isUnix()) {
+                    sh '''
+                        # 清理本地 Docker 镜像（可选）
+                        # docker rmi ${DOCKER_IMAGE}:latest || true
+                    '''
+                }
+            }
+        }
+    }
+}
+

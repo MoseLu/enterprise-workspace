@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: btc-shopflow-config
+  namespace: btc-shopflow
+data:
+  # 应用配置
+  NODE_ENV: "production"
+  API_BASE_URL: "https://api.bellis.com.cn"
+  
+  # 微前端配置
+  QIANKUN_BASE_URL: "https://bellis.com.cn"
+  
+  # 应用端口映射
+  SYSTEM_APP_PORT: "8080"
+  ADMIN_APP_PORT: "8081"
+  LOGISTICS_APP_PORT: "8082"
+  QUALITY_APP_PORT: "8083"
+  PRODUCTION_APP_PORT: "8084"
+  ENGINEERING_APP_PORT: "8085"
+  FINANCE_APP_PORT: "8086"
+  DOCS_APP_PORT: "8087"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: btc-shopflow
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name localhost;
+        root /usr/share/nginx/html;
+        index index.html;
+        
+        # 支持 SPA 路由
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+        
+        # 静态资源缓存
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+        
+        # 健康检查
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+        
+        # 安全头
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "no-referrer-when-downgrade" always;
+        add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
+    }

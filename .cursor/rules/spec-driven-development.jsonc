@@ -1,0 +1,108 @@
+{
+  "rules": [
+    {
+      "id": "spec-driven-development",
+      "name": "规范驱动开发",
+      "description": "本项目采用 GitHub SpecKit 规范驱动开发方法论。所有功能开发必须遵循规范流程。",
+      "match": {
+        "filePatterns": ["**/*"]
+      },
+      "when": "always",
+      "actions": [
+        {
+          "type": "read",
+          "paths": [
+            ".specify/memory/constitution.md",
+            "CLAUDE.md"
+          ]
+        }
+      ],
+      "priority": "highest"
+    },
+    {
+      "id": "code-quality-standards",
+      "name": "代码质量标准",
+      "description": "强制代码质量标准：TypeScript 严格模式、Go 静态分析、错误处理规范。",
+      "match": {
+        "filePatterns": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.go", "**/*.py"]
+      },
+      "when": "always",
+      "actions": [
+        {
+          "type": "read",
+          "paths": [".specify/memory/constitution.md"]
+        }
+      ],
+      "priority": "high"
+    },
+    {
+      "id": "security-requirements",
+      "name": "安全性要求",
+      "description": "安全性优先：输入验证、认证授权、数据加密、审计日志。",
+      "match": {
+        "filePatterns": ["**/*"]
+      },
+      "when": "always",
+      "actions": [
+        {
+          "type": "read",
+          "paths": [".specify/memory/constitution.md"]
+        }
+      ],
+      "priority": "highest"
+    },
+    {
+      "id": "test-requirements",
+      "name": "测试要求",
+      "description": "测试标准：核心业务逻辑测试覆盖率不低于 80%。",
+      "match": {
+        "filePatterns": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*_test.go", "**/test_*.py"]
+      },
+      "when": "always",
+      "actions": [
+        {
+          "type": "read",
+          "paths": [".specify/memory/constitution.md"]
+        }
+      ],
+      "priority": "high"
+    },
+    {
+      "id": "documentation-requirements",
+      "name": "文档要求",
+      "description": "文档标准：API 文档使用 OpenAPI/Swagger，内联注释必须清晰。",
+      "match": {
+        "filePatterns": ["**/*.md"]
+      },
+      "when": "always",
+      "actions": [
+        {
+          "type": "read",
+          "paths": [".specify/memory/constitution.md"]
+        }
+      ],
+      "priority": "medium"
+    }
+  ],
+  "version": "1.0.0",
+  "description": "企业工作空间 AI 开发规范配置",
+  "autoLoad": true,
+  "environments": {
+    "claude": {
+      "enabled": true,
+      "primaryConfig": "CLAUDE.md"
+    },
+    "cursor": {
+      "enabled": true,
+      "primaryConfig": ".cursor/rules/spec-driven-development.jsonc"
+    },
+    "windsurf": {
+      "enabled": true,
+      "primaryConfig": "CLAUDE.md"
+    },
+    "codex": {
+      "enabled": true,
+      "primaryConfig": "CLAUDE.md"
+    }
+  }
+}

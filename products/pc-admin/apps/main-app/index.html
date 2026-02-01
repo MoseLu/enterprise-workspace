@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>拜里斯科技</title>
+    <style>
+      html,
+      body,
+      #app {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      /* 关键：在 HTML 解析时立即设置 body 背景色，避免白屏 */
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background-color: #ffffff; /* 默认白色背景 */
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #000000; /* 暗色模式黑色背景 */
+        }
+      }
+
+      * {
+        -webkit-font-smoothing: antialiased;
+        font-family:
+          'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+          'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+      }
+
+      /* Loading 样式已统一在 loading.css 中定义，这里不再重复 */
+
+    </style>
+    <script>
+      // 关键：在页面加载时立即应用主题类，避免水合不匹配
+      // 必须在 JavaScript 执行前就应用，确保 Vue 组件渲染时主题类已存在
+      (function() {
+        try {
+          // 读取 Cookie 中的设置
+          function getCookie(name) {
+            const nameEQ = name + '=';
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+              let c = ca[i];
+              while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+              if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+          }
+
+          const settingsCookie = getCookie('btc_settings');
+          if (settingsCookie) {
+            try {
+              const settings = JSON.parse(decodeURIComponent(settingsCookie));
+              const systemThemeType = settings?.systemThemeType;
+              const htmlEl = document.documentElement;
+
+              if (systemThemeType === 'dark') {
+                htmlEl.classList.add('dark');
+              } else if (systemThemeType === 'light') {
+                htmlEl.classList.remove('dark');
+              } else if (systemThemeType === 'auto' || !systemThemeType) {
+                // AUTO 模式或未设置：跟随系统偏好
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (prefersDark) {
+                  htmlEl.classList.add('dark');
+                } else {
+                  htmlEl.classList.remove('dark');
+                }
+              }
+            } catch (e) {
+              // 如果解析失败，使用系统偏好
+              const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              if (prefersDark) {
+                document.documentElement.classList.add('dark');
+              }
+            }
+          } else {
+            // 如果没有 Cookie，使用系统偏好
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+              document.documentElement.classList.add('dark');
+            }
+          }
+        } catch (e) {
+          // 静默失败，使用系统偏好作为兜底
+          try {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (prefersDark) {
+              document.documentElement.classList.add('dark');
+            }
+          } catch (e2) {
+            // 完全失败，不做任何操作
+          }
+        }
+      })();
+    </script>
+    <script>
+      // 关键：在页面加载的最早阶段，立即检查并隐藏"拜里斯科技"loading（如果是子应用路由）
+      // 这必须在HTML解析时同步执行，避免"拜里斯科技"loading闪烁
+      // 同时，如果是子应用路由，立即设置正确的浏览器标题
+      (function() {
+        try {
+          const pathname = window.location.pathname;
+          const knownSubAppPrefixes = ['/system', '/admin', '/logistics', '/engineering', '/quality', '/production', '/finance', '/operations', '/docs', '/dashboard', '/personnel'];
+          const isSubAppRoute = knownSubAppPrefixes.some(prefix => pathname.startsWith(prefix));
+
+          // 如果是子应用路由，立即设置正确的浏览器标题（使用应用名称作为兜底）
+          if (isSubAppRoute) {
+            // 从路径提取应用 ID
+            var appId = 'main';
+            if (pathname.startsWith('/admin')) appId = 'admin';
+            else if (pathname.startsWith('/logistics')) appId = 'logistics';
+            else if (pathname.startsWith('/engineering')) appId = 'engineering';
+            else if (pathname.startsWith('/quality')) appId = 'quality';
+            else if (pathname.startsWith('/production')) appId = 'production';
+            else if (pathname.startsWith('/finance')) appId = 'finance';
+            else if (pathname.startsWith('/docs')) appId = 'docs';
+            else if (pathname.startsWith('/operations')) appId = 'operations';
+            else if (pathname.startsWith('/system')) appId = 'system';
+            else if (pathname.startsWith('/dashboard')) appId = 'dashboard';
+            else if (pathname.startsWith('/personnel')) appId = 'personnel';
+
+            // 应用名称映射（兜底方案，用于在 i18n 未初始化时显示正确的应用名称）
+            var appNameMap = {
+              'main': '主应用',
+              'system': '系统应用',
+              'admin': '管理应用',
+              'logistics': '物流应用',
+              'engineering': '工程应用',
+              'quality': '品质应用',
+              'production': '生产应用',
+              'finance': '财务应用',
+              'operations': '运维应用',
+              'docs': '文档应用',
+              'dashboard': '图表应用',
+              'personnel': '人事应用'
+            };
+
+            // 尝试从 window 获取国际化实例，设置正确的应用名称
+            // 如果无法获取，使用应用名称映射作为兜底（titleGuard 会在路由加载后设置正确的标题）
+            try {
+              // 尝试从 window 获取主应用的 i18n 实例（如果已初始化）
+              if (typeof window !== 'undefined' && window.__MAIN_APP_I18N__) {
+                var i18n = window.__MAIN_APP_I18N__;
+                if (i18n && i18n.global) {
+                  var localeValue = i18n.global.locale;
+                  var currentLocale = (typeof localeValue === 'string' ? localeValue : localeValue.value) || 'zh-CN';
+                  var i18nKey = 'micro_app.' + appId + '.title';
+                  var translated = i18n.global.t(i18nKey, currentLocale);
+                  if (translated && typeof translated === 'string' && translated !== i18nKey) {
+                    document.title = translated;
+                  } else {
+                    // 如果翻译失败，使用应用名称映射作为兜底
+                    document.title = appNameMap[appId] || appId;
+                  }
+                } else {
+                  // 如果 i18n 未初始化，使用应用名称映射作为兜底
+                  document.title = appNameMap[appId] || appId;
+                }
+              } else {
+                // 如果 i18n 未初始化，使用应用名称映射作为兜底
+                document.title = appNameMap[appId] || appId;
+              }
+            } catch (e) {
+              // 如果获取失败，使用应用名称映射作为兜底
+              document.title = appNameMap[appId] || appId;
+            }
+          }
+
+          if (isSubAppRoute) {
+            // 子应用路由，立即隐藏"拜里斯科技"loading
+            // 使用 is-hide 类，样式已在 loading.css 中定义
+            function hideLoading() {
+              var loadingEl = document.getElementById('Loading');
+              if (loadingEl) {
+                loadingEl.classList.add('is-hide');
+              }
+            }
+
+            if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', hideLoading);
+            } else {
+              hideLoading();
+            }
+          }
+        } catch (e) {
+          // 静默失败
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- 跨子域通信桥 iframe（用于跨标签页登出同步） -->
+    <!-- src 将在 useCrossDomainBridge 中动态设置，这里先留空避免加载错误的 URL -->
+    <iframe
+      id="btc-auth-bridge"
+      src="about:blank"
+      style="display: none; border: none;"
+      title="Auth Bridge"
+      aria-hidden="true"
+    ></iframe>
+    <!-- Loading 元素：Vue 组件会挂载到这里 -->
+    <!-- 关键：初始时添加 is-hide 类，避免显示空背景导致黑屏 -->
+    <div id="Loading" class="is-hide"></div>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+

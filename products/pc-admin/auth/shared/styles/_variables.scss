@@ -1,0 +1,82 @@
+// 认证页面样式变量
+
+// 基础尺寸变量
+$auth-input-height: 45px;
+$auth-input-font-size: 15px;
+$auth-card-width: 450px;
+$auth-card-height: 650px;
+$auth-card-border-radius: 12px;
+$auth-card-padding: 24px;
+$auth-card-header-height: 56px; // 登录卡片头部高度
+$auth-tab-height: 32px;
+$auth-tab-padding: 6px 20px;
+$auth-tab-font-size: 16px;
+$auth-tab-gap: 24px;
+$auth-button-height: 45px;
+$auth-button-font-size: 16px;
+$auth-button-border-radius: 6px;
+$auth-mobile-breakpoint: 768px;
+$auth-small-breakpoint: 960px;
+
+// 明亮主题颜色变量
+$auth-light-bg: #fff;
+$auth-light-card-bg: white;
+$auth-light-card-border: transparent;
+$auth-light-text-primary: #1a1a1a;
+$auth-light-text-regular: var(--el-text-color-primary);
+$auth-light-text-secondary: #666;
+$auth-light-text-placeholder: #999;
+$auth-light-input-bg: #fff;
+$auth-light-input-border: #dcdfe6;
+$auth-light-input-color: var(--el-text-color-primary);
+$auth-light-input-placeholder: #999;
+$auth-light-button-primary-bg: var(--el-color-primary);
+$auth-light-button-primary-color: white;
+$auth-light-button-default-bg: #fff;
+$auth-light-button-default-border: #dcdfe6;
+$auth-light-button-default-color: var(--el-text-color-primary);
+$auth-light-link-color: #1366ec;
+$auth-light-link-hover: #0d4bb8;
+$auth-light-tab-color: var(--el-text-color-primary);
+$auth-light-tab-hover: #000;
+$auth-light-tab-active: var(--el-color-primary);
+$auth-light-border-color: #f0f0f0;
+$auth-light-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+$auth-light-card-shadow: 
+	0 4px 20px rgba(0, 0, 0, 0.08),
+	0 2px 8px rgba(0, 0, 0, 0.04),
+	0 0 0 1px rgba(0, 0, 0, 0.02);
+
+// 暗色主题颜色变量（备用，主要使用CSS变量）
+$auth-dark-bg: var(--el-bg-color);
+$auth-dark-card-bg: var(--el-bg-color);
+$auth-dark-card-border: var(--el-border-color);
+$auth-dark-text-primary: #ffffff;
+$auth-dark-text-regular: #e5e5e5;
+$auth-dark-text-secondary: #cccccc;
+$auth-dark-text-placeholder: #b3b3b3;
+$auth-dark-input-bg: var(--el-bg-color);
+$auth-dark-input-border: var(--el-border-color);
+$auth-dark-input-color: #ffffff;
+$auth-dark-input-placeholder: #b3b3b3;
+$auth-dark-button-primary-bg: var(--el-color-primary);
+$auth-dark-button-primary-color: white;
+$auth-dark-button-default-bg: var(--el-bg-color);
+$auth-dark-button-default-border: var(--el-border-color);
+$auth-dark-button-default-color: #ffffff;
+$auth-dark-link-color: #409eff;
+$auth-dark-link-hover: #66b1ff;
+$auth-dark-tab-color: #cccccc;
+$auth-dark-tab-hover: #ffffff;
+$auth-dark-tab-active: #409eff;
+$auth-dark-border-color: var(--el-border-color);
+$auth-dark-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+$auth-dark-card-shadow: 
+	0 4px 20px rgba(0, 0, 0, 0.25),
+	0 2px 8px rgba(0, 0, 0, 0.15),
+	0 0 0 1px rgba(255, 255, 255, 0.05);
+$auth-dark-divider-color: #404040;
+$auth-dark-divider-text: #b3b3b3;
+$auth-dark-option-bg: #2a2a2a;
+$auth-dark-option-hover: #3a3a3a;
+$auth-dark-option-text: #cccccc;

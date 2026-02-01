@@ -1,0 +1,98 @@
+// ==================== CRUD 对话框样式 ====================
+
+.btc-dialog {
+	display: flex;
+	flex-direction: column;
+
+	&.el-dialog {
+		padding: 0;
+		border-radius: 8px;
+	}
+
+	.el-dialog {
+		&__header {
+			padding: 0;
+			margin-right: 0;
+
+			&-slot {
+				&.is-drag {
+					-moz-user-select: none;
+					-webkit-user-select: none;
+					-ms-user-select: none;
+					-khtml-user-select: none;
+					user-select: none;
+					cursor: move;
+				}
+			}
+		}
+
+		&__body {
+			padding: 0;
+			box-sizing: border-box;
+			flex: 1;
+			overflow: hidden;
+		}
+
+		&__footer {
+			padding: 0;
+		}
+	}
+
+	&__header {
+		position: relative;
+		padding: 10px;
+		border-bottom: 1px solid var(--el-border-color-extra-light);
+		text-align: center;
+		user-select: none;
+	}
+
+	&__default {
+		box-sizing: border-box;
+	}
+
+	&__footer {
+		border-top: 1px solid var(--el-border-color-extra-light);
+		padding: 20px;
+	}
+
+	&__title {
+		display: block;
+		font-size: 15px;
+		letter-spacing: 0.5px;
+	}
+
+	&__controls {
+		display: flex;
+		justify-content: flex-end;
+		position: absolute;
+		right: 8px;
+		top: 8px;
+		z-index: 9;
+		width: 100%;
+
+		&-icon,
+		.minimize,
+		.maximize,
+		.close {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 28px;
+			width: 28px;
+			border: 0;
+			background-color: transparent;
+			cursor: pointer;
+			outline: none;
+			border-radius: 6px;
+			margin-left: 5px;
+
+			i {
+				font-size: 18px;
+			}
+
+			&:hover {
+				background-color: var(--el-fill-color-darker);
+			}
+		}
+	}
+}

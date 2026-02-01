@@ -1,0 +1,455 @@
+name: Deploy Only (Lightweight)
+
+# ⚠️ 此工作流不会自动触发
+# - 只能通过 workflow_dispatch 或 repository_dispatch 手动触发
+# - 不会响应 push 事件
+# - 推荐使用各个应用的 deploy-{app-name}.yml 工作流进行部署
+on:
+  workflow_dispatch:
+    inputs:
+      apps:
+        description: 'Comma-separated list of apps to deploy (e.g., logistics-app,admin-app)'
+        required: true
+        type: string
+      environment:
+        description: 'Deployment environment'
+        required: false
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+      github_sha:
+        description: 'Git commit SHA (optional, defaults to latest)'
+        required: false
+        type: string
+  repository_dispatch:
+    types: [deploy-apps]
+
+env:
+  REGISTRY: ghcr.io
+
+permissions:
+  contents: read
+  packages: read
+  actions: write
+
+jobs:
+  # Step 1: Validate SSH Connection
+  validate-ssh:
+    name: Validate SSH Connection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Test SSH connection
+        run: |
+          echo "[INFO] Testing SSH connection..."
+          
+          if [ -z "${{ secrets.SERVER_KEY }}" ]; then
+            echo "[ERROR] SERVER_KEY not set"
+            exit 1
+          fi
+          
+          if [ -z "${{ secrets.SERVER_HOST }}" ]; then
+            echo "[ERROR] SERVER_HOST not set"
+            exit 1
+          fi
+          
+          echo "[INFO] Setting up SSH key..."
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          
+          SERVER_KEY="${{ secrets.SERVER_KEY }}"
+          if echo "$SERVER_KEY" | grep -q "^[A-Za-z0-9+/]*={0,2}$" && [ ${#SERVER_KEY} -gt 100 ]; then
+            echo "${{ secrets.SERVER_KEY }}" | base64 -d > ~/.ssh/id_rsa
+          else
+            echo "${{ secrets.SERVER_KEY }}" > ~/.ssh/id_rsa
+            sed -i 's/\\n/\n/g' ~/.ssh/id_rsa
+          fi
+          
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          
+          if ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -o BatchMode=yes \
+              -i ~/.ssh/id_rsa -p ${{ secrets.SERVER_PORT || '22' }} \
+              ${{ secrets.SERVER_USER || 'root' }}@${{ secrets.SERVER_HOST }} \
+              "echo 'SSH connection test successful'"; then
+            echo "[SUCCESS] SSH connection successful!"
+            echo "ssh_available=true" >> $GITHUB_ENV
+          else
+            echo "[ERROR] SSH connection failed!"
+            exit 1
+          fi
+
+  # Step 2: Parse and validate apps list
+  parse-apps:
+    name: Parse Apps List
+    runs-on: ubuntu-latest
+    outputs:
+      apps_list: ${{ steps.parse.outputs.apps_list }}
+      apps_json: ${{ steps.parse.outputs.apps_json }}
+    steps:
+      - name: Parse apps input
+        id: parse
+        run: |
+          # Get apps from workflow_dispatch or repository_dispatch
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            APPS_INPUT="${{ inputs.apps }}"
+          else
+            APPS_INPUT="${{ github.event.client_payload.apps }}"
+          fi
+          
+          if [ -z "$APPS_INPUT" ]; then
+            echo "[ERROR] No apps specified"
+            exit 1
+          fi
+          
+          # Normalize: remove spaces, convert to lowercase
+          APPS_LIST=$(echo "$APPS_INPUT" | tr '[:upper:]' '[:lower:]' | tr ',' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | tr '\n' ' ')
+          
+          # Validate apps
+          VALID_APPS="system-app admin-app dashboard-app engineering-app finance-app logistics-app operations-app personnel-app production-app quality-app layout-app"
+          INVALID_APPS=""
+          
+          for app in $APPS_LIST; do
+            if ! echo "$VALID_APPS" | grep -q "$app"; then
+              INVALID_APPS="$INVALID_APPS $app"
+            fi
+          done
+          
+          if [ -n "$INVALID_APPS" ]; then
+            echo "[ERROR] Invalid apps:$INVALID_APPS"
+            echo "Valid apps are: $VALID_APPS"
+            exit 1
+          fi
+          
+          # Convert to JSON array
+          APPS_JSON="["
+          FIRST=true
+          for app in $APPS_LIST; do
+            if [ "$FIRST" = true ]; then
+              FIRST=false
+            else
+              APPS_JSON="$APPS_JSON,"
+            fi
+            APPS_JSON="$APPS_JSON\"$app\""
+          done
+          APPS_JSON="$APPS_JSON]"
+          
+          echo "apps_list=$APPS_LIST" >> $GITHUB_OUTPUT
+          echo "apps_json=$APPS_JSON" >> $GITHUB_OUTPUT
+          echo "[INFO] Apps to deploy: $APPS_LIST"
+          echo "[INFO] Apps JSON: $APPS_JSON"
+
+  # Step 3: Deploy to Server
+  deploy:
+    name: Deploy Selected Apps
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [validate-ssh, parse-apps]
+    if: always() && needs.validate-ssh.result == 'success'
+    
+    steps:
+      - name: Deploy applications
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER || 'root' }}
+          key: ${{ secrets.SERVER_KEY }}
+          port: ${{ secrets.SERVER_PORT || '22' }}
+          timeout: 1800s
+          command_timeout: 25m
+          script: |
+            set -e
+            
+            # Get apps list from previous job
+            APPS_LIST="${{ needs.parse-apps.outputs.apps_list }}"
+            
+            # Get commit SHA (from input or use latest)
+            GITHUB_SHA="${{ inputs.github_sha || github.event.client_payload.github_sha || github.sha }}"
+            
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "🚀 Starting BTC ShopFlow Deployment"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "Apps to deploy: $APPS_LIST"
+            echo "Commit SHA: $GITHUB_SHA"
+            echo ""
+            
+            # Check project directory
+            if [ ! -d "/www/wwwroot/btc-shopflow-monorepo" ]; then
+              echo "Creating project directory..."
+              mkdir -p /www/wwwroot
+              cd /www/wwwroot
+              git clone https://github.com/BellisGit/btc-shopflow-monorepo.git
+            fi
+            
+            echo "Navigating to project directory..."
+            cd /www/wwwroot/btc-shopflow-monorepo
+            
+            echo "📊 Current disk space:"
+            df -h
+            
+            echo "🧹 Cleaning up unused Docker resources..."
+            docker image prune -f || true
+            docker builder prune -af || true
+            
+            echo "🔐 Logging into container registry..."
+            mkdir -p /tmp/.docker
+            export DOCKER_CONFIG=/tmp/.docker
+            
+            # Get token from secrets
+            if [ -n "${{ secrets.SERVER_PAT }}" ]; then
+              TOKEN="${{ secrets.SERVER_PAT }}"
+            elif [ -n "${{ secrets.GITHUB_TOKEN }}" ]; then
+              TOKEN="${{ secrets.GITHUB_TOKEN }}"
+            else
+              echo "[ERROR] No token available for registry"
+              exit 1
+            fi
+            
+            echo "$TOKEN" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            
+            REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+            
+            echo "📥 Pulling Docker images for selected apps..."
+            
+            # Function to pull image with retry (optimized for speed)
+            pull_image_async() {
+              local app=$1
+              local tag=$2
+              local timeout_duration=${3:-180}  # Reduced from 300 to 180 seconds
+              local max_retries=${4:-1}  # Reduced from 2 to 1 retry for faster failure
+              
+              echo "[$app] 🚀 Pulling image: ghcr.io/$REPO_LOWER/$app:$tag"
+              START_TIME=$(date +%s)
+              
+              RETRY_COUNT=0
+              while [ $RETRY_COUNT -lt $max_retries ]; do
+                RETRY_COUNT=$((RETRY_COUNT + 1))
+                
+                # Use shorter timeout and faster retry
+                if timeout $timeout_duration docker pull ghcr.io/$REPO_LOWER/$app:$tag > /dev/null 2>&1; then
+                  docker tag ghcr.io/$REPO_LOWER/$app:$tag btc-shopflow/$app:latest 2>/dev/null || true
+                  ELAPSED=$(($(date +%s) - START_TIME))
+                  echo "[$app] ✅ Pulled in ${ELAPSED}s"
+                  return 0
+                else
+                  echo "[$app] ⚠️  Pull failed (attempt $RETRY_COUNT/$max_retries)"
+                  if [ $RETRY_COUNT -lt $max_retries ]; then
+                    sleep 3  # Reduced retry delay
+                  fi
+                fi
+              done
+              return 1
+            }
+            
+            # Pull images for selected apps only (parallel execution)
+            echo "📥 Pulling Docker images in parallel..."
+            PIDS=()
+            for app in $APPS_LIST; do
+              (
+                # Try to pull latest tag first, fallback to SHA tag if specified
+                if ! pull_image_async "$app" "latest" 180 1; then
+                  if [ -n "$GITHUB_SHA" ] && [ "$GITHUB_SHA" != "latest" ] && [ "$GITHUB_SHA" != "" ]; then
+                    echo "[$app] 🔄 Trying SHA tag: $GITHUB_SHA"
+                    pull_image_async "$app" "$GITHUB_SHA" 180 1 || true
+                  fi
+                fi
+                
+                # Verify image exists
+                if ! docker images btc-shopflow/$app:latest --format "{{.Repository}}:{{.Tag}}" 2>/dev/null | grep -q "$app"; then
+                  echo "[$app] ❌ No image available after pull attempts"
+                else
+                  echo "[$app] ✅ Image ready for deployment"
+                fi
+              ) &
+              PIDS+=($!)
+            done
+            
+            # Wait for all pulls to complete (with timeout)
+            echo "⏳ Waiting for all images to be pulled (max 5 minutes)..."
+            FAILED=0
+            PULL_START=$(date +%s)
+            PULL_TIMEOUT=300  # 5 minutes total timeout
+            
+            for pid in "${PIDS[@]}"; do
+              # Wait with timeout
+              WAIT_START=$(date +%s)
+              while kill -0 "$pid" 2>/dev/null; do
+                ELAPSED=$(($(date +%s) - WAIT_START))
+                if [ $ELAPSED -gt $PULL_TIMEOUT ]; then
+                  echo "⏱️  Timeout waiting for image pull, killing process..."
+                  kill "$pid" 2>/dev/null || true
+                  FAILED=$((FAILED + 1))
+                  break
+                fi
+                sleep 1
+              done
+              
+              # Check exit status
+              if wait "$pid" 2>/dev/null; then
+                # Process completed successfully
+                :
+              else
+                FAILED=$((FAILED + 1))
+              fi
+            done
+            
+            TOTAL_TIME=$(($(date +%s) - PULL_START))
+            echo "⏱️  Total pull time: ${TOTAL_TIME}s"
+            
+            if [ $FAILED -gt 0 ]; then
+              echo "⚠️  Warning: $FAILED images failed to pull (may use existing images)"
+            fi
+            
+            echo ""
+            echo "📊 Image status for selected apps:"
+            for app in $APPS_LIST; do
+              docker images btc-shopflow/$app --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}" || echo "[$app] No image found"
+            done
+            
+            # App to port mapping
+            declare -A APP_PORTS=(
+              ["system-app"]="30080"
+              ["admin-app"]="30081"
+              ["logistics-app"]="30082"
+              ["quality-app"]="30083"
+              ["production-app"]="30084"
+              ["engineering-app"]="30085"
+              ["finance-app"]="30086"
+            )
+            
+            # Generate docker-compose configuration for selected apps only
+            echo "📝 Generating docker-compose configuration..."
+            
+            COMPOSE_FILE="docker-compose.prod.yml"
+            cat > "$COMPOSE_FILE" << 'EOF'
+            version: '3.8'
+            
+            services:
+            EOF
+            
+            # Add services for each selected app
+            for app in $APPS_LIST; do
+              PORT=${APP_PORTS[$app]}
+              CONTAINER_NAME="btc-$app"
+              
+              if [ -z "$PORT" ]; then
+                echo "[WARNING] No port mapping for $app, skipping"
+                continue
+              fi
+              
+              cat >> "$COMPOSE_FILE" << EOF
+              $app:
+                image: btc-shopflow/$app:latest
+                container_name: $CONTAINER_NAME
+                ports:
+                  - "$PORT:80"
+                restart: unless-stopped
+                networks:
+                  - btc-network
+            
+            EOF
+            done
+            
+            # Add network configuration
+            cat >> "$COMPOSE_FILE" << 'EOF'
+            networks:
+              btc-network:
+                driver: bridge
+            EOF
+            
+            echo "✅ Docker Compose configuration generated"
+            echo ""
+            cat "$COMPOSE_FILE"
+            echo ""
+            
+            # Stop and restart only selected containers
+            echo "🔄 Updating containers for selected apps..."
+            
+            for app in $APPS_LIST; do
+              CONTAINER_NAME="btc-$app"
+              echo "[$app] Stopping container: $CONTAINER_NAME"
+              
+              # Stop existing container if running
+              if docker ps -a --filter "name=$CONTAINER_NAME" --format "{{.Names}}" | grep -q "^$CONTAINER_NAME$"; then
+                docker stop "$CONTAINER_NAME" 2>/dev/null || true
+                docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
+                echo "[$app] ✅ Container stopped and removed"
+              else
+                echo "[$app] ℹ️  Container not found (will be created)"
+              fi
+            done
+            
+            # Use docker-compose to start services
+            echo "🚀 Starting services with docker-compose..."
+            docker-compose -f "$COMPOSE_FILE" up -d
+            
+            echo ""
+            echo "📋 Container status:"
+            for app in $APPS_LIST; do
+              CONTAINER_NAME="btc-$app"
+              if docker ps --filter "name=$CONTAINER_NAME" --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep -q "$CONTAINER_NAME"; then
+                echo "[$app] ✅ Container is running"
+              else
+                echo "[$app] ⚠️  Container status unknown"
+              fi
+            done
+            
+            echo ""
+            echo "🧹 Cleaning up unused images..."
+            docker image prune -f || true
+            
+            echo ""
+            echo "Final disk space:"
+            df -h
+            
+            echo ""
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "✅ Deployment completed successfully!"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "Deployed apps: $APPS_LIST"
+            echo ""
+
+      - name: Health checks
+        run: |
+          echo "Performing health checks..."
+          sleep 10
+          
+          APPS_LIST="${{ needs.parse-apps.outputs.apps_list }}"
+          declare -A APP_PORTS=(
+            ["system-app"]="30080"
+            ["admin-app"]="30081"
+            ["logistics-app"]="30082"
+            ["quality-app"]="30083"
+            ["production-app"]="30084"
+            ["engineering-app"]="30085"
+            ["finance-app"]="30086"
+          )
+          
+          for app in $APPS_LIST; do
+            PORT=${APP_PORTS[$app]}
+            if [ -n "$PORT" ]; then
+              echo "Checking $app on port $PORT..."
+              if curl -f -s --max-time 5 http://${{ secrets.SERVER_HOST }}:$PORT > /dev/null; then
+                echo "✅ $app is healthy"
+              else
+                echo "⚠️  $app health check failed (may still be starting)"
+              fi
+            fi
+          done
+
+      - name: Deployment summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Deployed Apps:" >> $GITHUB_STEP_SUMMARY
+          APPS_LIST="${{ needs.parse-apps.outputs.apps_list }}"
+          for app in $APPS_LIST; do
+            echo "- $app" >> $GITHUB_STEP_SUMMARY
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Commit SHA:" >> $GITHUB_STEP_SUMMARY
+          echo "${{ inputs.github_sha || github.sha }}" >> $GITHUB_STEP_SUMMARY

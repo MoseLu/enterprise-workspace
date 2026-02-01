@@ -1,0 +1,132 @@
+/**
+ * 概览模块配置
+ */
+
+import type { ModuleConfig } from '@btc/shared-core/types/module';
+
+export default {
+  // ModuleConfig 字段
+  name: 'overview',
+  label: 'menu.overview',
+  order: 1,
+
+  // PageConfig 字段
+  locale: {
+    'zh-CN': {
+      // 菜单配置
+      'menu.dashboard': '工作台',
+      'menu.overview': '概览',
+      'menu.todo': '我的待办',
+      'menu.profile': '个人中心',
+      // 日志查询字段
+      'log.query.fields.index': '序号',
+      'log.query.fields.app_name': '应用名称',
+      'log.query.fields.app_id': '应用ID',
+      'log.query.fields.log_level': '级别',
+      'log.query.fields.logger_name': '日志名称',
+      'log.query.fields.message': '消息',
+      'log.query.fields.timestamp': '时间',
+      'log.query.fields.micro_app_name': '微应用',
+      'log.query.fields.micro_app_type': '微应用类型',
+      'log.query.fields.micro_app_instance_id': '实例ID',
+      'log.query.fields.micro_app_lifecycle': '生命周期',
+      // 概览相关
+      'overview.title': '概览',
+      'overview.recentAccess': '最近访问',
+      'overview.allApps': '所有应用',
+      'overview.cardView': '卡片视图',
+      'overview.listView': '列表视图',
+      'overview.appName': '应用名称',
+      'overview.menuName': '菜单名称',
+      'overview.path': '路径',
+      'overview.actions': '操作',
+      'overview.noRecentAccess': '暂无最近访问记录',
+      'overview.noApps': '暂无应用数据',
+      'overview.viewAll': '查看全部',
+      // 待办相关
+      'todo.title': '我的待办',
+      'todo.empty': '暂无待办事项',
+      // 模块和应用名称
+      'menu.operations.name': '运维模块',
+      'domain.type.system': '系统模块',
+      'domain.type.logistics': '物流模块',
+      'domain.type.finance': '财务模块',
+      'domain.type.quality': '品质模块',
+      'domain.type.engineering': '工程模块',
+      'domain.type.production': '生产模块',
+      'domain.type.docs': '文档模块',
+      'domain.type.dashboard': '图表模块',
+      'domain.type.personnel': '人事模块',
+      'common.apps.logistics': '物流应用',
+      'common.apps.engineering': '工程应用',
+      'common.apps.quality': '品质应用',
+      'common.apps.production': '生产应用',
+      'common.apps.finance': '财务应用',
+      'common.apps.admin': '系统管理',
+      'common.apps.system': '系统应用',
+      'common.apps.dashboard': '看板应用',
+      'common.apps.personnel': '人事应用',
+      'common.apps.operations': '运维应用',
+    },
+    'en-US': {
+      // 菜单配置
+      'menu.dashboard': 'Dashboard',
+      'menu.overview': 'Overview',
+      'menu.todo': 'My Todo',
+      'menu.profile': 'Profile',
+      // 日志查询字段
+      'log.query.fields.index': 'Index',
+      'log.query.fields.app_name': 'App Name',
+      'log.query.fields.app_id': 'App ID',
+      'log.query.fields.log_level': 'Level',
+      'log.query.fields.logger_name': 'Logger Name',
+      'log.query.fields.message': 'Message',
+      'log.query.fields.timestamp': 'Timestamp',
+      'log.query.fields.micro_app_name': 'Micro App',
+      'log.query.fields.micro_app_type': 'Micro App Type',
+      'log.query.fields.micro_app_instance_id': 'Instance ID',
+      'log.query.fields.micro_app_lifecycle': 'Lifecycle',
+      // 概览相关
+      'overview.title': 'Overview',
+      'overview.recentAccess': 'Recent Access',
+      'overview.allApps': 'All Applications',
+      'overview.cardView': 'Card View',
+      'overview.listView': 'List View',
+      'overview.appName': 'Application Name',
+      'overview.menuName': 'Menu Name',
+      'overview.path': 'Path',
+      'overview.actions': 'Actions',
+      'overview.noRecentAccess': 'No recent access records',
+      'overview.noApps': 'No application data',
+      'overview.viewAll': 'View All',
+      // 待办相关
+      'todo.title': 'My Todo',
+      'todo.empty': 'No todo items',
+      // 模块和应用名称
+      'menu.operations.name': 'Operations App',
+      'domain.type.system': 'System App',
+      'domain.type.logistics': 'Logistics Module',
+      'domain.type.finance': 'Finance Module',
+      'domain.type.quality': 'Quality Module',
+      'domain.type.engineering': 'Engineering Module',
+      'domain.type.production': 'Production Module',
+      'domain.type.docs': 'Docs Module',
+      'domain.type.dashboard': 'Dashboard Module',
+      'domain.type.personnel': 'Personnel Module',
+      'common.apps.logistics': 'Logistics App',
+      'common.apps.engineering': 'Engineering App',
+      'common.apps.quality': 'Quality App',
+      'common.apps.production': 'Production App',
+      'common.apps.finance': 'Finance App',
+      'common.apps.admin': 'System Management',
+      'common.apps.system': 'System App',
+      'common.apps.dashboard': 'Dashboard App',
+      'common.apps.personnel': 'Personnel App',
+      'common.apps.operations': 'Operations App',
+    },
+  },
+
+  columns: {},
+  forms: {},
+  service: {},
+} satisfies ModuleConfig;

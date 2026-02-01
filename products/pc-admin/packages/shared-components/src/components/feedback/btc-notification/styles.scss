@@ -1,0 +1,67 @@
+// BtcNotification 组件样式
+// 基于 Element Plus 的 ElNotification 样式，支持自定义徽章
+
+// 自定义通知徽章样式
+.btc-notification-badge-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  z-index: 999999 !important;
+  pointer-events: none;
+
+  .btc-notification-badge {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--el-color-primary);
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ffd700;
+    padding: 0;
+    line-height: 18px;
+    text-align: center;
+    min-width: 18px;
+    box-sizing: border-box;
+  }
+}
+
+// 徽章定位样式 - 通过 CSS 变量控制
+.el-notification.btc-notification-with-badge {
+  position: var(--btc-notification-position, fixed) !important;
+  overflow: visible !important;
+}
+
+// 主题适配
+:root {
+  --btc-notification-badge-success: #67c23a;
+  --btc-notification-badge-warning: #e6a23c;
+  --btc-notification-badge-info: #909399;
+  --btc-notification-badge-error: #f56c6c;
+}
+
+// 暗色主题适配
+[data-theme="dark"] {
+  .btc-notification-badge-container {
+    .btc-notification-badge {
+      border-color: #ffd700;
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .btc-notification-badge-container {
+    .btc-notification-badge {
+      width: 16px;
+      height: 16px;
+      font-size: 11px;
+      line-height: 16px;
+      min-width: 16px;
+    }
+  }
+}

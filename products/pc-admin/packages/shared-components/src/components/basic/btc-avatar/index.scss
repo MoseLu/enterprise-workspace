@@ -1,0 +1,121 @@
+.btc-avatar {
+  display: inline-block;
+  position: relative;
+
+  &__box {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    padding: 3px; // 渐变边框的宽度
+    border-radius: 50%;
+    // 炫彩渐变边框 - 亮色模式
+    background: linear-gradient(135deg, #4F46E5, #EC4899, #06B6D4);
+    // 暗色模式适配
+    html.dark & {
+      background: linear-gradient(135deg, #818cf8, #f472b6, #22d3ee);
+    }
+    // 确保频谱条在边框上方
+    overflow: visible;
+  }
+
+  // 摇滚风格样式（仅在启用摇滚风格时）
+  &.is-rock-style &__box {
+    // 摇滚风格增强：高对比度和饱和度（增强律动感）
+    filter: contrast(110%) saturate(130%);
+  }
+
+  &__img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    overflow: hidden;
+    display: block;
+    background-color: var(--el-bg-color);
+    z-index: 2; // 确保头像在频谱条上方
+    transition: all 0.3s ease;
+
+    :deep(.el-image__inner) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  // 摇滚风格下的头像样式
+  &.is-rock-style &__img {
+    border: 1px solid #333; // 头像暗边框，增强对比
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    // 头像轻微抖动，增强摇滚感
+    animation: rockShake 0.3s ease-in-out infinite;
+  }
+
+  &__error {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--el-fill-color-light);
+    color: var(--el-text-color-placeholder);
+
+    .el-icon {
+      font-size: 50%;
+    }
+  }
+
+  // 频谱条样式 - 摇滚风格（急促顿挫）
+  :deep(.rhythm-bar) {
+    transition: height 0.08s ease-in, // ease-in 强调"冲击感"
+                opacity 0.08s ease-in,
+                background 0.1s ease,
+                box-shadow 0.1s ease,
+                transform 0.1s ease;
+    will-change: height, opacity, background, box-shadow, transform;
+  }
+
+  &__edit-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    background-color: var(--el-color-primary);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+
+    &:hover {
+      background-color: var(--el-color-primary-light-3);
+      transform: scale(1.1);
+    }
+
+    .el-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+// 摇滚抖动动画
+@keyframes rockShake {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-0.75deg);
+  }
+  75% {
+    transform: rotate(0.75deg);
+  }
+}
+

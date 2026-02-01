@@ -1,0 +1,70 @@
+{
+  "name": "enterprise-workspace",
+  "version": "1.0.0",
+  "description": "企业级工作区 - 多技术栈Monorepo架构，包含前端多端应用、后端服务、AI辅助开发平台",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "pc-admin",
+    "ai-studio",
+    "backend",
+    "auxiliary"
+  ],
+  "scripts": {
+    "## ============================================ 全局开发命令 ============================================",
+    "dev": "turbo run dev",
+    "dev:frontend": "turbo run dev --filter=frontend",
+    "dev:pc-admin": "turbo run dev --filter=pc-admin",
+    "dev:ai-studio": "turbo run dev --filter=ai-studio",
+    "dev:backend": "turbo run dev --filter=backend",
+    "## ============================================ 构建命令 ============================================",
+    "build": "turbo run build",
+    "build:frontend": "turbo run build --filter=frontend",
+    "build:pc-admin": "turbo run build --filter=pc-admin",
+    "build:ai-studio": "turbo run build --filter=ai-studio",
+    "build:backend": "turbo run build --filter=backend",
+    "build:all": "turbo run build --filter='./frontend' --filter='./pc-admin' --filter='./ai-studio' --filter='./backend'",
+    "## ============================================ 测试命令 ============================================",
+    "test": "turbo run test",
+    "test:frontend": "turbo run test --filter=frontend",
+    "test:backend": "turbo run test --filter=backend",
+    "test:ci": "turbo run test:ci --filter='./frontend' --filter='./backend'",
+    "## ============================================ 代码检查命令 ============================================",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint:fix",
+    "lint:frontend": "turbo run lint --filter=frontend",
+    "lint:backend": "turbo run lint --filter=backend",
+    "## ============================================ 依赖管理命令 ============================================",
+    "install:all": "pnpm install && cd frontend && pnpm install && cd ../pc-admin && pnpm install && cd ../ai-studio && pnpm install && cd ../backend && pnpm install",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "clean:cache": "turbo run clean:cache && rm -rf .turbo",
+    "## ============================================ AI Studio专属命令 ============================================",
+    "ai:generate": "turbo run ai:generate --filter=ai-studio",
+    "ai:hot-update": "turbo run ai:hot-update --filter=ai-studio",
+    "ai:preview": "turbo run ai:preview --filter=ai-studio",
+    "## ============================================ CI/CD命令 ============================================",
+    "ci:validate": "turbo run ci:validate",
+    "ci:cache": "turbo run ci:cache",
+    "cd:deploy:test": "turbo run cd:deploy:test",
+    "cd:deploy:prod": "turbo run cd:deploy:prod"
+  },
+  "devDependencies": {
+    "turbo": "^2.3.0",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.5.0",
+  "keywords": [
+    "enterprise",
+    "monorepo",
+    "turbo",
+    "taro",
+    "ant-design-pro",
+    "ai-studio"
+  ],
+  "author": "Enterprise Team",
+  "license": "UNLICENSED"
+}

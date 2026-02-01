@@ -1,0 +1,59 @@
+# <type>(<scope>): <subject>
+#
+# <body>
+#
+# <footer>
+
+# ============================================
+# 提交信息填写指南
+# ============================================
+#
+# 【类型（type）】必填，从以下选择：
+#   feat     - 新功能
+#   fix      - 修复bug
+#   docs     - 文档更新
+#   style    - 代码格式调整（不影响代码运行）
+#   refactor - 重构（既不是新功能也不是bug修复）
+#   test     - 测试相关
+#   chore    - 构建过程或辅助工具的变动
+#
+# 【作用域（scope）】可选，模块名或功能名：
+#   例如：auth, i18n, menu, logistics, admin-app, logistics-app 等
+#   如果改动影响多个模块，可以省略
+#
+# 【主题（subject）】必填，简短描述：
+#   - 不超过50个字符
+#   - 使用祈使句，首字母小写，结尾不加句号
+#   - 例如：Add JWT expiration check middleware
+#
+# 【正文（body）】可选，详细描述：
+#   - 可以多行，每行不超过72个字符
+#   - 使用列表形式说明具体改动点（以 - 开头）
+#   - 例如：
+#     - Ensure expired tokens return 401 Unauthorized
+#     - Add unit tests for expired and malformed tokens
+#     - Update documentation with example requests
+#
+# 【页脚（footer）】可选，用于：
+#   - 关闭 issue：Closes #123
+#   - 说明破坏性变更：BREAKING CHANGE: xxx
+#
+# ============================================
+# 示例
+# ============================================
+#
+# feat(auth): Add JWT expiration check middleware
+#
+# - Ensure expired tokens return 401 Unauthorized
+# - Add unit tests for expired and malformed tokens
+# - Update documentation with example requests
+#
+# Closes #123
+#
+# ============================================
+# 快速提交（只需填写第一行）
+# ============================================
+# 如果改动简单，只需填写第一行即可：
+# feat(i18n): Fix menu structure for logistics app
+#
+# 删除下面的注释行，填写你的提交信息：

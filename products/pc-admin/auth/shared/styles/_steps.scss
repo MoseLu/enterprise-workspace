@@ -1,0 +1,335 @@
+@use 'variables' as *;
+
+// 步骤组件样式
+// 强制覆盖btc-steps所有状态的图标和标题颜色 - 确保在认证页面中正确显示
+.btc-steps .el-step.is-success .el-step__icon .el-icon {
+	color: var(--el-color-primary);
+}
+
+.btc-steps .el-step.is-success .el-step__title {
+	color: var(--el-color-primary);
+}
+
+// 强制覆盖finish状态的图标和标题颜色
+.btc-steps .el-step.is-finish .el-step__icon {
+	background-color: var(--el-color-primary);
+	border-color: var(--el-color-primary);
+	color: white;
+}
+
+.btc-steps .el-step.is-finish .el-step__title {
+	color: var(--el-color-primary);
+}
+
+
+// 强制覆盖process状态的图标和标题颜色
+.btc-steps .el-step.is-process .el-step__icon {
+	background-color: var(--el-color-primary);
+	border-color: var(--el-color-primary);
+	color: white;
+}
+
+.btc-steps .el-step.is-process .el-step__title {
+	color: var(--el-color-primary);
+}
+
+
+
+// 强制覆盖wait状态的图标和标题颜色
+.btc-steps .el-step.is-wait .el-step__icon {
+	background-color: white;
+	border-color: var(--el-border-color);
+	color: $auth-light-text-regular;
+}
+
+.btc-steps .el-step.is-wait .el-step__title {
+	color: $auth-light-text-regular;
+}
+
+// 暗黑模式适配
+html.dark .btc-steps {
+	.el-step.is-wait .el-step__icon {
+		background-color: var(--el-bg-color);
+		border-color: var(--el-border-color);
+		color: $auth-dark-text-regular;
+	}
+
+	.el-step.is-wait .el-step__title {
+		color: $auth-dark-text-regular;
+	}
+}
+
+// btc-steps-form 组件样式
+.btc-steps-form {
+	.step-indicator {
+		flex-shrink: 0;
+		height: 80px;
+		padding: 20px;
+		// 移除步骤条下方的分割线
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		
+		// 确保步骤条宽度正确
+		.registration-steps {
+			width: 100%;
+			max-width: 100%;
+		}
+	}
+
+	.step-content {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		overflow-y: auto;
+
+		.step-description {
+			flex-shrink: 0;
+			text-align: center;
+			padding: 16px 20px;
+			border-bottom: 1px solid var(--el-border-color-light);
+
+			p {
+				margin: 0;
+				font-size: 14px;
+				color: var(--el-text-color-secondary);
+				line-height: 1.5;
+			}
+		}
+
+		.step-body {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 20px 0;
+			overflow-y: auto;
+
+			> * {
+				max-width: 100%;
+				box-sizing: border-box;
+				width: 100%;
+				display: flex;
+				flex-direction: column;
+				align-items: stretch;
+			}
+
+			// 使用 btc-row 的三段式配宽策略解决表单布局问题
+			// 支持 btc-form 和 el-form 两种写法，使用更高优先级的选择器
+			:deep(.el-form),
+			:deep(.btc-form) {
+				// 定义CSS变量，统一管理宽度
+				--item-w: 500px;   /* 每个表单项的"总宽度" */
+				--label-w: 120px;  /* label 固定宽度，左对齐 */
+				--gap: 20px;       /* 表单项间距 */
+				
+				width: 100% !important;
+				padding: 0 40px !important;
+				display: flex !important;
+				flex-direction: column !important;
+				align-items: center !important;
+				gap: var(--gap) !important;
+
+				// 使用更高优先级的选择器，强制覆盖所有可能的 label-width 设置
+				// 只对注册页面生效，不影响登录页面
+				.btc-steps-form .el-form-item,
+				.btc-form-item {
+					width: var(--item-w) !important;
+					margin: 0 !important;
+					margin-bottom: var(--gap) !important;
+					display: flex !important;
+					align-items: center !important;
+					justify-content: flex-start !important;
+
+					// 强制覆盖所有可能的 label 宽度设置
+					.btc-steps-form .el-form-item__label {
+						width: var(--label-w) !important;
+						min-width: var(--label-w) !important;
+						max-width: var(--label-w) !important;
+						text-align: left !important;
+						white-space: nowrap !important;
+						padding-right: 12px !important;
+						flex-shrink: 0 !important;
+						margin-bottom: 0 !important;
+						box-sizing: border-box !important;
+					}
+
+					// 强制覆盖 Element Plus 内联样式和所有可能的宽度设置
+					.btc-steps-form .el-form-item__label[style*="width"],
+					.btc-steps-form .el-form-item__label[style*="auto"],
+					.btc-steps-form .el-form-item__label[style*="120px"] {
+						width: var(--label-w) !important;
+						min-width: var(--label-w) !important;
+						max-width: var(--label-w) !important;
+					}
+
+					.btc-steps-form .el-form-item__content {
+						width: calc(var(--item-w) - var(--label-w)) !important;
+						min-width: calc(var(--item-w) - var(--label-w)) !important;
+						max-width: calc(var(--item-w) - var(--label-w)) !important;
+						flex-shrink: 0 !important;
+						min-width: auto !important;
+						margin-left: 0 !important;
+						transition: none !important;
+						display: flex !important;
+						align-items: center !important;
+						box-sizing: border-box !important;
+					}
+				}
+
+				// 确保所有输入类控件都占满 content 区域
+				.el-input,
+				.el-select,
+				.el-date-editor,
+				.el-input-number,
+				.el-textarea {
+					width: 100% !important;
+					box-sizing: border-box !important;
+				}
+			}
+
+			.default-step-content {
+				text-align: center;
+				padding: 40px 20px;
+				color: var(--el-text-color-secondary);
+			}
+		}
+	}
+
+	.step-actions {
+		flex-shrink: 0;
+		height: 80px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 12px;
+		padding: 20px;
+		border-top: 1px solid var(--el-border-color-light);
+		// 统一背景颜色，与其他区域保持一致
+		background-color: var(--el-bg-color);
+
+		.el-button {
+			height: 40px;
+			// 按钮占据整个区域宽度
+			flex: 1;
+			max-width: 200px; // 设置最大宽度避免按钮过宽
+			
+			&.el-button--primary {
+				background-color: var(--el-color-primary);
+				border-color: var(--el-color-primary);
+				color: #ffffff;
+				
+				&:hover {
+					background-color: var(--el-color-primary-light-3);
+					border-color: var(--el-color-primary-light-3);
+				}
+				
+				&:active {
+					background-color: var(--el-color-primary-dark-2);
+					border-color: var(--el-color-primary-dark-2);
+				}
+			}
+			
+			&.el-button--default {
+				background-color: var(--el-bg-color);
+				border-color: var(--el-border-color);
+				color: var(--el-text-color-primary);
+				
+				&:hover {
+					background-color: var(--el-fill-color-light);
+					border-color: var(--el-color-primary);
+					color: var(--el-color-primary);
+				}
+			}
+		}
+	}
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+	.btc-steps-form {
+		min-height: 400px;
+		max-height: 500px;
+
+		.step-indicator {
+			height: 70px;
+			padding: 12px 16px;
+		}
+
+		.step-content {
+			.step-description {
+				padding: 12px 16px;
+			}
+
+			.step-body {
+				padding: 16px;
+
+				// 移动端使用更小的宽度变量
+				:deep(.el-form),
+				:deep(.btc-form) {
+					--item-w: 300px;   /* 移动端减小总宽度 */
+					--label-w: 80px;   /* 移动端减小标签宽度 */
+					--gap: 16px;       /* 移动端减小间距 */
+					
+					padding: 0 16px !important;
+					
+					.el-form-item,
+					.btc-form-item {
+						width: var(--item-w) !important;
+						margin-bottom: var(--gap) !important;
+						
+						.el-form-item__label {
+							width: var(--label-w) !important;
+							min-width: var(--label-w) !important;
+							max-width: var(--label-w) !important;
+						}
+						
+						// 强制覆盖所有可能的宽度设置
+						.el-form-item__label[style*="width"],
+						.el-form-item__label[style*="auto"],
+						.el-form-item__label[style*="120px"] {
+							width: var(--label-w) !important;
+							min-width: var(--label-w) !important;
+							max-width: var(--label-w) !important;
+						}
+						
+						.el-form-item__content {
+							width: calc(var(--item-w) - var(--label-w)) !important;
+							min-width: calc(var(--item-w) - var(--label-w)) !important;
+							max-width: calc(var(--item-w) - var(--label-w)) !important;
+						}
+					}
+				}
+			}
+		}
+
+		.step-actions {
+			height: 60px;
+			padding: 0 16px;
+			flex-direction: column;
+			gap: 8px;
+			// 移动端也保持统一的背景颜色
+			background-color: var(--el-bg-color);
+
+			.el-button {
+				width: 100%;
+				min-width: auto;
+				height: 36px;
+				flex: none; // 移动端取消 flex: 1
+				
+				&.el-button--primary {
+					background-color: var(--el-color-primary);
+					border-color: var(--el-color-primary);
+					color: #ffffff;
+				}
+				
+				&.el-button--default {
+					background-color: var(--el-bg-color);
+					border-color: var(--el-border-color);
+					color: var(--el-text-color-primary);
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,375 @@
+// ========================================
+// Jenkins CD 测试环境部署流水线
+// 用于将代码部署到测试环境
+// ========================================
+
+// 流水线代理配置
+pipeline {
+    agent any
+    
+    // 流水线参数配置
+    parameters {
+        // 部署版本
+        string(
+            name: 'VERSION',
+            defaultValue: '',
+            description: '部署版本号（如留空则使用最新构建）'
+        )
+        // 是否跳过测试
+        booleanParam(
+            name: 'SKIP_TESTS',
+            defaultValue: false,
+            description: '是否跳过集成测试'
+        )
+        // 是否强制重新部署
+        booleanParam(
+            name: 'FORCE_DEPLOY',
+            defaultValue: false,
+            description: '是否强制重新部署'
+        )
+    }
+    
+    // 流水线环境变量
+    environment {
+        // 环境名称
+        ENV_NAME = 'test'
+        // 环境标识
+        ENVIRONMENT = 'testing'
+        // 项目名称
+        PROJECT_NAME = 'enterprise-workspace'
+        // 部署目标
+        DEPLOY_TARGET = 'test-server'
+        // Docker 镜像仓库
+        REGISTRY = 'ghcr.io'
+        // 镜像仓库命名空间
+        NAMESPACE = 'enterprise-workspace'
+        // Kubernetes 命名空间
+        K8S_NAMESPACE = 'testing'
+    }
+    
+    // 流水线触发器
+    triggers {
+        // GitHub 钩子触发：develop 分支
+        githubPush()
+        // 手动触发
+        pipelineTrigger('test-deploy-trigger')
+    }
+    
+    // 流水线选项
+    options {
+        // 禁用并发构建
+        disableConcurrentBuilds()
+        // 构建超时：20分钟
+        timeout(time: 20, unit: 'MINUTES')
+        // 跳过默认 checkout
+        skipDefaultCheckout()
+    }
+    
+    // 流水线阶段定义
+    stages {
+        // 阶段一：环境检查
+        stage('环境检查') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段一：环境检查'
+                    echo '======================================'
+                }
+                
+                // 显示部署信息
+                echo "部署环境: ${ENVIRONMENT}"
+                echo "项目: ${PROJECT_NAME}"
+                echo "版本: ${params.VERSION ?: 'latest'}"
+                echo "构建号: ${BUILD_NUMBER}"
+                echo "部署人: ${currentBuild.userId ?: 'system'}"
+            }
+        }
+        
+        // 阶段二：构建 Docker 镜像
+        stage('构建 Docker 镜像') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段二：构建 Docker 镜像'
+                    echo '======================================'
+                }
+                
+                // 检出代码
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/develop']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/example/enterprise-workspace.git',
+                        credentialsId: 'github-credentials'
+                    ]]
+                ])
+                
+                // 设置 Docker 构建环境
+                script {
+                    docker.build("${REGISTRY}/${NAMESPACE}:${params.VERSION ?: env.BUILD_NUMBER}")
+                }
+            }
+        }
+        
+        // 阶段三：推送镜像到仓库
+        stage('推送镜像') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段三：推送镜像'
+                    echo '======================================'
+                }
+                
+                // 登录镜像仓库
+                docker.withRegistry("https://${REGISTRY}", 'ghcr-credentials') {
+                    // 推送标签为构建号的镜像
+                    script {
+                        def image = docker.image("${REGISTRY}/${NAMESPACE}:${params.VERSION ?: env.BUILD_NUMBER}")
+                        image.push()
+                    }
+                    
+                    // 推送 latest 标签
+                    script {
+                        def image = docker.image("${REGISTRY}/${NAMESPACE}:${params.VERSION ?: env.BUILD_NUMBER}")
+                        image.push('test-latest')
+                    }
+                }
+            }
+        }
+        
+        // 阶段四：配置 Kubernetes 集群
+        stage('配置 Kubernetes') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段四：配置 Kubernetes 集群'
+                    echo '======================================'
+                }
+                
+                // 使用 Kubernetes CLI
+                withKubeConfig([
+                    credentialsId: 'kubeconfig-test',
+                    serverUrl: 'https://kubernetes.test.example.com'
+                ]) {
+                    echo 'Kubernetes 集群已配置'
+                    
+                    // 验证集群连接
+                    sh 'kubectl cluster-info'
+                    sh 'kubectl get nodes'
+                }
+            }
+        }
+        
+        // 阶段五：部署到测试环境
+        stage('部署应用') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段五：部署应用到测试环境'
+                    echo '======================================'
+                }
+                
+                withKubeConfig([
+                    credentialsId: 'kubeconfig-test',
+                    serverUrl: 'https://kubernetes.test.example.com'
+                ]) {
+                    // 创建命名空间（如不存在）
+                    sh '''
+                        kubectl create namespace ${K8S_NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+                    '''
+                    
+                    // 应用部署配置
+                    sh '''
+                        kubectl apply -f k8s/test/namespace.yaml
+                        kubectl apply -f k8s/test/deployment.yaml
+                        kubectl apply -f k8s/test/service.yaml
+                        kubectl apply -f k8s/test/ingress.yaml
+                    '''
+                    
+                    // 显示部署状态
+                    sh "kubectl get all -n ${K8S_NAMESPACE}"
+                }
+            }
+        }
+        
+        // 阶段六：等待部署完成
+        stage('等待部署') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段六：等待部署完成'
+                    echo '======================================'
+                }
+                
+                withKubeConfig([
+                    credentialsId: 'kubeconfig-test',
+                    serverUrl: 'https://kubernetes.test.example.com'
+                ]) {
+                    // 等待滚动更新完成
+                    script {
+                        timeout(time: 5, unit: 'MINUTES') {
+                            sh 'kubectl rollout status deployment/app -n ${K8S_NAMESPACE}'
+                        }
+                    }
+                    
+                    // 显示 Pod 状态
+                    sh "kubectl get pods -n ${K8S_NAMESPACE}"
+                    sh "kubectl get svc -n ${K8S_NAMESPACE}"
+                }
+            }
+        }
+        
+        // 阶段七：健康检查
+        stage('健康检查') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段七：健康检查'
+                    echo '======================================'
+                }
+                
+                // 检查应用健康端点
+                script {
+                    retry(5) {
+                        sh '''
+                            if curl -f http://test.example.com/health; then
+                                echo "健康检查通过"
+                            else
+                                echo "健康检查失败，10秒后重试..."
+                                sleep 10
+                                exit 1
+                            fi
+                        '''
+                    }
+                }
+            }
+        }
+        
+        // 阶段八：集成测试
+        stage('集成测试') {
+            when {
+                expression { return !params.SKIP_TESTS }
+            }
+            steps {
+                script {
+                    echo '======================================'
+                    echo '阶段八：集成测试'
+                    echo '======================================'
+                }
+                
+                // 安装 Newman
+                sh 'npm install -g newman'
+                
+                // 运行 API 测试集合
+                sh '''
+                    newman run tests/api/test-collection.json \
+                        --environment tests/api/test-env.json \
+                        --reporters cli,junit \
+                        --reporter-junit-export results/integration-test-results.xml
+                '''
+                
+                // 收集测试报告
+                junit 'results/*.xml'
+            }
+        }
+        
+        // 阶段九：部署完成
+        stage('部署完成') {
+            steps {
+                script {
+                    echo '======================================'
+                    echo '✅ 部署完成！'
+                    echo '======================================'
+                    
+                    // 显示部署信息
+                    echo "测试环境访问地址: https://test.example.com"
+                    echo "健康检查地址: https://test.example.com/health"
+                    echo "API 文档地址: https://test.example.com/api-docs"
+                }
+            }
+        }
+    }
+    
+    // 流水线后置处理
+    post {
+        // 成功时执行
+        success {
+            script {
+                echo '======================================'
+                echo '✅ 测试环境部署成功！'
+                echo '======================================'
+                
+                // 发送部署成功通知
+                slackSend(
+                    channel: '#devops-notifications',
+                    color: 'good',
+                    message: """✅ 测试环境部署成功
+                        *项目*: ${PROJECT_NAME}
+                        *环境*: ${ENVIRONMENT}
+                        *版本*: ${params.VERSION ?: 'latest'}
+                        *构建号*: ${BUILD_NUMBER}
+                        <http://test.example.com|访问测试环境>
+                    """
+                )
+                
+                // 发送邮件通知
+                mail(
+                    to: 'team@example.com',
+                    subject: "✅ 测试环境部署成功: ${PROJECT_NAME} #${BUILD_NUMBER}",
+                    body: """测试环境部署成功
+                        项目: ${PROJECT_NAME}
+                        环境: ${ENVIRONMENT}
+                        版本: ${params.VERSION ?: 'latest'}
+                        构建号: ${BUILD_NUMBER}
+                        访问地址: https://test.example.com
+                    """
+                )
+            }
+        }
+        
+        // 失败时执行
+        failure {
+            script {
+                echo '======================================'
+                echo '❌ 部署失败！'
+                echo '======================================'
+                
+                // 发送部署失败通知
+                slackSend(
+                    channel: '#devops-notifications',
+                    color: 'danger',
+                    message: """❌ 测试环境部署失败
+                        *项目*: ${PROJECT_NAME}
+                        *环境*: ${ENVIRONMENT}
+                        *构建号*: ${BUILD_NUMBER}
+                        <${env.BUILD_URL}|查看构建详情>
+                    """
+                )
+                
+                // 发送邮件通知
+                mail(
+                    to: 'team@example.com',
+                    subject: "❌ 测试环境部署失败: ${PROJECT_NAME} #${BUILD_NUMBER}",
+                    body: """测试环境部署失败
+                        项目: ${PROJECT_NAME}
+                        环境: ${ENVIRONMENT}
+                        构建号: ${BUILD_NUMBER}
+                        查看详情: ${env.BUILD_URL}
+                    """
+                )
+            }
+        }
+        
+        // 总是执行
+        always {
+            script {
+                echo '======================================'
+                echo '后置处理'
+                echo '======================================'
+                
+                // 清理 Docker 缓存
+                sh 'docker system prune -f'
+            }
+        }
+    }
+}

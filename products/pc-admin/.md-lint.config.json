@@ -1,0 +1,39 @@
+{
+  "description": "Markdown 文档规范配置 - 防止孤儿文档",
+  "rules": {
+    "allowed-locations": [
+      "apps/docs-site/**/*.md",
+      "README.md",
+      "apps/README.md",
+      "apps/*/README.md"
+    ],
+    "forbidden-locations": [
+      "packages/**/*.md",
+      "docs/**/*.md",
+      "apps/*/src/**/*.md",
+      "*.md"
+    ],
+    "exceptions": [
+      "README.md",
+      "apps\\README.md",
+      "apps/README.md",
+      "apps\\main-app\\README.md",
+      "apps/main-app/README.md",
+      "apps\\logistics-app\\README.md",
+      "apps/logistics-app/README.md",
+      "apps\\engineering-app\\README.md",
+      "apps/engineering-app/README.md",
+      "apps\\quality-app\\README.md",
+      "apps/quality-app/README.md",
+      "apps\\production-app\\README.md",
+      "apps/production-app/README.md",
+      "apps\\docs-site\\README.md",
+      "apps/docs-site/README.md"
+    ]
+  },
+  "messages": {
+    "error": "❌ 不允许在文档中心之外创建 Markdown 文档！",
+    "hint": "请在 apps/docs-site/ 目录下创建文档，或使用 pnpm --filter docs-site new-doc 命令。"
+  }
+}
+

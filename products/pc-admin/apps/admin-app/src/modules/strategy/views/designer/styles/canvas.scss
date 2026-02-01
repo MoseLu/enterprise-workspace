@@ -1,0 +1,65 @@
+// SVG 画布样式
+.canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--el-bg-color-page);
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.canvas-scroll {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.strategy-canvas {
+  display: block;
+  cursor: default;  // 默认箭头光标
+  overflow: hidden; // 确保内容不溢出容器，避免影响其他区域
+
+  &.dragging {
+    cursor: grabbing;
+  }
+}
+
+#text-editor-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1004; // 高于画布
+  pointer-events: none; // 容器不拦截，textarea自行开启
+
+  .overlay-textarea-editor,
+  .overlay-contenteditable-editor {
+    pointer-events: auto;
+    // 提前占位边框，避免 focus 抖动
+    border: 1px solid transparent;
+  }
+}
+
+// 画布缩放和平移动画
+.canvas-transform-transition {
+  transition: transform 0.3s ease;
+}
+
+// 网格背景页面样式
+// 注意：不设置 z-index，依赖 DOM 顺序和 pointer-events: none 来避免拦截事件
+.grid-background-page {
+  position: absolute;
+  pointer-events: none; /* 不拦截鼠标事件，让 SVG 处理 */
+}
+
+// 橡皮筋选框样式：与 SVG 同级，绝对定位在 canvas-scroll 容器内
+.rubber-band-selection {
+  position: absolute;
+  pointer-events: none;
+  // 不设置 z-index，依赖 DOM 顺序确保在 SVG 之上
+  // 样式通过内联 style 绑定动态设置
+}

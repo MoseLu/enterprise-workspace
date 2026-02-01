@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>监控中心 - BTC ShopFlow</title>
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="shortcut icon" type="image/png" href="/logo.png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <!-- Element Plus CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.4.4/dist/index.css?v=2.4.4" crossorigin="anonymous">
+  <!-- Element Plus Dark Theme -->
+  <link rel="stylesheet" href="https://unpkg.com/element-plus@2.4.4/theme-chalk/dark/css-vars.css?v=2.4.4" crossorigin="anonymous">
+  <script>
+    // 确保 CSS 加载完成后显示页面
+    (function() {
+      function checkAllLoaded() {
+        if (document.body) {
+          document.body.classList.add('loaded');
+        }
+      }
+      
+      // 等待 DOM 加载完成
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          initCSSLoader();
+        });
+      } else {
+        // DOM 已经加载完成
+        initCSSLoader();
+      }
+      
+      function initCSSLoader() {
+        const stylesheets = document.querySelectorAll('link[rel="stylesheet"]');
+        let loadedCount = 0;
+        const totalCount = stylesheets.length;
+        
+        if (totalCount === 0) {
+          // 没有样式表，直接显示
+          checkAllLoaded();
+          return;
+        }
+        
+        function onStylesheetLoaded() {
+          loadedCount++;
+          if (loadedCount >= totalCount) {
+            checkAllLoaded();
+          }
+        }
+        
+        stylesheets.forEach(link => {
+          if (link.sheet) {
+            // 已经加载完成
+            onStylesheetLoaded();
+          } else {
+            link.onload = onStylesheetLoaded;
+            link.onerror = onStylesheetLoaded; // 即使失败也继续显示
+          }
+        });
+        
+        // 超时保护：3秒后强制显示
+        setTimeout(() => {
+          checkAllLoaded();
+        }, 3000);
+      }
+    })();
+  </script>
+  <style>
+    /* 防止 CSS 加载失败时的样式闪烁 */
+    body:not(.loaded) {
+      visibility: hidden;
+    }
+    body.loaded {
+      visibility: visible;
+    }
+  </style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #app {
+      height: 100%;
+    }
+
+    .common-layout {
+      height: 100%;
+    }
+
+    .layout-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background-color: var(--el-bg-color, #fff);
+      border-bottom: 1px solid var(--el-border-color-lighter, #ebeef5);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .layout-aside {
+      background-color: var(--el-bg-color, #fff);
+      border-right: 1px solid var(--el-border-color-lighter, #ebeef5);
+      overflow: hidden;
+    }
+
+    .layout-aside :deep(.el-menu) {
+      border-right: none;
+    }
+
+    .layout-aside :deep(.el-menu-item) {
+      height: 56px;
+      line-height: 56px;
+      font-size: 14px;
+    }
+
+    .layout-aside :deep(.el-menu-item.is-active) {
+      background-color: var(--el-color-primary-light-9, #ecf5ff);
+      color: var(--el-color-primary, #409eff);
+    }
+
+    .layout-main {
+      background-color: var(--el-bg-color-page, #f5f7fa);
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .layout-main :deep(.el-card) {
+      box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .layout-main :deep(.el-card__header) {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--el-border-color-lighter, #ebeef5);
+    }
+
+    .layout-main :deep(.el-card__body) {
+      padding: 20px;
+    }
+
+    .aside-content {
+      padding: 20px;
+    }
+
+    .aside-section {
+      margin-bottom: 24px;
+    }
+
+    .aside-section-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--el-text-color-regular, #606266);
+      margin-bottom: 12px;
+    }
+
+    .monitor-row {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      row-gap: 10px;
+      column-gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .monitor-row + .monitor-row {
+      margin-top: 10px;
+    }
+
+    .monitor-flex1 {
+      flex: 1;
+      font-size: 12px;
+    }
+
+    /* 统计卡片样式 */
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+      padding: 16px;
+      background: var(--el-bg-color, #fff);
+      border-radius: var(--el-border-radius-base, 4px);
+      border: 1px solid var(--el-border-color-lighter, #ebeef5);
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--el-text-color-secondary, #909399);
+    }
+
+    /* 表格容器 */
+    .table-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .table-container .el-table {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--el-border-color, #dcdfe6);
+    }
+
+    .table-container .el-table__inner {
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* 表格边框样式 */
+    .layout-main :deep(.el-table) {
+      border: 1px solid var(--el-border-color, #dcdfe6);
+    }
+
+    .layout-main :deep(.el-table__header-wrapper) {
+      border-bottom: 1px solid var(--el-border-color, #dcdfe6);
+    }
+
+    .layout-main :deep(.el-table__body-wrapper) {
+      border-top: 1px solid var(--el-border-color, #dcdfe6);
+    }
+
+    .layout-main :deep(.el-table th),
+    .layout-main :deep(.el-table td) {
+      border-right: 1px solid var(--el-border-color, #dcdfe6);
+    }
+
+    .layout-main :deep(.el-table th:last-child),
+    .layout-main :deep(.el-table td:last-child) {
+      border-right: none;
+    }
+
+    /* 错误信息单元格 */
+    .error-message-cell {
+      max-width: 500px;
+      cursor: pointer;
+      line-height: 1.5;
+    }
+
+    .error-message-cell.expanded {
+      white-space: normal;
+      word-break: break-all;
+    }
+
+    .error-message-cell:not(.expanded) {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-path-cell {
+      max-width: 300px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: var(--el-text-color-regular, #606266);
+    }
+
+    .suggestion-text {
+      color: var(--el-color-warning, #e6a23c);
+      font-size: 12px;
+      margin-top: 4px;
+      display: block;
+      padding: 4px 8px;
+      background: var(--el-color-warning-light-9, #fdf6ec);
+      border-radius: 4px;
+    }
+
+    .new-error-row {
+      animation: highlight 2s ease-out;
+    }
+
+    @keyframes highlight {
+      0% { background: var(--el-color-warning-light-9, #fdf6ec); }
+      100% { background: transparent; }
+    }
+
+    /* 空状态 */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    /* 连接状态 */
+    .connection-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 详情对话框 */
+    .error-detail-pre {
+      background: var(--el-bg-color-page, #f5f7fa);
+      padding: 12px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .stats-row {
+        flex-direction: column;
+      }
+
+      .stat-item {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="common-layout">
+      <el-container style="height: 100%;">
+        <!-- 顶栏 -->
+        <el-header class="layout-header" height="60px">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: var(--el-text-color-primary, #303133);">
+              监控中心
+            </h2>
+            <el-tag :type="connectionStatus === 'connected' ? 'success' : connectionStatus === 'connecting' ? 'warning' : 'danger'" size="large">
+              {{ connectionStatus === 'connected' ? '已连接' : connectionStatus === 'connecting' ? '连接中...' : '未连接' }}
+            </el-tag>
+          </div>
+        </el-header>
+
+        <el-container>
+          <!-- 左侧菜单 -->
+          <el-aside width="220px" class="layout-aside">
+            <el-menu
+              :default-active="$route.path || '/dev'"
+              @select="handleMenuSelect"
+              style="height: 100%;"
+              :collapse="false"
+              :router="true"
+            >
+              <el-menu-item index="/dev">
+                <span style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                  <span>服务监控</span>
+                  <el-badge v-if="devCount > 0" :value="devCount" :max="99" />
+                </span>
+              </el-menu-item>
+              <el-menu-item index="/errors">
+                <span style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                  <span>错误监控</span>
+                  <el-badge v-if="errors.length > 0" :value="errors.length" :max="99" />
+                </span>
+              </el-menu-item>
+            </el-menu>
+          </el-aside>
+
+          <!-- 右侧内容 -->
+          <el-main class="layout-main">
+            <router-view v-slot="{ Component }">
+              <component :is="Component" />
+            </router-view>
+          </el-main>
+              <!-- 筛选和操作栏 -->
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 12px; background: var(--el-bg-color, #fff); border-radius: 4px; border: 1px solid var(--el-border-color-lighter, #ebeef5);">
+                <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                  <span style="color: var(--el-text-color-regular, #606266); font-size: 14px; font-weight: 500;">严重程度:</span>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <el-checkbox v-model="filters.critical" id="filter-critical" name="filter-critical" />
+                    <el-tag type="danger" size="small" effect="dark">严重</el-tag>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <el-checkbox v-model="filters.error" id="filter-error" name="filter-error" />
+                    <el-tag type="danger" size="small" effect="plain">错误</el-tag>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <el-checkbox v-model="filters.warning" id="filter-warning" name="filter-warning" />
+                    <el-tag type="warning" size="small" effect="plain">警告</el-tag>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <el-checkbox v-model="filters.info" id="filter-info" name="filter-info" />
+                    <el-tag type="info" size="small" effect="plain">信息</el-tag>
+                  </div>
+                  <el-select
+                    v-model="filterPackageName"
+                    id="filter-package-name"
+                    name="filter-package-name"
+                    placeholder="工作空间"
+                    clearable
+                    style="width: 200px;"
+                  >
+                    <el-option
+                      v-for="pkg in packageNames"
+                      :key="pkg"
+                      :label="pkg"
+                      :value="pkg"
+                    />
+                  </el-select>
+                  <el-select
+                    v-model="filterErrorType"
+                    id="filter-error-type"
+                    name="filter-error-type"
+                    placeholder="错误类型"
+                    clearable
+                    style="width: 200px;"
+                  >
+                    <el-option
+                      v-for="type in errorTypes"
+                      :key="type"
+                      :label="type"
+                      :value="type"
+                    />
+                  </el-select>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                  <el-button type="danger" @click="clearAllErrors" :disabled="errors.length === 0">
+                    清空列表
+                  </el-button>
+                  <el-button type="primary" @click="exportErrors" :disabled="errors.length === 0">
+                    导出错误
+                  </el-button>
+                </div>
+              </div>
+
+              <!-- 表格容器 -->
+              <div class="table-container">
+                <el-table
+                  :data="filteredErrors"
+                  stripe
+                  border
+                  style="width: 100%"
+                  v-loading="loading"
+                  @row-click="handleRowClick"
+                  row-class-name="error-row"
+                  height="100%"
+                >
+          <template #empty>
+            <el-empty :description="emptyText" />
+          </template>
+          <el-table-column prop="severity" label="严重程度" width="120" align="center" fixed="left">
+            <template #default="{ row }">
+              <el-tag
+                :type="getSeverityType(row.severity)"
+                size="small"
+                effect="dark"
+              >
+                {{ getSeverityLabel(row.severity) }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          
+          <el-table-column prop="errorType" label="类型" width="140" align="center">
+            <template #default="{ row }">
+              <el-tag type="info" size="small" effect="plain">
+                {{ row.errorType || 'unknown' }}
+              </el-tag>
+              <el-tag v-if="row.fixable" type="success" size="small" effect="plain" style="margin-left: 4px;">
+                可修复
+              </el-tag>
+            </template>
+          </el-table-column>
+          
+          <el-table-column prop="packageName" label="工作空间" width="180" align="center">
+            <template #default="{ row }">
+              <el-tag type="warning" size="small" effect="plain">
+                {{ row.packageName || '未知' }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          
+          <el-table-column prop="filePath" label="文件" width="250" align="center" show-overflow-tooltip>
+            <template #default="{ row }">
+              <code class="file-path-cell">{{ row.filePath || '-' }}</code>
+            </template>
+          </el-table-column>
+          
+          <el-table-column prop="errorMessage" label="错误信息" min-width="400" align="center">
+            <template #default="{ row }">
+              <div
+                class="error-message-cell"
+                :class="{ expanded: expandedMessages.has(row.errorHash) }"
+                @click.stop="toggleMessage(row.errorHash)"
+              >
+                <div>{{ row.errorMessage || '' }}</div>
+                <span v-if="row.suggestion" class="suggestion-text">
+                  {{ row.suggestion }}
+                </span>
+                <el-button
+                  v-if="hasMoreInfo(row)"
+                  link
+                  type="primary"
+                  size="small"
+                  @click.stop="showDetailDialog(row)"
+                  style="margin-top: 4px;"
+                >
+                  查看详情
+                </el-button>
+              </div>
+            </template>
+          </el-table-column>
+          
+          <el-table-column prop="occurrence_count" label="次数" width="80" align="center">
+            <template #default="{ row }">
+              <el-badge :value="row.occurrence_count || 1" :max="99" />
+            </template>
+          </el-table-column>
+          
+          <el-table-column prop="timestamp" label="时间" width="150" align="center">
+            <template #default="{ row }">
+              <span style="color: var(--el-text-color-secondary, #909399); font-size: 12px;">
+                {{ formatTime(row.timestamp) }}
+              </span>
+            </template>
+          </el-table-column>
+                </el-table>
+              </div>
+            </div>
+          </el-main>
+        </el-container>
+      </el-container>
+    </div>
+
+  </div>
+
+  <!-- Vue 3 Production Build -->
+  <script src="https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js"></script>
+  <!-- Vue Router -->
+  <script src="https://unpkg.com/vue-router@4.2.5/dist/vue-router.global.prod.js"></script>
+  <!-- Element Plus JS -->
+  <script src="https://unpkg.com/element-plus@2.4.4/dist/index.full.js"></script>
+  <!-- Element Plus Icons -->
+  <script src="https://unpkg.com/@element-plus/icons-vue@2.3.1/dist/index.iife.js"></script>
+
+  <script>
+    const { createApp, ref, computed, onMounted, onUnmounted, provide, inject, watch } = Vue;
+    const { createRouter, createWebHashHistory } = VueRouter;
+    const { ElMessage, ElNotification } = ElementPlus;
+
+    // 服务监控组件
+    const DevServiceMonitor = {
+      template: `
+        <div style="height: 100%;">
+          <el-card shadow="hover" style="height: 100%; display: flex; flex-direction: column;">
+            <template #header>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>运行中的开发服务器 ({{ devCount }})</span>
+                <el-button size="small" @click="refreshCommands">刷新</el-button>
+              </div>
+            </template>
+            <div style="flex: 1; overflow-y: auto;">
+              <template v-if="devCommands.length === 0">
+                <el-empty description="暂无运行中的开发服务器" />
+              </template>
+              <div v-else style="display: flex; flex-direction: column; gap: 12px;">
+                <el-card v-for="cmd in devCommands" :key="cmd.id" shadow="hover" style="margin-bottom: 12px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="flex: 1;">
+                      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                        <el-tag type="success" size="small">运行中</el-tag>
+                        <code style="font-size: 13px; color: var(--el-text-color-primary, #303133);">{{ cmd.command }} {{ (cmd.args || []).join(' ') }}</code>
+                      </div>
+                      <div style="color: var(--el-text-color-secondary, #909399); font-size: 12px;">
+                        启动时间: {{ formatTime(cmd.startTime) }}
+                      </div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                      <el-button type="primary" size="small" @click="viewErrorsForCommand(cmd.id)">
+                        查看错误
+                      </el-button>
+                      <el-button type="danger" size="small" @click="stopCommand(cmd.id)">
+                        停止
+                      </el-button>
+                    </div>
+                  </div>
+                </el-card>
+              </div>
+            </div>
+          </el-card>
+        </div>
+      `,
+      setup() {
+        const context = inject('monitorContext', {});
+        const { runningCommands = ref([]), refreshCommands = () => {}, stopCommand = async () => {}, formatTime = () => '-', router = null } = context;
+        const { ElMessage } = ElementPlus;
+
+        const devCommands = computed(() => {
+          return runningCommands.value.filter(cmd => 
+            (cmd.command === 'dev:all' || cmd.command === 'dev' || 
+            (cmd.command && cmd.command.includes('dev'))) && cmd.status === 'running'
+          );
+        });
+
+        const devCount = computed(() => devCommands.value.length);
+
+        const viewErrorsForCommand = (commandId) => {
+          const context = inject('monitorContext', {});
+          const routerInstance = context.router;
+          if (routerInstance) {
+            routerInstance.push('/errors');
+          }
+        };
+
+        const handleStopCommand = async (commandId) => {
+          await stopCommand(commandId);
+        };
+
+        return {
+          devCommands,
+          devCount,
+          refreshCommands,
+          stopCommand: handleStopCommand,
+          formatTime,
+          viewErrorsForCommand
+        };
+      }
+    };
+
+    // 错误监控组件
+    const ErrorMonitor = {
+      template: `
+        <div style="height: 100%; display: flex; flex-direction: column;">
+          <!-- 筛选和操作栏 -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 12px; background: var(--el-bg-color, #fff); border-radius: 4px; border: 1px solid var(--el-border-color-lighter, #ebeef5);">
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+              <span style="color: var(--el-text-color-regular, #606266); font-size: 14px; font-weight: 500;">严重程度:</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <el-checkbox v-model="filters.critical" id="filter-critical" name="filter-critical" />
+                <el-tag type="danger" size="small" effect="dark">严重</el-tag>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <el-checkbox v-model="filters.error" id="filter-error" name="filter-error" />
+                <el-tag type="danger" size="small" effect="plain">错误</el-tag>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <el-checkbox v-model="filters.warning" id="filter-warning" name="filter-warning" />
+                <el-tag type="warning" size="small" effect="plain">警告</el-tag>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <el-checkbox v-model="filters.info" id="filter-info" name="filter-info" />
+                <el-tag type="info" size="small" effect="plain">信息</el-tag>
+              </div>
+              <el-select
+                v-model="filterPackageName"
+                id="filter-package-name"
+                name="filter-package-name"
+                placeholder="工作空间"
+                clearable
+                style="width: 200px;"
+              >
+                <el-option
+                  v-for="pkg in packageNames"
+                  :key="pkg"
+                  :label="pkg"
+                  :value="pkg"
+                />
+              </el-select>
+              <el-select
+                v-model="filterErrorType"
+                id="filter-error-type"
+                name="filter-error-type"
+                placeholder="错误类型"
+                clearable
+                style="width: 200px;"
+              >
+                <el-option
+                  v-for="type in errorTypes"
+                  :key="type"
+                  :label="type"
+                  :value="type"
+                />
+              </el-select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <el-button type="danger" @click="clearAllErrors" :disabled="errors.length === 0">
+                清空列表
+              </el-button>
+              <el-button type="primary" @click="exportErrors" :disabled="errors.length === 0">
+                导出错误
+              </el-button>
+            </div>
+          </div>
+
+          <!-- 表格容器 -->
+          <div class="table-container">
+            <el-table
+              :data="filteredErrors"
+              stripe
+              border
+              style="width: 100%"
+              v-loading="loading"
+              @row-click="handleRowClick"
+              row-class-name="error-row"
+              height="100%"
+            >
+              <template #empty>
+                <el-empty :description="emptyText" />
+              </template>
+              <el-table-column prop="severity" label="严重程度" width="120" align="center" fixed="left">
+                <template #default="{ row }">
+                  <el-tag
+                    :type="getSeverityType(row.severity)"
+                    size="small"
+                    effect="dark"
+                  >
+                    {{ getSeverityLabel(row.severity) }}
+                  </el-tag>
+                </template>
+              </el-table-column>
+              
+              <el-table-column prop="errorType" label="类型" width="140" align="center">
+                <template #default="{ row }">
+                  <el-tag type="info" size="small" effect="plain">
+                    {{ row.errorType || 'unknown' }}
+                  </el-tag>
+                  <el-tag v-if="row.fixable" type="success" size="small" effect="plain" style="margin-left: 4px;">
+                    可修复
+                  </el-tag>
+                </template>
+              </el-table-column>
+              
+              <el-table-column prop="packageName" label="工作空间" width="180" align="center">
+                <template #default="{ row }">
+                  <el-tag type="warning" size="small" effect="plain">
+                    {{ row.packageName || '未知' }}
+                  </el-tag>
+                </template>
+              </el-table-column>
+              
+              <el-table-column prop="filePath" label="文件" width="250" align="center" show-overflow-tooltip>
+                <template #default="{ row }">
+                  <code class="file-path-cell">{{ row.filePath || '-' }}</code>
+                </template>
+              </el-table-column>
+              
+              <el-table-column prop="errorMessage" label="错误信息" min-width="400" align="center">
+                <template #default="{ row }">
+                  <div
+                    class="error-message-cell"
+                    :class="{ expanded: expandedMessages.has(row.errorHash) }"
+                    @click.stop="toggleMessage(row.errorHash)"
+                  >
+                    <div>{{ row.errorMessage || '' }}</div>
+                    <span v-if="row.suggestion" class="suggestion-text">
+                      {{ row.suggestion }}
+                    </span>
+                    <el-button
+                      v-if="hasMoreInfo(row)"
+                      link
+                      type="primary"
+                      size="small"
+                      @click.stop="showDetailDialog(row)"
+                      style="margin-top: 4px;"
+                    >
+                      查看详情
+                    </el-button>
+                  </div>
+                </template>
+              </el-table-column>
+              
+              <el-table-column prop="occurrence_count" label="次数" width="80" align="center">
+                <template #default="{ row }">
+                  <el-badge :value="row.occurrence_count || 1" :max="99" />
+                </template>
+              </el-table-column>
+              
+              <el-table-column prop="timestamp" label="时间" width="150" align="center">
+                <template #default="{ row }">
+                  <span style="color: var(--el-text-color-secondary, #909399); font-size: 12px;">
+                    {{ formatTime(row.timestamp) }}
+                  </span>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+
+          <!-- 错误详情对话框 -->
+          <el-dialog
+            v-model="detailDialogVisible"
+            title="错误详情"
+            width="70%"
+            :before-close="handleCloseDetail"
+          >
+            <el-descriptions :column="2" border v-if="selectedError">
+              <el-descriptions-item label="严重程度">
+                <el-tag :type="getSeverityType(selectedError.severity)" effect="dark">
+                  {{ getSeverityLabel(selectedError.severity) }}
+                </el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="错误类型">
+                <el-tag type="info">{{ selectedError.errorType || 'unknown' }}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item label="工作空间">
+                {{ selectedError.packageName || '未知' }}
+              </el-descriptions-item>
+              <el-descriptions-item label="出现次数">
+                <el-badge :value="selectedError.occurrence_count || 1" />
+              </el-descriptions-item>
+              <el-descriptions-item label="文件路径" :span="2">
+                <code>{{ selectedError.filePath || '-' }}</code>
+              </el-descriptions-item>
+              <el-descriptions-item label="错误信息" :span="2">
+                <pre class="error-detail-pre">{{ selectedError.errorMessage || '' }}</pre>
+              </el-descriptions-item>
+              <el-descriptions-item label="原始输出" :span="2" v-if="selectedError.rawOutput && selectedError.rawOutput !== selectedError.errorMessage">
+                <pre class="error-detail-pre">{{ selectedError.rawOutput }}</pre>
+              </el-descriptions-item>
+              <el-descriptions-item label="解决建议" :span="2" v-if="selectedError.suggestion">
+                <el-alert type="warning" :closable="false">
+                  {{ selectedError.suggestion }}
+                </el-alert>
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-dialog>
+        </div>
+      `,
+      setup() {
+        const context = inject('monitorContext', {});
+        const { errors = ref([]), filters = ref({ critical: true, error: true, warning: true, info: true }), connectionStatus = ref('disconnected'), loading = ref(false) } = context;
+        const filterPackageName = ref('');
+        const filterErrorType = ref('');
+        const expandedMessages = ref(new Set());
+        const detailDialogVisible = ref(false);
+        const selectedError = ref(null);
+        const { ElMessage } = ElementPlus;
+
+        const packageNames = computed(() => {
+          const names = new Set();
+          errors.value.forEach(err => {
+            if (err.packageName) {
+              names.add(err.packageName);
+            }
+          });
+          return Array.from(names).sort();
+        });
+
+        const errorTypes = computed(() => {
+          const types = new Set();
+          errors.value.forEach(err => {
+            if (err.errorType) {
+              types.add(err.errorType);
+            }
+          });
+          return Array.from(types).sort();
+        });
+
+        const filteredErrors = computed(() => {
+          let result = errors.value.filter(err => {
+            const severity = err.severity || 'info';
+            return filters.value[severity] !== false;
+          });
+
+          if (filterPackageName.value) {
+            result = result.filter(err => err.packageName === filterPackageName.value);
+          }
+
+          if (filterErrorType.value) {
+            result = result.filter(err => err.errorType === filterErrorType.value);
+          }
+
+          return result.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        });
+
+        const emptyText = computed(() => {
+          if (connectionStatus.value === 'disconnected') {
+            return '等待连接...';
+          }
+          if (errors.value.length === 0) {
+            return '暂无错误';
+          }
+          return '没有匹配的错误';
+        });
+
+        const getSeverityType = (severity) => {
+          const typeMap = {
+            'critical': 'danger',
+            'error': 'danger',
+            'warning': 'warning',
+            'info': 'info'
+          };
+          return typeMap[severity] || 'info';
+        };
+
+        const getSeverityLabel = (severity) => {
+          const labelMap = {
+            'critical': '严重',
+            'error': '错误',
+            'warning': '警告',
+            'info': '信息'
+          };
+          return labelMap[severity] || severity;
+        };
+
+        const formatTime = (timestamp) => {
+          if (!timestamp) return '-';
+          const date = new Date(timestamp);
+          return date.toLocaleTimeString('zh-CN');
+        };
+
+        const hasMoreInfo = (error) => {
+          return error.rawOutput && error.rawOutput !== error.errorMessage && error.rawOutput.length > error.errorMessage.length;
+        };
+
+        const toggleMessage = (errorHash) => {
+          if (expandedMessages.value.has(errorHash)) {
+            expandedMessages.value.delete(errorHash);
+          } else {
+            expandedMessages.value.add(errorHash);
+          }
+        };
+
+        const showDetailDialog = (error) => {
+          selectedError.value = error;
+          detailDialogVisible.value = true;
+        };
+
+        const handleCloseDetail = () => {
+          detailDialogVisible.value = false;
+          selectedError.value = null;
+        };
+
+        const handleRowClick = (row) => {
+          showDetailDialog(row);
+        };
+
+        const clearAllErrors = () => {
+          errors.value = [];
+          ElMessage.success('已清空错误列表');
+        };
+
+        const exportErrors = () => {
+          const dataStr = JSON.stringify(errors.value, null, 2);
+          const dataBlob = new Blob([dataStr], { type: 'application/json' });
+          const url = URL.createObjectURL(dataBlob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `dev-errors-${new Date().toISOString().split('T')[0]}.json`;
+          link.click();
+          URL.revokeObjectURL(url);
+          ElMessage.success('错误数据已导出');
+        };
+
+        return {
+          errors,
+          filters,
+          filterPackageName,
+          filterErrorType,
+          packageNames,
+          errorTypes,
+          filteredErrors,
+          emptyText,
+          loading,
+          expandedMessages,
+          detailDialogVisible,
+          selectedError,
+          getSeverityType,
+          getSeverityLabel,
+          formatTime,
+          hasMoreInfo,
+          toggleMessage,
+          showDetailDialog,
+          handleCloseDetail,
+          handleRowClick,
+          clearAllErrors,
+          exportErrors
+        };
+      }
+    };
+
+    // 路由配置
+    const routes = [
+      {
+        path: '/',
+        redirect: '/dev'
+      },
+      {
+        path: '/dev',
+        component: DevServiceMonitor
+      },
+      {
+        path: '/errors',
+        component: ErrorMonitor
+      }
+    ];
+
+    const router = createRouter({
+      history: createWebHashHistory(),
+      routes
+    });
+
+    // 主应用组件
+    createApp({
+      setup() {
+        const stats = ref({
+          critical: 0,
+          error: 0,
+          warning: 0,
+          info: 0
+        });
+
+        const errors = ref([]);
+        const filters = ref({
+          critical: true,
+          error: true,
+          warning: true,
+          info: true
+        });
+
+        const connectionStatus = ref('disconnected'); // disconnected, connecting, connected
+        const loading = ref(false);
+        const runningCommands = ref([]);
+        let eventSource = null;
+        let commandsRefreshTimer = null;
+
+        // 计算可用的工作空间列表
+        const packageNames = computed(() => {
+          const names = new Set();
+          errors.value.forEach(err => {
+            if (err.packageName) {
+              names.add(err.packageName);
+            }
+          });
+          return Array.from(names).sort();
+        });
+
+        // 计算可用的错误类型列表
+        const errorTypes = computed(() => {
+          const types = new Set();
+          errors.value.forEach(err => {
+            if (err.errorType) {
+              types.add(err.errorType);
+            }
+          });
+          return Array.from(types).sort();
+        });
+
+        // 计算运行中的进程统计
+        const devCommands = computed(() => {
+          return runningCommands.value.filter(cmd => 
+            (cmd.command === 'dev:all' || cmd.command === 'dev' || 
+            (cmd.command && cmd.command.includes('dev'))) && cmd.status === 'running'
+          );
+        });
+
+        const devCount = computed(() => devCommands.value.length);
+
+        // 刷新运行中的命令列表
+        const refreshCommands = async () => {
+          try {
+            const response = await fetch('/api/commands');
+            const result = await response.json();
+            if (response.ok) {
+              runningCommands.value = result.commands || [];
+            }
+          } catch (error) {
+            console.error('刷新命令列表失败:', error);
+          }
+        };
+
+        // 停止命令
+        const stopCommand = async (commandId) => {
+          try {
+            const response = await fetch(`/api/commands/${commandId}`, {
+              method: 'DELETE'
+            });
+            const result = await response.json();
+            if (response.ok) {
+              ElMessage.success(result.message || '命令已停止');
+              await refreshCommands();
+            } else {
+              ElMessage.error(result.error || '停止命令失败');
+            }
+          } catch (error) {
+            ElMessage.error('停止命令失败: ' + error.message);
+          }
+        };
+
+        // 格式化时间
+        const formatTime = (timestamp) => {
+          if (!timestamp) return '-';
+          const date = new Date(timestamp);
+          return date.toLocaleTimeString('zh-CN');
+        };
+
+        // 获取严重程度类型
+        const getSeverityType = (severity) => {
+          const typeMap = {
+            'critical': 'danger',
+            'error': 'danger',
+            'warning': 'warning',
+            'info': 'info'
+          };
+          return typeMap[severity] || 'info';
+        };
+
+        // 更新统计
+        const updateStats = () => {
+          try {
+            // 确保 stats 已经初始化
+            if (!stats) {
+              console.warn('stats is not defined');
+              return;
+            }
+            // 确保 stats.value 存在，如果不存在则初始化
+            if (!stats.value) {
+              stats.value = {
+                critical: 0,
+                error: 0,
+                warning: 0,
+                info: 0
+              };
+            }
+            // 更新统计值
+            const errorsList = errors.value || [];
+            stats.value = {
+              critical: errorsList.filter(e => e.severity === 'critical').length,
+              error: errorsList.filter(e => e.severity === 'error').length,
+              warning: errorsList.filter(e => e.severity === 'warning').length,
+              info: errorsList.filter(e => e.severity === 'info').length
+            };
+          } catch (error) {
+            console.error('updateStats error:', error);
+            // 如果出错，确保 stats.value 至少有一个默认值
+            if (stats && !stats.value) {
+              stats.value = {
+                critical: 0,
+                error: 0,
+                warning: 0,
+                info: 0
+              };
+            }
+          }
+        };
+
+        // 菜单选择处理
+        const handleMenuSelect = (path) => {
+          router.push(path);
+        };
+
+        // 添加错误
+        const addError = (errorData) => {
+          const error = {
+            ...errorData.data,
+            id: errors.value.length + 1
+          };
+
+          // 检查是否已存在（基于 errorHash）
+          const existingIndex = errors.value.findIndex(e => e.errorHash === error.errorHash);
+          if (existingIndex >= 0) {
+            // 更新现有错误
+            errors.value[existingIndex] = error;
+          } else {
+            // 添加新错误
+            errors.value.push(error);
+            
+            // 显示通知
+            const severity = error.severity || 'info';
+            if (severity === 'critical' || severity === 'error') {
+              ElNotification({
+                title: '新错误检测到',
+                message: error.errorMessage || '未知错误',
+                type: getSeverityType(severity),
+                duration: 5000,
+                position: 'top-right'
+              });
+            }
+          }
+
+          // 更新统计
+          updateStats();
+        };
+
+        // 连接 SSE
+        const connect = () => {
+          connectionStatus.value = 'connecting';
+          
+          if (eventSource) {
+            eventSource.close();
+          }
+
+          eventSource = new EventSource('/events');
+
+          eventSource.onopen = () => {
+            connectionStatus.value = 'connected';
+            ElMessage.success('已连接到错误监控服务器');
+          };
+
+          eventSource.onmessage = (event) => {
+            try {
+              const data = JSON.parse(event.data);
+              console.log('[SSE] 收到消息:', data.type, data);
+              if (data.type === 'connected') {
+                console.log('✅ 已连接到错误监控服务器');
+              } else if (data.type === 'error') {
+                console.log('[SSE] ✅ 收到错误:', data.data);
+                addError(data);
+              } else if (data.type === 'close') {
+                eventSource.close();
+                connectionStatus.value = 'disconnected';
+                ElMessage.warning('服务器连接已关闭');
+              } else {
+                console.log('[SSE] ⚠️  未知消息类型:', data.type);
+              }
+            } catch (error) {
+              console.error('❌ 解析 SSE 消息失败:', error, event.data);
+            }
+          };
+
+          eventSource.onerror = (error) => {
+            console.error('[SSE] ❌ 连接错误:', error);
+            console.error('[SSE] readyState:', eventSource?.readyState);
+            // readyState: 0=CONNECTING, 1=OPEN, 2=CLOSED
+            if (eventSource?.readyState === EventSource.CLOSED) {
+              connectionStatus.value = 'disconnected';
+              ElMessage.error('连接已关闭，5秒后重试...');
+              // 5秒后重连
+              setTimeout(() => {
+                if (eventSource) {
+                  eventSource.close();
+                }
+                console.log('[SSE] 🔄 尝试重新连接...');
+                connect();
+              }, 5000);
+            } else if (eventSource?.readyState === EventSource.CONNECTING) {
+              console.log('[SSE] ⏳ 正在连接...');
+            } else {
+              // OPEN 状态但触发错误，可能是网络问题
+              console.warn('[SSE] ⚠️  连接状态异常，准备重连...');
+              connectionStatus.value = 'disconnected';
+              setTimeout(() => {
+                if (eventSource) {
+                  eventSource.close();
+                }
+                connect();
+              }, 5000);
+            }
+          };
+        };
+
+        // 确保 stats 已经正确初始化
+        if (!stats.value || typeof stats.value !== 'object') {
+          stats.value = {
+            critical: 0,
+            error: 0,
+            warning: 0,
+            info: 0
+          };
+        }
+
+        // 初始化时调用一次 updateStats（在 provide 之前）
+        updateStats();
+
+        // 提供共享状态给子组件（确保所有值都已初始化）
+        provide('monitorContext', {
+          errors,
+          filters,
+          stats,
+          runningCommands,
+          connectionStatus,
+          loading,
+          refreshCommands,
+          stopCommand,
+          formatTime,
+          router
+        });
+
+        // 组件挂载时连接
+        onMounted(() => {
+          connect();
+          refreshCommands();
+          // 每5秒刷新一次命令列表
+          commandsRefreshTimer = setInterval(refreshCommands, 5000);
+          
+          // 默认跳转到 /dev（如果当前路径是根路径）
+          if (router.currentRoute.value.path === '/' || !router.currentRoute.value.path || router.currentRoute.value.path === '/#/') {
+            router.push('/dev');
+          }
+        });
+
+        // 组件卸载时关闭连接
+        onUnmounted(() => {
+          if (eventSource) {
+            eventSource.close();
+          }
+          if (commandsRefreshTimer) {
+            clearInterval(commandsRefreshTimer);
+          }
+        });
+
+        const currentRoute = computed(() => router.currentRoute.value);
+
+        return {
+          errors,
+          devCount,
+          connectionStatus,
+          handleMenuSelect,
+          $route: currentRoute
+        };
+      }
+    })
+    .use(ElementPlus)
+    .use(router)
+    .mount('#app');
+  </script>
+</body>
+</html>

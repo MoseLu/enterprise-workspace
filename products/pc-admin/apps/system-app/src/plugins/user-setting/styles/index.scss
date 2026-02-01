@@ -1,0 +1,213 @@
+/**
+ * 偏好设置抽屉样式
+ */
+
+.preferences-drawer {
+  padding: 20px; // 添加边距
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  // 隐藏滚动条但保持滚动功能
+  scrollbar-width: none; // Firefox
+  &::-webkit-scrollbar {
+    width: 0; // Chrome/Safari
+    height: 0;
+  }
+}
+
+.user-preferences-panel {
+  position: fixed;
+  top: 47px; // 从顶栏下方开始（顶栏高度 47px）
+  right: 0;
+  width: 380px;
+  height: calc(100vh - 47px); // 高度减去顶栏高度
+  z-index: 999; // 高于遮罩层
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-left: 1px solid var(--el-border-color-extra-light);
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  overflow: hidden;
+
+  @media (max-width: 480px) {
+    width: 100%;
+  }
+}
+
+.preferences-slide-enter-active,
+.preferences-slide-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.preferences-slide-enter-from,
+.preferences-slide-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+html.dark {
+  .user-preferences-panel {
+    background: rgba(10, 10, 10, 0.9);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.5);
+  }
+}
+
+// 公共的设置框样式（用于菜单布局、菜单风格、主题风格）
+.setting-box-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  gap: 6px 15px; // 垂直间距 6px，水平间距 15px
+
+  .setting-item {
+    box-sizing: border-box;
+    width: calc((100% - 30px) / 3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    .box {
+      position: relative;
+      box-sizing: border-box;
+      display: flex;
+      width: 100%;
+      height: 55px;
+      border: 2px solid var(--el-border-color-light);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s;
+      box-shadow: 0 2px 8px 0 rgb(0 0 0 / 20%);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      &.is-active {
+        border-color: var(--el-color-primary);
+        box-shadow: 0 0 0 2px var(--el-color-primary-light-8);
+      }
+
+      &.mt-16 {
+        margin-top: 16px;
+      }
+    }
+
+    .name {
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--el-text-color-regular);
+      text-align: center;
+    }
+  }
+}
+
+// 主题预设列表样式
+.theme-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: opacity 0.2s;
+    // 设置固定宽度，确保相同位置垂直对齐（宽度需要能容纳圆圈和文字）
+    flex: 0 0 70px;
+  }
+
+  .theme-item-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    .color-box {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%; // 圆形
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 6px;
+      box-shadow: 0 2px 8px var(--el-box-shadow-light);
+      position: relative;
+      overflow: hidden;
+
+      .el-icon {
+        color: #fff;
+        font-size: 14px;
+        z-index: 1;
+      }
+
+      // 自定义主题：静态圆形彩虹色渐变（未选择颜色时）
+      &.is-custom {
+        background: conic-gradient(
+          from 0deg,
+          #ff0000,
+          #ff7f00,
+          #ffff00,
+          #00ff00,
+          #0000ff,
+          #4b0082,
+          #9400d3,
+          #ff0000
+        );
+      }
+    }
+
+    span {
+      font-size: 12px;
+      color: var(--el-text-color-regular);
+      white-space: nowrap; // 防止文本换行
+      overflow: hidden;
+      text-overflow: ellipsis; // 如果文本过长，显示省略号
+      max-width: 100%;
+    }
+  }
+}
+
+// 移动端适配
+@media screen and (max-width: 480px) {
+  .preferences-drawer {
+    padding: 0 8px 20px;
+
+    .main-color-wrap {
+      .offset {
+        justify-content: center;
+
+        > div {
+          margin: 0 8px 8px 0;
+        }
+      }
+    }
+  }
+}
+

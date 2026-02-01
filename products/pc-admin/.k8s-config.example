@@ -1,0 +1,16 @@
+# K8s 增量部署配置文件示例
+# 复制此文件为 .k8s-config 并填写实际配置
+# cp .k8s-config.example .k8s-config
+
+# 私有镜像仓库地址（格式：IP:PORT 或 domain:PORT）
+# 例如：192.168.1.100:5000 或 registry.example.com:5000
+PRIVATE_REGISTRY=192.168.1.100:5000
+
+# K8s 命名空间
+K8S_NAMESPACE=btc-shopflow
+
+# K8s 集群配置（可选，用于 GitHub Actions）
+# K8S_SERVER=https://kubernetes.example.com:6443
+# K8S_CA_CERT=LS0tLS1CRUdJTi...
+# K8S_TOKEN=eyJhbGciOiJSUzI1NiIs...
+
