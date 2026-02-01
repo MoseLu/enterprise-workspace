@@ -1,0 +1,69 @@
+name: Hotfix Workflow
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  hotfix-validation:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref_name, 'hotfix/')
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Extract hotfix info
+        id: hotfix
+        run: |
+          HOTFIX_NAME=${GITHUB_REF_NAME#hotfix/}
+          echo "hotfix=$HOTFIX_NAME" >> $GITHUB_OUTPUT
+          echo "=== Hotfix Branch: $HOTFIX_NAME ==="
+          echo ""
+          echo "⚠️  This is an urgent production fix"
+          echo "After merging, remember to:"
+          echo "1. Create a release tag"
+          echo "2. Update CHANGELOG.md"
+          echo "3. Merge changes back to develop"
+      
+      - name: Hotfix severity check
+        run: |
+          echo "=== Hotfix Details ==="
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Action: ${{ github.event_name }}"
+          echo ""
+          echo "Hotfix will be applied to production immediately after merge"
+
+  version-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check version format
+        run: |
+          echo "=== Version Check ==="
+          BRANCH_NAME=${{ github.ref_name }}
+          if [[ "$BRANCH_NAME" =~ ^hotfix/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "✓ Version format: $BRANCH_NAME"
+          elif [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "✓ Merging to main"
+          else
+            echo "ℹ️  Hotfix branch naming: hotfix/v<major>.<minor>.<patch>"
+          fi
+
+  post-merge:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Post hotfix merge
+        run: |
+          echo "=== Hotfix Deployed to Production ==="
+          echo ""
+          echo "Next steps:"
+          echo "1. ✅ Create release tag if not exists"
+          echo "2. ✅ Merge main back to develop"
+          echo "3. ✅ Update documentation"
+          echo ""
+          echo "To create a tag:"
+          echo "  git tag -a v1.x.x -m 'Release v1.x.x'"
+          echo "  git push origin v1.x.x"

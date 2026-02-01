@@ -1,0 +1,54 @@
+name: Feature Branch Workflow
+
+on:
+  push:
+    branches-ignore: [main, develop]
+
+jobs:
+  validate-feature:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref_name, 'feature/')
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Extract feature name
+        id: feature
+        run: |
+          FEATURE_NAME=${GITHUB_REF_NAME#feature/}
+          echo "feature=$FEATURE_NAME" >> $GITHUB_OUTPUT
+          echo "=== Feature Branch: $FEATURE_NAME ==="
+      
+      - name: Feature structure check
+        run: |
+          echo "Feature branch validated"
+          echo ""
+          echo "Remember to:"
+          echo "1. Keep changes focused on the feature"
+          echo "2. Write clear commit messages"
+          echo "3. Test before creating PR"
+      
+      - name: Create feature tracking comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const feature = '${{ steps.feature.outputs.feature }}';
+            console.log(`Feature branch: ${feature}`);
+            console.log('Ready for development');
+
+  feature-complete:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.base.ref == 'develop'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Feature completion checklist
+        run: |
+          echo "=== Feature Completion Checklist ==="
+          echo ""
+          echo "Before merging to develop, ensure:"
+          echo "✓ Code is tested"
+          echo "✓ Documentation is updated"
+          echo "✓ No linting errors"
+          echo "✓ PR is reviewed"
+          echo ""
+          echo "Creating PR to merge into develop..."

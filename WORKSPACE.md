@@ -48,7 +48,38 @@ cd enterprise-workspace
 ## 相关文档
 
 - [MONOREPO.md](./MONOREPO.md)：Monorepo 架构详细设计
+- [分支策略](./.github/BRANCH_STRATEGY.md)：Git 分支管理规范
+- [GitHub 配置](./.github/)：CI/CD 流水线和工作流配置
 
----
+## Git 分支策略
+
+本仓库采用 **Git Flow** 分支模型，包含 5 种分支类型：
+
+| 分支类型 | 用途 | 命名规范 |
+|---------|------|----------|
+| `main` | 生产环境代码 | `main` |
+| `develop` | 开发主干 | `develop` |
+| `feature/*` | 新功能开发 | `feature/<功能名>` |
+| `bugfix/*` | 常规 bug 修复 | `bugfix/<描述>` |
+| `hotfix/*` | 紧急热修复 | `hotfix/<版本>` |
+
+### 分支保护规则
+
+- **main 分支**：受保护，禁止直接推送，必须通过 PR 合并
+- **develop 分支**：受保护，禁止直接推送，必须通过 PR 合并
+
+### CI/CD 流水线
+
+```bash
+feature/* ──PR──► develop ──PR──► main ──► 生产环境
+                │                   │
+                │                   ▼
+                │              hotfix/*
+                │
+                ▼
+             bugfix/*
+```
+
+详细规范请参考：[.github/BRANCH_STRATEGY.md](./.github/BRANCH_STRATEGY.md)
 
 **最后更新**：2026-02-01
