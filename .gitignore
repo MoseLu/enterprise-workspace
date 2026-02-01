@@ -1,46 +1,107 @@
 # ============================================
 # Enterprise Workspace Monorepo .gitignore
+# 企业工作区 Monorepo 版本控制忽略规则
 # ============================================
+# 此文件定义了所有需要从版本控制中忽略的文件和目录
+# 遵循项目结构.txt中定义的规范
 
-# ---------------- 系统文件 ----------------
+## ============================================ 基础系统文件 ============================================
+# macOS系统文件
 .DS_Store
-Thumbs.db
-*.swp
-*.swo
-*~
-.#*
+AppleDouble
+.LSOverride
 
-# ---------------- IDE ----------------
+# Windows系统文件
+Thumbs.db
+Thumbs.db:encryptable
+Desktop.ini
+
+# Linux系统文件
+*~
+
+# 编辑器临时文件
+*~
+.*.swp
+.*.swo
+.*.sw?
+.#
+*#
+
+## ============================================ IDE和编辑器配置 ============================================
+# VSCode配置（但保留工作区设置）
 .vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# IntelliJ IDEA配置
 .idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+
+# 其他编辑器
+*.sublime-*
+.project
+.classpath
+.classpsettings
+.factorypath
+.settings/
+*.code-workspace
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
 
-# ---------------- Node.js ----------------
+## ============================================ Node.js/Pnpm 相关 ============================================
+# 依赖目录
 node_modules/
+.pnpm-store/
+
+# 日志文件
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 
-# ---------------- Python ----------------
+# pnpm lock文件（工作区根目录保留，子模块忽略）
+pnpm-lock.yaml
+!frontend/pnpm-lock.yaml
+!pc-admin/pnpm-lock.yaml
+!ai-studio/pnpm-lock.yaml
+
+# 临时文件
+npmtmp/
+pnpmtmp/
+
+## ============================================ Python 相关 ============================================
+# Python字节码和缓存
 __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
 .coverage
 htmlcov/
+.eggs/
+dist/
+build/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
 venv/
 env/
 .venv/
-*.egg-info/
-dist/
-build/
+ENV/
+env.bak/
+venv.bak/
 
-# ---------------- Go ----------------
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+## ============================================ Go 相关 ============================================
+# Go编译产物
 *.exe
 *.exe~
 *.dll
@@ -48,70 +109,227 @@ build/
 *.dylib
 *.test
 *.out
+
+# Go modules
 vendor/
+go.work
+go.work.sum
 
-# ---------------- 编译产物 ----------------
-*.class
-*.dll
-*.exe
-*.o
-*.a
-*.so
-*.dylib
-*.d.ts.map
-*.js.map
+# Go build cache
+$GOPATH/pkg/mod/
+$GOCACHE/
 
-# ---------------- 日志 ----------------
-*.log
+## ============================================ Java/Maven/Gradle 相关 ============================================
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+
+## ============================================ 构建产物目录 ============================================
+# 前端构建产物
+dist/
+build/
+.next/
+.out/
+output/
+
+# 后端构建产物
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Monorepo构建产物
+.artifacts/
+.turbo/
+dist/
+build/
+.out/
+
+## ============================================ 日志目录 ============================================
+# 全局日志目录
 logs/
+*.log
+log/
 *.log.*
 
-# ---------------- 测试 ----------------
-coverage/
-.nyc_output/
+# 各模块日志
+frontend/logs/
+pc-admin/logs/
+backend/logs/
+ai-studio/logs/
+auxiliary/logs/
 
-# ---------------- 临时文件 ----------------
-tmp/
+# CI/CD日志
+.cicd/artifacts/**/logs/
+.github/**/logs/
+
+## ============================================ 临时文件目录 ============================================
+# 全局临时目录
 temp/
-*.tmp
-*.temp
+tmp/
+tmp-*/
 
-# ---------------- IDE 配置（保留部分配置） ---------------
-# 不忽略 .cursor 目录中的具体配置
-.cursor/*.json
-.cursor/rag_context_*.txt
-.cursor/rag_context_prepend.txt
+# 各模块临时目录
+frontend/temp/
+frontend/tmp/
+pc-admin/temp/
+pc-admin/tmp/
+backend/temp/
+backend/tmp/
+ai-studio/temp/
+ai-studio/tmp/
+auxiliary/temp/
+auxiliary/tmp/
 
-# ---------------- 本地环境配置 ----------------
+# 备份目录
+backup/
+backups/
+*.bak
+*.backup
+*.orig
+*.rej
+*___jb_old___
+*___jb_bak___
+
+## ============================================ 本地环境配置（敏感信息）============================================
+# 环境变量文件（包含敏感信息）
 .env
 .env.local
 .env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 配置文件（敏感信息）
 *.local
+config.local.*
+application-local.*
+application.*.local
 
-# ---------------- 数据库 ----------------
+## ============================================ 数据库文件 ============================================
+# 数据库文件
 *.sqlite
-*.db
 *.sqlite3
+*.db
+*.mdb
+*.accdb
 
-# ---------------- 备份 ----------------
-*.bak
-*.backup
-*~
-.#*
+# Hibernate
+*.h2.db
 
-# ---------------- 特殊目录 ----------------
-.sandbox/
-node_modules/
-dist/
-build/
+## ============================================ 测试相关 ============================================
+# 测试覆盖率
+coverage/
+.nyc_output/
+htmlcov/
 
-# ============================================
-# 不忽略的目录（这些需要版本控制）
-# ============================================
-!products/*/
-!services/*/
-!tools/*/
-!docs/*/
-!config/*/
-!infrastructure/*/
-!references/*/
+# Jest
+jest-results.xml
+jest/
+
+# 其他测试
+test-results/
+test-reports/
+*.test-result.xml
+*.test-report.xml
+
+## ============================================ AI Studio 特定 ============================================
+# AI Studio生成代码目录（临时生成物）
+ai-studio/generated/
+ai-studio/temp/
+ai-studio/output/
+
+# CRUD生成代码临时目录
+generated/crud/temp/
+generated/crud/backup/
+
+# 热更新备份
+hot-update/backup/
+crud-backup/
+
+## ============================================ Docker 相关 ============================================
+# Docker
+.docker/
+docker-compose.override.yml
+
+## ============================================ 特殊目录（子模块忽略）============================================
+# Git子模块中的构建产物（由各子模块自己管理）
+products/*/node_modules/
+products/*/dist/
+products/*/build/
+products/*/target/
+products/*/*.log
+
+# 服务目录
+services/*/node_modules/
+services/*/dist/
+services/*/build/
+services/*/target/
+
+# 工具目录
+tools/*/node_modules/
+tools/*/dist/
+tools/*/build/
+tools/*/target/
+
+## ============================================ 文档和参考资料 ============================================
+# 文档临时文件
+docs/.temp/
+docs/.cache/
+docs/_site/
+docs/.next/
+
+## ============================================ 参考项目目录 ============================================
+# 参考项目（不纳入版本控制）
+references/MonkeyCode-main/
+references/art-design-pro/
+references/mobile-apps/
+references/ralph-test-project/
+references/CC-Switch-*/
+# 保留 ralph-claude-code（Git Submodule 管理）
+!references/ralph-claude-code/
+
+## ============================================ 其他 ============================================
+# 锁定文件（工作区根目录保留）
+package-lock.json
+yarn.lock
+pnpm-workspace.yaml
+!frontend/package-lock.json
+!pc-admin/package-lock.json
+!ai-studio/package-lock.json
+
+# 工作区配置（保留）
+!.gitignore
+!.editorconfig
+!.eslintrc.js
+!.prettierrc
+!.gitmodules
+
+# 上传文件
+uploads/
+upload/
+*.upload

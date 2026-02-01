@@ -6,7 +6,7 @@
 
 1. **顶层根仓库 = 全局工程化整合基座**：仅存放跨所有模块的全局配置、脚本、CI/CD 模板、文档，不包含业务核心代码，是整个项目的唯一入口；
 2. **产品子仓库 = 高内聚独立业务模块**：产品模块采用 Git Submodule 管理，可独立启动、独立迭代、独立发布；
-3. **参考项目 = 本地目录**：设计系统参考、移动端参考等项目作为本地目录，不纳入 Git 版本控制；
+3. **参考项目 = 本地目录**：设计系统参考、移动端参考、AI 编程工具参考等项目作为本地目录，不纳入 Git 版本控制；
 4. **版本隔离 + 全局锁定**：子仓库采用语义化版本独立打 Tag，顶层根仓库通过 Git Submodule 仅锁定产品子仓库的稳定版本。
 
 ## 二、仓库整体划分
@@ -17,8 +17,9 @@
 |----------|--------------------|----------------|------|----------|
 | **顶层根仓库** | BellisGit/enterprise-workspace | / | ✅ Git | 全局整合、一键启动/部署、跨模块 CI/CD、全局规范 |
 | **产品子仓库** | BellisGit/agent-orchestrator | products/agent-orchestrator | ✅ Submodule | 多 Agent 编排与调度平台 |
-| **参考项目** | Daymychen/art-design-pro | references/art-design-pro | 📁 本地目录 | Art Design Pro 设计系统参考 |
-| **参考项目** | BellisGit/mobile-apps | references/mobile-apps | 📁 本地目录 | 移动端应用参考 |
+| **参考项目** | chaitin/MonkeyCode | references/MonkeyCode-main | 📁 本地 | AI 编程工具参考（MonkeyCode） |
+| **参考项目** | Daymychen/art-design-pro | references/art-design-pro | 📁 本地 | Art Design Pro 设计系统参考 |
+| **参考项目** | BellisGit/mobile-apps | references/mobile-apps | 📁 本地 | 移动端应用参考 |
 | **参考子仓库** | frankbria/ralph-claude-code | references/ralph-claude-code | ✅ Submodule | Ralph Claude Code 参考实现 |
 
 ### 当前 Submodule 配置
@@ -39,9 +40,11 @@
 | 目录 | 类型 | 远程仓库 | 说明 |
 |------|------|----------|------|
 | `products/agent-orchestrator` | 产品子仓库 | BellisGit/agent-orchestrator-platform | ✅ 正式产品模块，Git 管理 |
-| `references/art-design-pro` | 参考项目 | Daymychen/art-design-pro | 📁 本地参考，开发完成后删除 |
-| `references/mobile-apps` | 参考项目 | BellisGit/mobile-apps | 📁 本地参考，开发完成后删除 |
 | `references/ralph-claude-code` | 参考子仓库 | frankbria/ralph-claude-code | ✅ Claude Code 参考，保持同步 |
+| `references/MonkeyCode-main` | 参考项目 | chaitin/MonkeyCode | 📁 AI 编程工具参考 |
+| `references/art-design-pro` | 参考项目 | Daymychen/art-design-pro | 📁 设计系统参考 |
+| `references/mobile-apps` | 参考项目 | BellisGit/mobile-apps | 📁 移动端参考 |
+| `references/ralph-test-project` | 参考项目 | - | 📁 Ralph 测试项目 |
 
 ## 三、产品子仓库详细说明
 
@@ -56,26 +59,43 @@
 
 ## 四、参考项目说明
 
-### 参考项目（非 Git 管理）
+### AI 编程工具参考
 
-以下项目作为本地参考，不纳入 Git 版本控制，开发完成后将删除：
+| 目录 | 来源 | 用途 | 技术栈 | 后续处理 |
+|------|------|------|--------|----------|
+| `references/MonkeyCode-main` | chaitin/MonkeyCode | AI 编程工具参考 | Go + React + TypeScript | 长期参考 |
+| `references/ralph-claude-code` | frankbria/ralph-claude-code | Claude Code 参考 | Shell + TypeScript | ✅ Git 同步 |
+
+### 设计系统参考
 
 | 目录 | 来源 | 用途 | 后续处理 |
 |------|------|------|----------|
-| `references/art-design-pro` | Daymychen/art-design-pro | Art Design Pro 设计系统参考 | 开发完成后删除 |
-| `references/mobile-apps` | BellisGit/mobile-apps | 移动端应用架构参考 | 开发完成后删除 |
+| `references/art-design-pro` | Daymychen/art-design-pro | Art Design Pro 设计系统参考 | Vue 3 | 开发完成后删除 |
+
+### 移动端参考
+
+| 目录 | 来源 | 用途 | 后续处理 |
+|------|------|------|----------|
+| `references/mobile-apps` | BellisGit/mobile-apps | 移动端应用架构参考 | Kotlin + Java | 开发完成后删除 |
+
+### 测试项目
+
+| 目录 | 来源 | 用途 | 后续处理 |
+|------|------|------|----------|
+| `references/ralph-test-project` | - | Ralph 测试项目 | - | 开发完成后删除 |
+
+### 开发工具
+
+| 目录 | 用途 | 说明 |
+|------|------|------|
+| `references/CC-Switch-v3.10.2-Windows-Portable` | 开发工具 | Claude Code Switcher Windows 便携版 |
 
 **参考项目特点：**
 - 仅作为开发参考，不参与项目构建
-- 不纳入 Git 版本控制
+- 不纳入 Git 版本控制（除 ralph-claude-code）
 - 可随时从远程仓库拉取最新代码
-- 开发完成后整体删除
-
-### 参考子仓库
-
-| 目录 | 来源 | 用途 | 管理方式 |
-|------|------|------|----------|
-| `references/ralph-claude-code` | frankbria/ralph-claude-code | Claude Code 参考实现 | Git Submodule 同步 |
+- MonkeyCode 和 Ralph Claude Code 作为 AI 编程工具的长期参考
+- 设计和移动端参考开发完成后删除
 
 ## 五、顶层根仓库结构
 
@@ -113,9 +133,11 @@ enterprise-workspace/
 ├── products/                      # 产品目录
 │   └── agent-orchestrator/        # Git Submodule（产品模块）
 ├── references/                    # 参考目录
-│   ├── art-design-pro/            # 本地参考（设计系统）
-│   ├── mobile-apps/               # 本地参考（移动端）
-│   └── ralph-claude-code/         # Git Submodule（Claude Code 参考）
+│   ├── MonkeyCode-main/           # 📁 AI 编程工具参考
+│   ├── art-design-pro/            # 📁 设计系统参考
+│   ├── mobile-apps/               # 📁 移动端参考
+│   ├── ralph-claude-code/         # Git Submodule（Claude Code 参考）
+│   └── ralph-test-project/        # 📁 测试项目
 └── artifacts/                     # 构建产物（.gitignore）
 ```
 
@@ -172,7 +194,7 @@ enterprise-workspace/
 feat(agent-orchestrator): 添加 Agent 调度功能
 fix(pc-admin): 修复用户列表分页问题
 docs: 更新 API 文档
-chore: 移除参考项目 submodule 配置
+chore: 添加 MonkeyCode 参考项目
 ```
 
 ### 子仓库操作流程
@@ -230,6 +252,7 @@ git push origin develop
 | enterprise-workspace | - | 开发中 |
 | agent-orchestrator | - | 待发布 |
 | ralph-claude-code | - | Submodule 同步中 |
+| MonkeyCode | - | 本地参考 |
 
 ### 版本发布流程
 
@@ -279,6 +302,11 @@ git commit -m "chore: 更新 agent-orchestrator 到 v1.1.0"
 参考项目不通过 Git Submodule 管理，如需同步最新代码：
 
 ```bash
+# MonkeyCode
+cd references/MonkeyCode-main
+git fetch origin
+git reset --hard origin/develop
+
 # art-design-pro
 cd references/art-design-pro
 git fetch origin
@@ -302,7 +330,7 @@ git reset --hard origin/develop
 
 ---
 
-**文档版本**：1.1.0  
-**更新说明**：移除 art-design-pro 和 mobile-apps 的 Submodule 配置，改为本地参考目录  
+**文档版本**：1.2.0  
+**更新说明**：添加 MonkeyCode 参考项目，完善参考项目分类说明  
 **最后更新**：2026-02-01  
 **维护者**：企业架构组
