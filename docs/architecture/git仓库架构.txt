@@ -5,86 +5,79 @@
 ## 一、核心设计原则
 
 1. **顶层根仓库 = 全局工程化整合基座**：仅存放跨所有模块的全局配置、脚本、CI/CD 模板、文档，不包含业务核心代码，是整个项目的唯一入口；
-2. **子仓库 = 高模块**：每个子仓库聚焦单一技术内聚独立业务栈/业务领域，内部保持完整的工程化能力，可独立启动、独立迭代、独立发布；
-3. **版本隔离 + 全局锁定**：子仓库采用语义化版本独立打 Tag，顶层根仓库通过 Git Submodule 仅锁定子仓库的稳定版本；
-4. **多团队协作边界清晰**：每个子仓库对应专属开发团队，架构团队仅维护顶层根仓库和子仓库版本关联。
+2. **产品子仓库 = 高内聚独立业务模块**：产品模块采用 Git Submodule 管理，可独立启动、独立迭代、独立发布；
+3. **参考项目 = 本地目录**：设计系统参考、移动端参考等项目作为本地目录，不纳入 Git 版本控制；
+4. **版本隔离 + 全局锁定**：子仓库采用语义化版本独立打 Tag，顶层根仓库通过 Git Submodule 仅锁定产品子仓库的稳定版本。
 
 ## 二、仓库整体划分
 
 ### 总览
 
-| 仓库类型 | 仓库名称（GitHub） | 对应根目录路径 | 核心职责 |
-|----------|--------------------|----------------|----------|
-| 顶层根仓库 | BellisGit/enterprise-workspace | / | 全局整合、一键启动/部署、跨模块 CI/CD、全局规范 |
-| 产品子仓库 | BellisGit/agent-orchestrator | products/agent-orchestrator | 多 Agent 编排与调度平台 |
-| 参考子仓库 | Daymychen/art-design-pro | references/art-design-pro | Art Design Pro 设计系统参考 |
-| 参考子仓库 | BellisGit/mobile-apps | references/mobile-apps | 移动端应用参考 |
-| 参考子仓库 | frankbria/ralph-claude-code | references/ralph-claude-code | Ralph Claude Code 参考 |
+| 仓库类型 | 仓库名称（GitHub） | 对应根目录路径 | 状态 | 核心职责 |
+|----------|--------------------|----------------|------|----------|
+| **顶层根仓库** | BellisGit/enterprise-workspace | / | ✅ Git | 全局整合、一键启动/部署、跨模块 CI/CD、全局规范 |
+| **产品子仓库** | BellisGit/agent-orchestrator | products/agent-orchestrator | ✅ Submodule | 多 Agent 编排与调度平台 |
+| **参考项目** | Daymychen/art-design-pro | references/art-design-pro | 📁 本地目录 | Art Design Pro 设计系统参考 |
+| **参考项目** | BellisGit/mobile-apps | references/mobile-apps | 📁 本地目录 | 移动端应用参考 |
+| **参考子仓库** | frankbria/ralph-claude-code | references/ralph-claude-code | ✅ Submodule | Ralph Claude Code 参考实现 |
 
 ### 当前 Submodule 配置
 
-```
+```ini
 # .gitmodules 配置
 [submodule "products/agent-orchestrator"]
     path = products/agent-orchestrator
     url = https://github.com/BellisGit/agent-orchestrator-platform.git
-
-[submodule "references/art-design-pro"]
-    path = references/art-design-pro
-    url = https://github.com/Daymychen/art-design-pro.git
-
-[submodule "references/mobile-apps"]
-    path = references/mobile-apps
-    url = https://github.com/BellisGit/mobile-apps.git
 
 [submodule "references/ralph-claude-code"]
     path = references/ralph-claude-code
     url = https://github.com/frankbria/ralph-claude-code.git
 ```
 
-## 三、当前子仓库状态
+### 子仓库状态说明
 
-### 子仓库状态总览
+| 目录 | 类型 | 远程仓库 | 说明 |
+|------|------|----------|------|
+| `products/agent-orchestrator` | 产品子仓库 | BellisGit/agent-orchestrator-platform | ✅ 正式产品模块，Git 管理 |
+| `references/art-design-pro` | 参考项目 | Daymychen/art-design-pro | 📁 本地参考，开发完成后删除 |
+| `references/mobile-apps` | 参考项目 | BellisGit/mobile-apps | 📁 本地参考，开发完成后删除 |
+| `references/ralph-claude-code` | 参考子仓库 | frankbria/ralph-claude-code | ✅ Claude Code 参考，保持同步 |
 
-| 子仓库 | 路径 | 当前提交 | 分支状态 | 远程仓库 |
-|--------|------|----------|----------|----------|
-| agent-orchestrator | products/agent-orchestrator | 2b21306 | main → origin/main | 已推送 |
-| art-design-pro | references/art-design-pro | c4aa8ae | detached | 未推送 |
-| mobile-apps | references/mobile-apps | cac4517 | detached (develop) | 未推送 |
-| ralph-claude-code | references/ralph-claude-code | 9aa2fef | detached (main) | 未推送 |
+## 三、产品子仓库详细说明
 
-### 子仓库详细说明
-
-#### 1. products/agent-orchestrator（产品模块）
+### products/agent-orchestrator（核心产品模块）
 
 - **仓库地址**：https://github.com/BellisGit/agent-orchestrator-platform.git
 - **职责**：多 Agent 编排与调度平台
 - **技术栈**：Go + Gin + PostgreSQL
 - **当前状态**：✅ 已初始化，已推送到远程
 - **远程分支**：main（已设置跟踪）
+- **管理方式**：Git Submodule，版本锁定
 
-#### 2. references/art-design-pro（参考模块）
+## 四、参考项目说明
 
-- **仓库地址**：https://github.com/Daymychen/art-design-pro.git
-- **职责**：Art Design Pro 设计系统参考
-- **当前状态**：✅ 清洁工作区
-- **注意事项**：HEAD 处于 detached 状态，建议跟踪远程分支
+### 参考项目（非 Git 管理）
 
-#### 3. references/mobile-apps（参考模块）
+以下项目作为本地参考，不纳入 Git 版本控制，开发完成后将删除：
 
-- **仓库地址**：https://github.com/BellisGit/mobile-apps.git
-- **职责**：移动端应用参考
-- **当前状态**：✅ 清洁工作区
-- **远程分支**：develop
+| 目录 | 来源 | 用途 | 后续处理 |
+|------|------|------|----------|
+| `references/art-design-pro` | Daymychen/art-design-pro | Art Design Pro 设计系统参考 | 开发完成后删除 |
+| `references/mobile-apps` | BellisGit/mobile-apps | 移动端应用架构参考 | 开发完成后删除 |
 
-#### 4. references/ralph-claude-code（参考模块）
+**参考项目特点：**
+- 仅作为开发参考，不参与项目构建
+- 不纳入 Git 版本控制
+- 可随时从远程仓库拉取最新代码
+- 开发完成后整体删除
 
-- **仓库地址**：https://github.com/frankbria/ralph-claude-code.git
-- **职责**：Ralph Claude Code 参考实现
-- **当前状态**：✅ 清洁工作区
-- **远程分支**：main
+### 参考子仓库
 
-## 四、顶层根仓库结构
+| 目录 | 来源 | 用途 | 管理方式 |
+|------|------|------|----------|
+| `references/ralph-claude-code` | frankbria/ralph-claude-code | Claude Code 参考实现 | Git Submodule 同步 |
+
+## 五、顶层根仓库结构
 
 ```
 enterprise-workspace/
@@ -95,7 +88,7 @@ enterprise-workspace/
 ├── package.json                   # 根级依赖（Turbo Repo）
 ├── turbo.json                     # Turbo 全局配置
 ├── docker-compose.yml             # Docker 中间件编排
-├── .gitmodules                    # Submodule 配置
+├── .gitmodules                    # Submodule 配置（仅产品模块）
 ├── .gitignore                     # 全局忽略规则
 ├── .editorconfig                  # 编辑器规范
 ├── .eslintrc.js                   # ESLint 配置
@@ -118,15 +111,15 @@ enterprise-workspace/
 │   ├── cicd/                      # CI/CD 文档
 │   └── middleware/                # 中间件文档
 ├── products/                      # 产品目录
-│   └── agent-orchestrator/        # Git Submodule（多 Agent 编排）
+│   └── agent-orchestrator/        # Git Submodule（产品模块）
 ├── references/                    # 参考目录
-│   ├── art-design-pro/            # Git Submodule（设计系统参考）
-│   ├── mobile-apps/               # Git Submodule（移动端参考）
+│   ├── art-design-pro/            # 本地参考（设计系统）
+│   ├── mobile-apps/               # 本地参考（移动端）
 │   └── ralph-claude-code/         # Git Submodule（Claude Code 参考）
 └── artifacts/                     # 构建产物（.gitignore）
 ```
 
-## 五、规范驱动开发配置
+## 六、SpecKit 规范驱动开发配置
 
 ### SpecKit 集成
 
@@ -158,7 +151,7 @@ enterprise-workspace/
 | Windsurf | CLAUDE.md + AGENTS.md | ✅ |
 | Codex CLI | CLAUDE.md + AGENTS.md | ✅ |
 
-## 六、团队协作规范
+## 七、团队协作规范
 
 ### 分支策略
 
@@ -179,6 +172,7 @@ enterprise-workspace/
 feat(agent-orchestrator): 添加 Agent 调度功能
 fix(pc-admin): 修复用户列表分页问题
 docs: 更新 API 文档
+chore: 移除参考项目 submodule 配置
 ```
 
 ### 子仓库操作流程
@@ -216,7 +210,7 @@ git commit -m "chore: 更新 agent-orchestrator 到 v1.0.0"
 git push origin develop
 ```
 
-## 七、CI/CD 配置
+## 八、CI/CD 配置
 
 ### GitHub Actions 工作流
 
@@ -227,15 +221,7 @@ git push origin develop
 | hotfix.yml | PR 到 hotfix/* | 紧急修复验证 |
 | pr-validation.yml | 所有 PR | PR 预检 |
 
-### 子仓库 CI/CD
-
-每个产品子仓库配置独立的 CI/CD：
-
-- **构建**：代码检查、类型检查、单元测试
-- **部署**：独立部署到测试环境
-- **发布**：语义化版本打 Tag
-
-## 八、版本管理
+## 九、版本管理
 
 ### 当前版本状态
 
@@ -243,9 +229,7 @@ git push origin develop
 |------|----------|------|
 | enterprise-workspace | - | 开发中 |
 | agent-orchestrator | - | 待发布 |
-| art-design-pro | v2.2.1 | 参考使用 |
-| mobile-apps | - | 待发布 |
-| ralph-claude-code | - | 参考使用 |
+| ralph-claude-code | - | Submodule 同步中 |
 
 ### 版本发布流程
 
@@ -255,9 +239,9 @@ git push origin develop
 4. 更新顶层根仓库的 submodule 引用
 5. 提交并推送顶层根仓库
 
-## 九、常见问题
+## 十、常见问题
 
-### Q1：子仓库代码未同步？
+### Q1：如何更新产品子仓库？
 
 ```bash
 # 更新所有子仓库
@@ -290,15 +274,23 @@ git add products/agent-orchestrator
 git commit -m "chore: 更新 agent-orchestrator 到 v1.1.0"
 ```
 
-### Q4：子仓库处于 detached 状态？
+### Q4：参考项目如何同步最新代码？
+
+参考项目不通过 Git Submodule 管理，如需同步最新代码：
 
 ```bash
+# art-design-pro
 cd references/art-design-pro
-git checkout develop
-git branch --set-upstream-to=origin/develop develop
+git fetch origin
+git reset --hard origin/develop
+
+# mobile-apps
+cd references/mobile-apps
+git fetch origin
+git reset --hard origin/develop
 ```
 
-## 十、相关文档
+## 十一、相关文档
 
 | 文档 | 路径 | 描述 |
 |------|------|------|
@@ -310,6 +302,7 @@ git branch --set-upstream-to=origin/develop develop
 
 ---
 
-**文档版本**：1.0.0  
+**文档版本**：1.1.0  
+**更新说明**：移除 art-design-pro 和 mobile-apps 的 Submodule 配置，改为本地参考目录  
 **最后更新**：2026-02-01  
 **维护者**：企业架构组
