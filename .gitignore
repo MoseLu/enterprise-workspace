@@ -1,0 +1,117 @@
+# ============================================
+# Enterprise Workspace Monorepo .gitignore
+# ============================================
+
+# ---------------- 系统文件 ----------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.#*
+
+# ---------------- IDE ----------------
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ---------------- Node.js ----------------
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---------------- Python ----------------
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+venv/
+env/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# ---------------- Go ----------------
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+
+# ---------------- 编译产物 ----------------
+*.class
+*.dll
+*.exe
+*.o
+*.a
+*.so
+*.dylib
+*.d.ts.map
+*.js.map
+
+# ---------------- 日志 ----------------
+*.log
+logs/
+*.log.*
+
+# ---------------- 测试 ----------------
+coverage/
+.nyc_output/
+
+# ---------------- 临时文件 ----------------
+tmp/
+temp/
+*.tmp
+*.temp
+
+# ---------------- IDE 配置（保留部分配置） ---------------
+# 不忽略 .cursor 目录中的具体配置
+.cursor/*.json
+.cursor/rag_context_*.txt
+.cursor/rag_context_prepend.txt
+
+# ---------------- 本地环境配置 ----------------
+.env
+.env.local
+.env.*.local
+*.local
+
+# ---------------- 数据库 ----------------
+*.sqlite
+*.db
+*.sqlite3
+
+# ---------------- 备份 ----------------
+*.bak
+*.backup
+*~
+.#*
+
+# ---------------- 特殊目录 ----------------
+.sandbox/
+node_modules/
+dist/
+build/
+
+# ============================================
+# 不忽略的目录（这些需要版本控制）
+# ============================================
+!products/*/
+!services/*/
+!tools/*/
+!docs/*/
+!config/*/
+!infrastructure/*/
+!references/*/
