@@ -2,6 +2,8 @@
 
 企业级工作区（Enterprise Workspace），采用 Monorepo 架构组织多个相关项目。
 
+**GitHub 仓库**：[BellisGit/enterprise-workspace](https://github.com/BellisGit/enterprise-workspace)
+
 > **重要说明**：这是一个**工作区根目录**，本身**不是 Git 仓库**。各个子项目可能有自己的 Git 仓库，但工作区根目录不涉及版本控制。
 
 ## 目录结构总览
