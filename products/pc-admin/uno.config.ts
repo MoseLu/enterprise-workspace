@@ -1,4 +1,5 @@
-import { defineConfig, presetUno, presetAttributify, presetIcons } from 'unocss';
+import { defineConfig, presetUno, presetAttributify, presetIcons, presetWebFonts } from 'unocss';
+import { join } from 'path';
 
 export default defineConfig({
   presets: [
@@ -6,28 +7,46 @@ export default defineConfig({
     presetAttributify(),
     presetIcons({
       scale: 1.2,
-      warn: false, // 关闭警告，避免无效图标名称（如 "-"）导致的警告
+      warn: false,
+    }),
+    presetWebFonts({
+      provider: 'google',
+      fonts: {
+        sans: 'Inter:400,500,600,700',
+        mono: 'JetBrains+Mono:400,500',
+      },
     }),
   ],
 
+  // 导入 Design System 设计令牌
+  cssFile: join(__dirname, 'common/design-system/tokens/css/index.css'),
+
   shortcuts: {
-    btn: 'px-4 py-2 rounded inline-block bg-blue-500 text-white cursor-pointer hover:bg-blue-600 disabled:cursor-default disabled:bg-gray-600 disabled:opacity-50',
-    'btn-primary': 'bg-blue-500 hover:bg-blue-600',
-    'btn-success': 'bg-green-500 hover:bg-green-600',
-    'btn-warning': 'bg-orange-500 hover:bg-orange-600',
-    'btn-danger': 'bg-red-500 hover:bg-red-600',
+    // 覆盖快捷变量，使用 design-system 的语义化变量
+    'btn': 'px-4 py-2 rounded inline-block cursor-pointer transition-colors',
+    'btn-primary': 'bg-[var(--color-primary-main)] text-white hover:bg-[var(--color-primary-hover)] disabled:bg-[var(--color-primary-disabled)]',
+    'btn-success': 'bg-[var(--color-success-main)] text-white hover:bg-[var(--color-success-hover)]',
+    'btn-warning': 'bg-[var(--color-warning-main)] text-white hover:bg-[var(--color-warning-hover)]',
+    'btn-danger': 'bg-[var(--color-danger-main)] text-white hover:bg-[var(--color-danger-hover)]',
+    'btn-outline': 'border border-[var(--color-border-main)] bg-transparent hover:bg-[var(--theme-bg-hover)]',
+    'btn-ghost': 'bg-transparent hover:bg-[var(--theme-bg-hover)]',
     'flex-center': 'flex items-center justify-center',
     'flex-between': 'flex items-center justify-between',
-    card: 'bg-white rounded-lg shadow p-4',
+    'card': 'bg-[var(--theme-card-bg)] border border-[var(--theme-card-border)] rounded-lg shadow-[var(--theme-shadow-md)] p-6',
   },
 
   theme: {
     colors: {
-      primary: '#409EFF',
-      success: '#67C23A',
-      warning: '#E6A23C',
-      danger: '#F56C6C',
-      info: '#909399',
+      // 使用 design-system 的颜色变量
+      primary: 'rgb(var(--color-primary-500) / <alpha-value>)',
+      success: 'rgb(var(--color-success-500) / <alpha-value>)',
+      warning: 'rgb(var(--color-warning-500) / <alpha-value>)',
+      danger: 'rgb(var(--color-danger-500) / <alpha-value>)',
+      info: 'rgb(var(--color-info-500) / <alpha-value>)',
+    },
+    fontFamily: {
+      sans: 'var(--font-family-sans)',
+      mono: 'var(--font-family-mono)',
     },
   },
 });

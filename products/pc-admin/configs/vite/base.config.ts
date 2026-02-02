@@ -63,6 +63,13 @@ export function createBaseAliases(
     // Element Plus 别名（始终使用）
     'element-plus/es': 'element-plus/es',
     'element-plus/dist': 'element-plus/dist',
+
+    // Design System 别名（统一设计语言）
+    '@ds': resolve(appDir, 'common/design-system'),
+    '@ds/components': resolve(appDir, 'common/design-system/components'),
+    '@ds/tokens': resolve(appDir, 'common/design-system/tokens'),
+    '@ds/hooks': resolve(appDir, 'common/design-system/hooks'),
+    '@ds/utils': resolve(appDir, 'common/design-system/utils'),
   };
 
   return aliases;
