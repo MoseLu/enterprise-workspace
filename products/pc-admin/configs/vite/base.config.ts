@@ -15,7 +15,7 @@ import { createPathHelpers } from './utils/path-helpers';
  * @returns 别名配置对象
  */
 export function createBaseAliases(
-  appDir: string, 
+  appDir: string,
   _appName: string
 ): Record<string, string> {
   const { withSrc, withRoot, withConfigs, withPackages } = createPathHelpers(appDir);
@@ -39,7 +39,7 @@ export function createBaseAliases(
     '@btc/i18n': withPackages('shared-components/src/i18n'),
     '@btc/subapp-manifests': withPackages('shared-core/src/manifest'),
     '@btc/env': withPackages('shared-core/src/env'),
-    
+
     // shared-components 内部使用的别名（用于解析 shared-components 内部的导入）
     '@btc-common': withPackages('shared-components/src/common'),
     '@btc-components': withPackages('shared-components/src/components'),
@@ -50,7 +50,7 @@ export function createBaseAliases(
     '@assets': withPackages('shared-components/src/assets'), // @assets 别名，用于图片资源导入
     '@btc-utils': withPackages('shared-components/src/utils'),
     '@plugins': withPackages('shared-components/src/plugins'),
-    
+
     // 图表相关别名
     '@charts-utils/css-var': withPackages('shared-components/src/charts/utils/css-var'),
     '@charts-utils/color': withPackages('shared-components/src/charts/utils/color'),
@@ -65,11 +65,11 @@ export function createBaseAliases(
     'element-plus/dist': 'element-plus/dist',
 
     // Design System 别名（统一设计语言）
-    '@ds': resolve(appDir, 'common/design-system'),
-    '@ds/components': resolve(appDir, 'common/design-system/components'),
-    '@ds/tokens': resolve(appDir, 'common/design-system/tokens'),
-    '@ds/hooks': resolve(appDir, 'common/design-system/hooks'),
-    '@ds/utils': resolve(appDir, 'common/design-system/utils'),
+    '@ds': resolve(appDir, 'common/frontend'),
+    '@ds/components': resolve(appDir, 'common/frontend/components'),
+    '@ds/tokens': resolve(appDir, 'common/frontend/tokens'),
+    '@ds/hooks': resolve(appDir, 'common/frontend/hooks'),
+    '@ds/utils': resolve(appDir, 'common/frontend/utils'),
   };
 
   return aliases;
@@ -82,12 +82,12 @@ export function createBaseAliases(
  * @returns resolve 配置对象
  */
 export function createBaseResolve(
-  appDir: string, 
+  appDir: string,
   appName: string
 ): UserConfig['resolve'] {
   const { withPackages } = createPathHelpers(appDir);
   const aliases = createBaseAliases(appDir, appName);
-  
+
   // 使用数组形式的别名，确保更具体的别名优先匹配
   // Vite 会按数组顺序匹配，第一个匹配的别名会被使用
   const aliasArray: Array<{ find: string | RegExp; replacement: string }> = [
@@ -133,7 +133,7 @@ export function createBaseResolve(
       replacement,
     })),
   ];
-  
+
   return {
     alias: aliasArray,
     dedupe: ['vue', 'vue-router', 'pinia', 'element-plus', '@element-plus/icons-vue'],

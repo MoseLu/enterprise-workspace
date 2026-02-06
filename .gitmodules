@@ -1,6 +1,6 @@
-[submodule "products/pc-admin/common/design-system"]
-	path = products/pc-admin/common/design-system
-	url = https://github.com/BellisGit/design-system.git
-[submodule "products/devstation/ui/common/design-system"]
-	path = products/devstation/ui/common/design-system
-	url = https://github.com/BellisGit/design-system.git
+[submodule "products/pc-admin/common/frontend"]
+	path = products/pc-admin/common/frontend
+	url = https://github.com/BellisGit/frontend.git
+[submodule "products/devstation/ui/common/frontend"]
+	path = products/devstation/ui/common/frontend
+	url = https://github.com/BellisGit/frontend.git

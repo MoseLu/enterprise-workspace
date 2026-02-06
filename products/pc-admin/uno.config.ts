@@ -19,7 +19,7 @@ export default defineConfig({
   ],
 
   // 导入 Design System 设计令牌
-  cssFile: join(__dirname, 'common/design-system/tokens/css/index.css'),
+  cssFile: join(__dirname, 'common/frontend/tokens/css/index.css'),
 
   shortcuts: {
     // 覆盖快捷变量，使用 design-system 的语义化变量

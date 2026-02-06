@@ -175,24 +175,24 @@ docs/
 | OP-001 | 运维平台核心架构设计 | P0 | 1周 | `01-architecture/01-system-overview/README.md` | ✅ 完成 |
 | OP-002 | 多智能体编排引擎 | P0 | 3周 | `02-core-modules/02-agent-orchestrator/README.md` | ✅ 完成 |
 | OP-003 | 任务调度与队列系统 | P0 | 2周 | `02-core-modules/03-queue-system/README.md` | ✅ 完成 |
-| OP-004 | Git 平台 Webhook 集成 | P1 | 2周 | `02-core-modules/04-webhook-handler/` | ⏳ 待创建 |
-| OP-005 | 计费与配额管理系统 | P1 | 2周 | `03-enterprise-features/01-billing-system/` | ⏳ 待创建 |
-| OP-006 | 安全扫描集成 | P1 | 2周 | `03-enterprise-features/02-security-scanner/` | ⏳ 待创建 |
-| OP-007 | 前端 UI 组件与页面 | P1 | 3周 | `04-frontend/` | ⏳ 待创建 |
-| OP-008 | 部署与监控配置 | P2 | 1周 | `05-infrastructure/` | ⏳ 待创建 |
+| OP-004 | Git 平台 Webhook 集成 | P1 | 2周 | `02-core-modules/04-webhook-handler/` | ✅ 完成 |
+| OP-005 | 计费与配额管理系统 | P1 | 2周 | `03-enterprise-features/01-billing-system/` | ✅ 完成 |
+| OP-006 | 安全扫描集成 | P1 | 2周 | `03-enterprise-features/02-security-scanner/` | ✅ 完成 |
+| OP-007 | 前端 UI 组件与页面 | P1 | 3周 | `04-frontend/` | ✅ 完成 |
+| OP-008 | 部署与监控配置 | P2 | 1周 | `05-infrastructure/` | ✅ 完成 |
 
 ### DevStation 任务
 
 | 编号 | 任务名称 | 优先级 | 预估工时 | 路径 | 状态 |
 |------|----------|--------|----------|------|------|
 | DS-001 | 开发者工作站核心架构 | P0 | 1周 | `01-architecture/01-system-overview/README.md` | ✅ 完成 |
-| DS-002 | 本地 Ollama 集成 | P0 | 2周 | `02-ai-integration/01-model-management/` | ⏳ 待创建 |
-| DS-003 | 上下文管理系统 | P0 | 2周 | `02-ai-integration/02-context-management/` | ⏳ 待创建 |
-| DS-004 | 代码补全引擎 | P1 | 2周 | `02-ai-integration/03-code-intelligence/` | ⏳ 待创建 |
-| DS-005 | VSCode 扩展开发 | P1 | 3周 | `03-ide-integration/01-vscode-extension/` | ⏳ 待创建 |
-| DS-006 | 用户引导与偏好设置 | P2 | 1周 | `04-user-experience/` | ⏳ 待创建 |
-| DS-007 | IDE 通信协议 | P1 | 1周 | `03-ide-integration/03-communication/` | ⏳ 待创建 |
-| DS-008 | 性能优化与本地安全 | P2 | 1周 | `05-infrastructure/` | ⏳ 待创建 |
+| DS-002 | 本地 Ollama 集成 | P0 | 2周 | `02-ai-integration/01-model-management/` | ✅ 完成 |
+| DS-003 | 上下文管理系统 | P0 | 2周 | `02-ai-integration/02-context-management/` | ✅ 完成 |
+| DS-004 | 代码补全引擎 | P1 | 2周 | `02-ai-integration/03-code-intelligence/` | ✅ 完成 |
+| DS-005 | VSCode 扩展开发 | P1 | 3周 | `03-ide-integration/01-vscode-extension/` | ✅ 完成 |
+| DS-006 | 用户引导与偏好设置 | P2 | 1周 | `04-user-experience/` | ✅ 完成 |
+| DS-007 | IDE 通信协议 | P1 | 1周 | `03-ide-integration/03-communication/` | ✅ 完成 |
+| DS-008 | 性能优化与本地安全 | P2 | 1周 | `05-infrastructure/` | ✅ 完成 |
 
 ## 任务统计
 
@@ -200,9 +200,9 @@ docs/
 
 | 产品 | 总任务数 | 已完成 | 待创建 | 预估总工时 |
 |------|----------|--------|--------|------------|
-| Ops-Platform | 8 | 3 | 5 | 14 周 |
-| DevStation | 8 | 1 | 7 | 13 周 |
-| **合计** | **16** | **4** | **12** | **27 周** |
+| Ops-Platform | 8 | 8 | 0 | 14 周 |
+| DevStation | 8 | 8 | 0 | 13 周 |
+| **合计** | **16** | **16** | **0** | **27 周** |
 
 ### 按优先级统计
 

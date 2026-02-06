@@ -174,6 +174,66 @@ Codex CLI 读取项目根目录的 `CLAUDE.md` 文件和 `.specify/` 目录下�
 - 重大变更必须有 Change Log
 - 提交信息清晰明确
 
+### Git 提交规范
+
+本项目使用 **release-please** 实现 CHANGELOG 自动生成，所有提交必须遵循 **Conventional Commits** 规范。
+
+#### 提交信息格式
+
+```
+<类型>(<作用域>): <描述>
+
+# 示例
+feat(Core): 新增用户认证功能
+fix(Desktop): 修复登录页面样式问题
+chore(TUI): 更新依赖版本
+docs(Core): 补充API文档
+```
+
+#### 类型说明
+
+| 类型 | 说明 | 版本升级 |
+|------|------|----------|
+| `feat` | 新功能 | Minor 版本 (1.1.0 → 1.2.0) |
+| `fix` | Bug 修复 | Patch 版本 (1.1.0 → 1.1.1) |
+| `feat!` / `fix!` | 破坏性变更 | Major 版本 (1.1.0 → 2.0.0) |
+| `chore` | 工程化变更 | Patch 版本 |
+| `docs` | 文档更新 | Patch 版本 |
+| `style` | 代码格式 | Patch 版本 |
+| `refactor` | 重构 | Patch 版本 |
+| `perf` | 性能优化 | Patch 版本 |
+| `test` | 测试相关 | Patch 版本 |
+| `build` | 构建相关 | Patch 版本 |
+| `ci` | CI 配置 | Patch 版本 |
+| `revert` | 回滚提交 | 无版本升级 |
+
+#### 作用域说明
+
+| 作用域 | 说明 |
+|--------|------|
+| `Core` | 核心功能、基础设施、后端服务 |
+| `TUI` | 终端用户界面 |
+| `Desktop` | 桌面应用程序 |
+
+#### 本地校验
+
+项目配置了 `commitlint + husky`，提交时自动校验格式：
+
+```bash
+# 安装依赖后自动初始化 husky
+pnpm install
+
+# 手动初始化 husky（如果需要）
+npx husky install
+```
+
+#### 自动化流程
+
+1. **提交代码** → commitlint 校验本地格式
+2. **推送到主分支** → GitHub Actions 检测提交
+3. **自动生成 PR** → release-please 创建版本更新 PR
+4. **合并 PR** → 自动更新 CHANGELOG、打 Tag、创建 Release
+
 ## 开发流程
 
 ### 规范驱动开发流程
@@ -500,10 +560,12 @@ cp .env.example .env
    - 更新文档
 
 3. **提交代码**
-   ```bash
-   git add .
-   git commit -m "feat: 添加新功能"
-   ```
+    ```bash
+    git add .
+    git commit -m "feat(Core): 添加用户认证功能"
+    ```
+    
+    **注意**：提交信息必须包含作用域（Core/TUI/Desktop），否则无法自动生成 CHANGELOG。
 
 4. **创建 Pull Request**
    - 描述变更内容
