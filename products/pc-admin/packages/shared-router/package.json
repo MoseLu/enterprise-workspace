@@ -13,9 +13,6 @@
       "require": "./dist/index.js"
     }
   },
-  "publishConfig": {
-    "registry": "http://localhost:4873"
-  },
   "files": [
     "dist",
     "README.md"
