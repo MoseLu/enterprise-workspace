@@ -27,11 +27,12 @@
     "verify-build": "node scripts/verify-build.mjs"
   },
   "peerDependencies": {
-    "@btc/shared-core": "^2.0.0",
     "vue": "^3.3.0",
     "vue-router": "^4.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@btc/shared-core": "workspace:*"
+  },
   "devDependencies": {
     "typescript": "^5.9.3",
     "vite": "^5.4.20",
