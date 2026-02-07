@@ -1,0 +1,77 @@
+/**
+ * Minimal Theme Colors
+ * Minimal 极简主题颜色
+ *
+ * Design System: Enterprise Workspace
+ * Theme: Minimal
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "minimal": {
+    "color": {
+      "primary": {
+        "50": "#f0f9ff",
+        "100": "#e0f2fe",
+        "200": "#bae6fd",
+        "300": "#7dd3fc",
+        "400": "#38bdf8",
+        "500": "#0ea5e9",
+        "600": "#0284c7",
+        "700": "#0369a1",
+        "800": "#075985",
+        "900": "#0c4a6e",
+        "950": "#082f49"
+      },
+      "neutral": {
+        "white": "#ffffff",
+        "50": "#fafafa",
+        "100": "#f4f4f5",
+        "200": "#e4e4e7",
+        "300": "#d4d4d8",
+        "400": "#a1a1aa",
+        "500": "#71717a",
+        "600": "#52525b",
+        "700": "#3f3f46",
+        "800": "#27272a",
+        "900": "#18181b",
+        "950": "#09090b"
+      },
+      "background": {
+        "default": "#ffffff",
+        "secondary": "#fafafa",
+        "tertiary": "#f4f4f5",
+        "card": "#ffffff",
+        "overlay": "rgba(0, 0, 0, 0.5)"
+      },
+      "text": {
+        "primary": "#18181b",
+        "secondary": "#52525b",
+        "tertiary": "#71717a",
+        "muted": "#a1a1aa",
+        "disabled": "#d4d4d8",
+        "placeholder": "#a1a1aa",
+        "inverse": "#ffffff"
+      },
+      "border": {
+        "light": "#e4e4e7",
+        "medium": "#d4d4d8",
+        "dark": "#a1a1aa",
+        "focus": "#0ea5e9"
+      },
+      "interactive": {
+        "hover": "#f4f4f5",
+        "active": "#e4e4e7",
+        "focus": "rgba(14, 165, 233, 0.15)",
+        "selected": "rgba(14, 165, 233, 0.1)"
+      },
+      "status": {
+        "success": "#22c55e",
+        "warning": "#f59e0b",
+        "error": "#ef4444",
+        "info": "#3b82f6"
+      }
+    }
+  }
+}

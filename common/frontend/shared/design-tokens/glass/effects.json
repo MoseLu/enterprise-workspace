@@ -1,0 +1,144 @@
+/**
+ * Glass Theme Effects
+ * 玻璃态主题效果令牌
+ *
+ * Design System: Enterprise Workspace
+ * Theme: Glass / Dark Theme
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "glass": {
+    "effect": {
+      "backdrop-blur": {
+        "none": {
+          "value": "blur(0px)",
+          "type": "other",
+          "description": "无模糊"
+        },
+        "sm": {
+          "value": "blur(4px)",
+          "type": "other",
+          "description": "小模糊"
+        },
+        "md": {
+          "value": "blur(8px)",
+          "type": "other",
+          "description": "中等模糊（常用）"
+        },
+        "lg": {
+          "value": "blur(12px)",
+          "type": "other",
+          "description": "大模糊"
+        },
+        "xl": {
+          "value": "blur(16px)",
+          "type": "other",
+          "description": "特大模糊"
+        },
+        "2xl": {
+          "value": "blur(24px)",
+          "type": "other",
+          "description": "超模糊"
+        }
+      },
+      "shadow": {
+        "sm": {
+          "value": "0 1px 2px rgba(0, 0, 0, 0.3)",
+          "type": "boxShadow",
+          "description": "小阴影"
+        },
+        "md": {
+          "value": "0 4px 12px rgba(0, 0, 0, 0.25)",
+          "type": "boxShadow",
+          "description": "中等阴影"
+        },
+        "lg": {
+          "value": "0 8px 24px rgba(0, 0, 0, 0.35)",
+          "type": "boxShadow",
+          "description": "大阴影"
+        },
+        "xl": {
+          "value": "0 16px 48px rgba(0, 0, 0, 0.4)",
+          "type": "boxShadow",
+          "description": "特大阴影"
+        },
+        "inner": {
+          "value": "inset 0 2px 4px rgba(0, 0, 0, 0.3)",
+          "type": "boxShadow",
+          "description": "内阴影"
+        },
+        "glow": {
+          "value": "0 0 20px rgba(255, 255, 255, 0.1)",
+          "type": "boxShadow",
+          "description": "发光效果"
+        }
+      },
+      "border-radius": {
+        "none": {
+          "value": "0px",
+          "type": "borderRadius",
+          "description": "无圆角"
+        },
+        "sm": {
+          "value": "4px",
+          "type": "borderRadius",
+          "description": "小圆角"
+        },
+        "md": {
+          "value": "8px",
+          "type": "borderRadius",
+          "description": "中等圆角"
+        },
+        "lg": {
+          "value": "12px",
+          "type": "borderRadius",
+          "description": "大圆角"
+        },
+        "xl": {
+          "value": "16px",
+          "type": "borderRadius",
+          "description": "特大圆角"
+        },
+        "2xl": {
+          "value": "24px",
+          "type": "borderRadius",
+          "description": "超圆角"
+        },
+        "3xl": {
+          "value": "32px",
+          "type": "borderRadius",
+          "description": "极大圆角"
+        },
+        "full": {
+          "value": "9999px",
+          "type": "borderRadius",
+          "description": "完全圆角（圆形）"
+        }
+      },
+      "opacity": {
+        "0": {
+          "value": "0",
+          "type": "opacity",
+          "description": "完全透明"
+        },
+        "25": {
+          "value": "0.25",
+          "type": "opacity",
+          "description": "25%透明度"
+        },
+        "50": {
+          "value": "0.5",
+          "type": "opacity",
+          "description": "半透明"
+        },
+        "75": {
+          "value": "0.75",
+          "type": "opacity",
+          "description": "75%透明度"
+        }
+      }
+    }
+  }
+}

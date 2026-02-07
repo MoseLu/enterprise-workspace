@@ -1,0 +1,130 @@
+/**
+ * Strategy Management Page Styles
+ * React Admin - Strategy Module
+ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.toolbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Table Container */
+.tableContainer {
+  flex: 1;
+  overflow: auto;
+  padding: 0 16px 16px;
+}
+
+/* Strategy Tags */
+.strategyTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+/* Test Form */
+.testForm {
+  margin-bottom: 16px;
+}
+
+/* Test Result */
+.testResult {
+  margin-top: 16px;
+}
+
+.resultDescriptions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 16px;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+.resultItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.resultLabel {
+  color: #666;
+  font-size: 14px;
+  min-width: 100px;
+}
+
+.stepInfo {
+  padding: 4px 0;
+}
+
+.stepName {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.stepDuration {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.stepResult {
+  font-size: 12px;
+  color: #52c41a;
+  background: #f6ffed;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.stepError {
+  font-size: 12px;
+  color: #ff4d4f;
+  background: #fff2f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+/* Dialog Footer */
+.dialogFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 12px;
+  }
+
+  .resultDescriptions {
+    grid-template-columns: 1fr;
+  }
+}

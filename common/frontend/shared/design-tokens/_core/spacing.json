@@ -1,0 +1,152 @@
+/**
+ * Core Spacing Tokens
+ * 核心间距令牌
+ *
+ * Design System: Enterprise Workspace
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "spacing": {
+    "base-unit": {
+      "value": "4px",
+      "type": "spacing",
+      "description": "基础间距单位"
+    },
+    "scale": {
+      "0": {
+        "value": "0px",
+        "type": "spacing",
+        "description": "无间距"
+      },
+      "px": {
+        "value": "1px",
+        "type": "spacing",
+        "description": "1像素"
+      },
+      "0.5": {
+        "value": "2px",
+        "type": "spacing",
+        "description": "半单位"
+      },
+      "1": {
+        "value": "4px",
+        "type": "spacing",
+        "description": "1单位"
+      },
+      "1.5": {
+        "value": "6px",
+        "type": "spacing",
+        "description": "1.5单位"
+      },
+      "2": {
+        "value": "8px",
+        "type": "spacing",
+        "description": "2单位（小）"
+      },
+      "2.5": {
+        "value": "10px",
+        "type": "spacing",
+        "description": "2.5单位"
+      },
+      "3": {
+        "value": "12px",
+        "type": "spacing",
+        "description": "3单位（中）"
+      },
+      "3.5": {
+        "value": "14px",
+        "type": "spacing",
+        "description": "3.5单位"
+      },
+      "4": {
+        "value": "16px",
+        "type": "spacing",
+        "description": "4单位（常规）"
+      },
+      "5": {
+        "value": "20px",
+        "type": "spacing",
+        "description": "5单位"
+      },
+      "6": {
+        "value": "24px",
+        "type": "spacing",
+        "description": "6单位（大）"
+      },
+      "7": {
+        "value": "28px",
+        "type": "spacing",
+        "description": "7单位"
+      },
+      "8": {
+        "value": "32px",
+        "type": "spacing",
+        "description": "8单位（加大）"
+      },
+      "9": {
+        "value": "36px",
+        "type": "spacing",
+        "description": "9单位"
+      },
+      "10": {
+        "value": "40px",
+        "type": "spacing",
+        "description": "10单位"
+      },
+      "11": {
+        "value": "44px",
+        "type": "spacing",
+        "description": "11单位"
+      },
+      "12": {
+        "value": "48px",
+        "type": "spacing",
+        "description": "12单位（特大）"
+      },
+      "16": {
+        "value": "64px",
+        "type": "spacing",
+        "description": "16单位"
+      },
+      "20": {
+        "value": "80px",
+        "type": "spacing",
+        "description": "20单位"
+      },
+      "24": {
+        "value": "96px",
+        "type": "spacing",
+        "description": "24单位"
+      }
+    },
+    "component": {
+      "inline-padding": {
+        "value": "{spacing.3}",
+        "type": "spacing",
+        "description": "按钮内水平间距"
+      },
+      "stack-gap": {
+        "value": "{spacing.4}",
+        "type": "spacing",
+        "description": "堆叠元素间距"
+      },
+      "inline-gap": {
+        "value": "{spacing.2}",
+        "type": "spacing",
+        "description": "行内元素间距"
+      },
+      "section-padding": {
+        "value": "{spacing.8}",
+        "type": "spacing",
+        "description": "区块内边距"
+      },
+      "container-padding": {
+        "value": "{spacing.6}",
+        "type": "spacing",
+        "description": "容器内边距"
+      }
+    }
+  }
+}

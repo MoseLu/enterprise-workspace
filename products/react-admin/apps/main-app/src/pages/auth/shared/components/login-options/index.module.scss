@@ -1,0 +1,70 @@
+.loginOptions {
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+  padding: 16px 0;
+}
+
+.loginOption {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  padding: 8px 16px;
+  border-radius: 8px;
+
+  &:hover {
+    transform: translateY(-2px);
+    opacity: 0.85;
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ant-color-primary, #3b82f6);
+    outline-offset: 2px;
+  }
+
+  span {
+    font-size: 13px;
+    color: var(--ant-color-text-secondary, #6b7280);
+  }
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover svg {
+    transform: scale(1.05);
+  }
+}
+
+.wechatIcon {
+  color: #07c160;
+}
+
+.appIcon {
+  color: var(--ant-color-text-primary, #1f2937);
+}
+
+// 暗色主题适配
+:global(html.dark) {
+  .loginOption {
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    span {
+      color: var(--ant-color-text-secondary, #9ca3af);
+    }
+  }
+
+  .appIcon {
+    color: var(--ant-color-text-primary, #f3f4f6);
+  }
+}

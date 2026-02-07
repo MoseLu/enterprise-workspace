@@ -1,0 +1,360 @@
+/**
+ * Home 首页样式
+ */
+
+.page {
+  min-height: 100vh;
+  background: #fff;
+}
+
+/* 首屏视频/轮播图 */
+.heroSection {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  min-height: 400px;
+  max-height: 600px;
+  overflow: hidden;
+}
+
+.heroVideo {
+  width: 100%;
+  height: 100%;
+
+  :global(video) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* 品牌理念标语区 */
+.brandSlogan {
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  text-align: center;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.sloganContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.sloganChinese {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 4px;
+}
+
+.sloganRed {
+  font-size: 32px;
+  font-weight: 500;
+  color: #ff6b6b;
+}
+
+.sloganEnglish {
+  font-size: 18px;
+  opacity: 0.9;
+  letter-spacing: 2px;
+}
+
+/* 核心理念网格区 */
+.coreValues {
+  padding: 80px 20px;
+  background: #f8f9fa;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+}
+
+@media (max-width: 768px) {
+  .valuesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.valuesColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sectionBlock {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.redTitleBar {
+  font-size: 18px;
+  font-weight: 600;
+  color: #c0392b;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #c0392b;
+}
+
+.redOutlineText {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #333;
+  margin-bottom: 8px;
+  padding-left: 16px;
+  border-left: 3px solid #e74c3c;
+}
+
+.qualityGoals {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.goalText {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
+
+.goalEnglish {
+  font-size: 13px;
+  color: #7f8c8d;
+}
+
+/* 团队文化 */
+.cultureSection {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.cultureCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .cultureCardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .cultureCardsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cultureCard {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px 16px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.cardTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 8px;
+}
+
+.cardEnglish {
+  font-size: 12px;
+  color: #95a5a6;
+  margin: 0;
+}
+
+/* 产品展示区 */
+.productsShowcase {
+  padding: 80px 20px;
+  background: #fff;
+}
+
+.productsTitle {
+  font-size: 36px;
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: center;
+  margin: 0 0 8px;
+}
+
+.productsSubtitle {
+  font-size: 16px;
+  color: #7f8c8d;
+  text-align: center;
+  margin: 0 0 40px;
+  letter-spacing: 2px;
+}
+
+.productsScene {
+  position: relative;
+  width: 100%;
+  min-height: 600px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+
+.subScene {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.productCard {
+  width: 200px;
+  height: 280px;
+  background: linear-gradient(145deg, #ffffff, #f5f7fa);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-10px);
+  }
+}
+
+.productImage {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #f0f2f5;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.1);
+  }
+}
+
+.productInfo {
+  padding: 16px;
+  text-align: center;
+}
+
+.productName {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 4px;
+}
+
+.productDesc {
+  font-size: 12px;
+  color: #7f8c8d;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .sloganChinese {
+    font-size: 36px;
+  }
+
+  .sloganRed {
+    font-size: 24px;
+  }
+
+  .sloganEnglish {
+    font-size: 14px;
+  }
+
+  .brandSlogan {
+    padding: 40px 20px;
+  }
+
+  .coreValues,
+  .productsShowcase {
+    padding: 50px 20px;
+  }
+
+  .productsTitle {
+    font-size: 28px;
+  }
+
+  .productCard {
+    width: 160px;
+    height: 240px;
+  }
+
+  .productImage {
+    height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sloganChinese {
+    font-size: 28px;
+  }
+
+  .sloganRed {
+    font-size: 20px;
+  }
+
+  .sectionBlock {
+    padding: 20px;
+  }
+
+  .productCard {
+    width: 140px;
+    height: 200px;
+  }
+
+  .productImage {
+    height: 130px;
+  }
+
+  .productName {
+    font-size: 14px;
+  }
+
+  .productDesc {
+    font-size: 11px;
+  }
+}

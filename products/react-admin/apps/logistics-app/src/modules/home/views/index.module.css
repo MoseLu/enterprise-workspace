@@ -1,0 +1,153 @@
+/**
+ * Logistics Home Page Styles
+ *
+ * CSS Module for logistics home page containing:
+ * - Dashboard overview
+ * - Quick navigation
+ * - Statistics cards
+ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.strategyCharts {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.chartGallery {
+  height: 100%;
+  min-height: 0;
+}
+
+.container {
+  height: 100%;
+  min-height: 0;
+}
+
+.chartItem {
+  min-height: 300px;
+}
+
+/* Dashboard overview styles */
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: 100%;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.statCard {
+  padding: 20px;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.statValue {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.statLabel {
+  color: #666;
+  font-size: 14px;
+}
+
+.statTrend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.statTrend.positive {
+  color: #52c41a;
+}
+
+.statTrend.negative {
+  color: #ff4d4f;
+}
+
+/* Quick navigation styles */
+.quickNav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.navItem:hover {
+  background-color: #f5f5f5;
+  transform: translateY(-2px);
+}
+
+.navIcon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.navLabel {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Section titles */
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+/* Welcome banner */
+.welcomeBanner {
+  padding: 24px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.welcomeTitle {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.welcomeSubtitle {
+  color: #666;
+  font-size: 14px;
+}

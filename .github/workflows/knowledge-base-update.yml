@@ -1,0 +1,168 @@
+name: Knowledge Base Update
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'knowledge-base/**'
+      - '.github/workflows/knowledge-base-update.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'knowledge-base/**'
+
+jobs:
+  validate-knowledge-base:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate taxonomy JSON
+        run: |
+          echo "=== Validating knowledge-taxonomy.json ==="
+          node -e "
+            const data = require('./knowledge-base/RAG/knowledge-taxonomy.json');
+            console.log('✓ taxonomy version:', data.version);
+            console.log('✓ knowledge types:', Object.keys(data.knowledgeTypes).join(', '));
+            console.log('✓ domains:', Object.keys(data.domains).join(', '));
+            console.log('✓ search intents:', Object.keys(data.searchIntent).join(', '));
+          "
+
+      - name: Validate graph JSON
+        run: |
+          echo "=== Validating knowledge-graph.json ==="
+          node -e "
+            const data = require('./knowledge-base/RAG/knowledge-graph.json');
+            console.log('✓ graph version:', data.version);
+            const nodes = data.nodes;
+            console.log('✓ node types:', Object.keys(nodes).join(', '));
+            for (const [type, list] of Object.entries(nodes)) {
+              console.log('  -', type + ':', Array.isArray(list) ? list.length + ' entries' : 'N/A');
+            }
+          "
+
+      - name: Validate index JSON
+        run: |
+          echo "=== Validating knowledge-index.json ==="
+          node -e "
+            const data = require('./knowledge-base/RAG/knowledge-index.json');
+            console.log('✓ index version:', data.version);
+            console.log('✓ total entries:', data.summary.totalEntries);
+            console.log('✓ type distribution:');
+            for (const [type, count] of Object.entries(data.summary.typeDistribution)) {
+              console.log('  -', type + ':', count);
+            }
+          "
+
+  sync-taxonomy-to-graph:
+    runs-on: ubuntu-latest
+    needs: validate-knowledge-base
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync taxonomy to graph
+        id: sync
+        run: |
+          echo "=== Syncing taxonomy to graph ==="
+          node -e "
+            const fs = require('fs');
+            const taxonomy = JSON.parse(fs.readFileSync('./knowledge-base/RAG/knowledge-taxonomy.json', 'utf8'));
+            const graph = JSON.parse(fs.readFileSync('./knowledge-base/RAG/knowledge-graph.json', 'utf8'));
+
+            // Update statistics
+            const newStats = { ...graph.statistics };
+            newStats.nodesByType = {
+              ...newStats.nodesByType,
+              rule: Object.keys(taxonomy.knowledgeTypes.RULE?.categories || {}).length * 2,
+              solution: Object.keys(taxonomy.knowledgeTypes.SOLUTION?.categories || {}).length * 2,
+            };
+
+            fs.writeFileSync(
+              './knowledge-base/RAG/knowledge-graph.json',
+              JSON.stringify({ ...graph, statistics: newStats }, null, 2) + '\n'
+            );
+
+            console.log('✓ Statistics updated');
+            console.log('✓ New stats:', JSON.stringify(newStats.nodesByType));
+          "
+
+      - name: Commit changes
+        if: steps.sync.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add knowledge-base/RAG/knowledge-graph.json
+          git commit -m "docs: sync knowledge-base statistics" || echo "No changes to commit"
+          git push || echo "Push skipped"
+
+  update-search-index:
+    runs-on: ubuntu-latest
+    needs: validate-knowledge-base
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update search index
+        run: |
+          echo "=== Updating search index ==="
+          node -e "
+            const fs = require('fs');
+            const graph = JSON.parse(fs.readFileSync('./knowledge-base/RAG/knowledge-graph.json', 'utf8'));
+
+            // Collect all entries from graph
+            const entries = [];
+            const nodeTypes = ['rules', 'solutions', 'decisions', 'components', 'hooks', 'patterns', 'domains'];
+
+            for (const nodeType of nodeTypes) {
+              const nodes = graph.nodes[nodeType] || [];
+              for (const node of nodes) {
+                entries.push({
+                  id: node.id,
+                  type: node.type,
+                  title: node.label,
+                  summary: node.description,
+                  content: JSON.stringify(node),
+                  metadata: {
+                    filePath: node.filePath || null,
+                    tags: [...(node.tags || []), ...(node.keywords || [])],
+                    domain: node.keywords?.[0] || 'general',
+                    lastModified: new Date().toISOString(),
+                    priority: 'medium'
+                  }
+                });
+              }
+            }
+
+            // Update index
+            const indexPath = './knowledge-base/RAG/knowledge-index.json';
+            const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+            index.version = '2.0.0';
+            index.lastUpdated = new Date().toISOString();
+            index.summary.totalEntries = entries.length;
+
+            fs.writeFileSync(indexPath, JSON.stringify(index, null, 2) + '\n');
+
+            console.log('✓ Index updated');
+            console.log('✓ Total entries:', entries.length);
+          "
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add knowledge-base/RAG/knowledge-index.json
+          git commit -m "docs: update knowledge-base search index" || echo "No changes to commit"
+          git push || echo "Push skipped"
+
+  notify:
+    needs: [validate-knowledge-base, sync-taxonomy-to-graph, update-search-index]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Summary
+        run: |
+          echo "=== Knowledge Base Update Complete ==="
+          echo "Status: ${{ needs.validate-knowledge-base.result }}"
+          echo ""
+          echo "Knowledge base is ready for use with Claude Code."

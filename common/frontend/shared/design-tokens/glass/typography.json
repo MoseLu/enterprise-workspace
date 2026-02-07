@@ -1,0 +1,128 @@
+/**
+ * Glass Theme Typography
+ * 玻璃态主题排版令牌
+ *
+ * Design System: Enterprise Workspace
+ * Theme: Glass / Dark Theme
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "glass": {
+    "typography": {
+      "font-family": {
+        "body": {
+          "value": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "type": "fontFamily",
+          "description": "正文字体"
+        },
+        "heading": {
+          "value": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          "type": "fontFamily",
+          "description": "标题字体"
+        },
+        "mono": {
+          "value": "'JetBrains Mono', 'Fira Code', monospace",
+          "type": "fontFamily",
+          "description": "代码字体"
+        }
+      },
+      "font-size": {
+        "xs": {
+          "value": "12px",
+          "type": "fontSize",
+          "lineHeight": "1.5",
+          "description": "超小字"
+        },
+        "sm": {
+          "value": "14px",
+          "type": "fontSize",
+          "lineHeight": "1.5",
+          "description": "小字"
+        },
+        "base": {
+          "value": "16px",
+          "type": "fontSize",
+          "lineHeight": "1.6",
+          "description": "基准字"
+        },
+        "lg": {
+          "value": "18px",
+          "type": "fontSize",
+          "lineHeight": "1.6",
+          "description": "大字"
+        },
+        "xl": {
+          "value": "20px",
+          "type": "fontSize",
+          "lineHeight": "1.5",
+          "description": "标题小"
+        },
+        "2xl": {
+          "value": "24px",
+          "type": "fontSize",
+          "lineHeight": "1.4",
+          "description": "标题中"
+        },
+        "3xl": {
+          "value": "30px",
+          "type": "fontSize",
+          "lineHeight": "1.3",
+          "description": "标题大"
+        },
+        "4xl": {
+          "value": "36px",
+          "type": "fontSize",
+          "lineHeight": "1.2",
+          "description": "标题特大"
+        },
+        "5xl": {
+          "value": "48px",
+          "type": "fontSize",
+          "lineHeight": "1.1",
+          "description": "超大标题"
+        }
+      },
+      "font-weight": {
+        "normal": {
+          "value": "400",
+          "type": "fontWeight",
+          "description": "常规"
+        },
+        "medium": {
+          "value": "500",
+          "type": "fontWeight",
+          "description": "中等"
+        },
+        "semibold": {
+          "value": "600",
+          "type": "fontWeight",
+          "description": "半粗"
+        },
+        "bold": {
+          "value": "700",
+          "type": "fontWeight",
+          "description": "粗体"
+        }
+      },
+      "letter-spacing": {
+        "tight": {
+          "value": "-0.02em",
+          "type": "letterSpacing",
+          "description": "紧凑"
+        },
+        "normal": {
+          "value": "0",
+          "type": "letterSpacing",
+          "description": "常规"
+        },
+        "wide": {
+          "value": "0.02em",
+          "type": "letterSpacing",
+          "description": "宽松"
+        }
+      }
+    }
+  }
+}

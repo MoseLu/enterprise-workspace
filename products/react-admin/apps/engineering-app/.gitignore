@@ -1,0 +1,37 @@
+# 依赖
+node_modules/
+
+# 构建产物
+dist/
+dist-cdn/
+build/
+
+# 日志
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 测试
+coverage/
+
+# 临时文件
+*.tmp
+*.temp
+*.tsbuildinfo
+vite.config.ts.timestamp-*.mjs

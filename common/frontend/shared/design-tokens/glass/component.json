@@ -1,0 +1,307 @@
+/**
+ * Glass Theme Component Tokens
+ * 玻璃态主题组件令牌
+ *
+ * Design System: Enterprise Workspace
+ * Theme: Glass / Dark Theme
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "glass": {
+    "component": {
+      "card": {
+        "padding": {
+          "value": "16px",
+          "type": "spacing",
+          "description": "卡片内边距"
+        },
+        "padding-lg": {
+          "value": "24px",
+          "type": "spacing",
+          "description": "卡片大内边距"
+        },
+        "radius": {
+          "value": "12px",
+          "type": "borderRadius",
+          "description": "卡片圆角"
+        },
+        "shadow": {
+          "value": "md",
+          "type": "shadow",
+          "description": "卡片阴影"
+        },
+        "blur": {
+          "value": "md",
+          "type": "blur",
+          "description": "毛玻璃模糊"
+        },
+        "background": {
+          "value": "card",
+          "type": "color",
+          "description": "卡片背景"
+        },
+        "border": {
+          "value": "light",
+          "type": "color",
+          "description": "卡片边框"
+        },
+        "transition": {
+          "value": "normal",
+          "type": "transition",
+          "description": "过渡动画"
+        }
+      },
+      "button": {
+        "height": {
+          "sm": "28px",
+          "md": "36px",
+          "lg": "44px"
+        },
+        "padding-x": {
+          "value": "12px",
+          "type": "spacing",
+          "description": "按钮水平内边距"
+        },
+        "radius": {
+          "value": "8px",
+          "type": "borderRadius",
+          "description": "按钮圆角"
+        },
+        "font-size": {
+          "sm": "12px",
+          "md": "14px",
+          "lg": "16px"
+        },
+        "shadow": {
+          "value": "none",
+          "type": "shadow",
+          "description": "按钮阴影"
+        },
+        "transition": {
+          "value": "fast",
+          "type": "transition",
+          "description": "过渡动画"
+        }
+      },
+      "input": {
+        "height": {
+          "sm": "28px",
+          "md": "36px",
+          "lg": "44px"
+        },
+        "padding-x": {
+          "value": "12px",
+          "type": "spacing",
+          "description": "输入框水平内边距"
+        },
+        "radius": {
+          "value": "8px",
+          "type": "borderRadius",
+          "description": "输入框圆角"
+        },
+        "font-size": {
+          "value": "14px",
+          "type": "fontSize",
+          "description": "输入框字号"
+        },
+        "shadow": {
+          "value": "inner",
+          "type": "shadow",
+          "description": "输入框阴影"
+        }
+      },
+      "navbar": {
+        "height": {
+          "value": "64px",
+          "type": "sizing",
+          "description": "导航栏高度"
+        },
+        "padding-x": {
+          "value": "24px",
+          "type": "spacing",
+          "description": "导航栏水平内边距"
+        },
+        "blur": {
+          "value": "md",
+          "type": "blur",
+          "description": "导航栏模糊"
+        },
+        "background": {
+          "value": "card",
+          "type": "color",
+          "description": "导航栏背景"
+        }
+      },
+      "sidebar": {
+        "width": {
+          "value": "240px",
+          "type": "sizing",
+          "description": "侧边栏宽度"
+        },
+        "collapsed-width": {
+          "value": "72px",
+          "type": "sizing",
+          "description": "侧边栏折叠宽度"
+        },
+        "item-height": {
+          "value": "44px",
+          "type": "sizing",
+          "description": "菜单项高度"
+        },
+        "padding": {
+          "value": "12px",
+          "type": "spacing",
+          "description": "侧边栏内边距"
+        }
+      },
+      "modal": {
+        "padding": {
+          "value": "24px",
+          "type": "spacing",
+          "description": "模态框内边距"
+        },
+        "radius": {
+          "value": "16px",
+          "type": "borderRadius",
+          "description": "模态框圆角"
+        },
+        "blur": {
+          "value": "lg",
+          "type": "blur",
+          "description": "模态框模糊"
+        },
+        "shadow": {
+          "value": "xl",
+          "type": "shadow",
+          "description": "模态框阴影"
+        }
+      },
+      "popup": {
+        "padding": {
+          "value": "16px",
+          "type": "spacing",
+          "description": "弹窗内边距"
+        },
+        "radius": {
+          "value": "12px",
+          "type": "borderRadius",
+          "description": "弹窗圆角"
+        },
+        "blur": {
+          "value": "sm",
+          "type": "blur",
+          "description": "弹窗模糊"
+        },
+        "shadow": {
+          "value": "lg",
+          "type": "shadow",
+          "description": "弹窗阴影"
+        }
+      },
+      "dropdown": {
+        "padding": {
+          "value": "8px",
+          "type": "spacing",
+          "description": "下拉菜单内边距"
+        },
+        "radius": {
+          "value": "8px",
+          "type": "borderRadius",
+          "description": "下拉菜单圆角"
+        },
+        "shadow": {
+          "value": "md",
+          "type": "shadow",
+          "description": "下拉菜单阴影"
+        }
+      },
+      "pagination": {
+        "button-size": {
+          "value": "36px",
+          "type": "sizing",
+          "description": "分页按钮尺寸"
+        },
+        "radius": {
+          "value": "8px",
+          "type": "borderRadius",
+          "description": "分页按钮圆角"
+        }
+      },
+      "table": {
+        "header-height": {
+          "value": "44px",
+          "type": "sizing",
+          "description": "表头高度"
+        },
+        "row-height": {
+          "value": "52px",
+          "type": "sizing",
+          "description": "行高"
+        },
+        "padding": {
+          "value": "12px 16px",
+          "type": "spacing",
+          "description": "单元格内边距"
+        },
+        "radius": {
+          "value": "8px",
+          "type": "borderRadius",
+          "description": "表格圆角"
+        }
+      },
+      "tag": {
+        "padding-x": {
+          "value": "8px",
+          "type": "spacing",
+          "description": "标签水平内边距"
+        },
+        "padding-y": {
+          "value": "2px",
+          "type": "spacing",
+          "description": "标签垂直内边距"
+        },
+        "radius": {
+          "value": "4px",
+          "type": "borderRadius",
+          "description": "标签圆角"
+        },
+        "font-size": {
+          "value": "12px",
+          "type": "fontSize",
+          "description": "标签字号"
+        }
+      },
+      "badge": {
+        "size": {
+          "sm": "16px",
+          "md": "20px",
+          "lg": "24px"
+        },
+        "radius": {
+          "value": "9999px",
+          "type": "borderRadius",
+          "description": "徽章圆角"
+        }
+      },
+      "tooltip": {
+        "padding": {
+          "value": "8px 12px",
+          "type": "spacing",
+          "description": "提示框内边距"
+        },
+        "radius": {
+          "value": "6px",
+          "type": "borderRadius",
+          "description": "提示框圆角"
+        },
+        "font-size": {
+          "value": "12px",
+          "type": "fontSize",
+          "description": "提示框字号"
+        }
+      }
+    }
+  }
+}

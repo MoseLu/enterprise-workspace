@@ -1,0 +1,30 @@
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  width: 26px;
+  background-color: var(--anticolorBgContainer, #fff);
+  border: 1px solid var(--anticolorFillSecondary, #f0f0f0);
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+  outline: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: var(--anticolorText, #333);
+}
+
+.iconBtn:hover:not(.disabled) {
+  border-color: var(--anticolorPrimary, #1677ff);
+  background-color: transparent;
+}
+
+.iconBtn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.iconBtn :global(.btc-svg) {
+  font-size: 16px;
+  color: var(--anticolorTextPrimary, #333);
+}

@@ -1,0 +1,104 @@
+.permissionList {
+  padding: 10px;
+  height: 100%;
+  overflow: auto;
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.permissionItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background-color: var(--fill-color-lighter);
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.permissionItem:hover {
+  background-color: var(--fill-color-light);
+  transform: translateX(2px);
+}
+
+.permissionItem:hover .icon {
+  color: var(--color-danger);
+}
+
+.permissionItemIndex {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-primary-light-8);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.permissionItemContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.permissionItemName {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-color-primary);
+  margin-bottom: 4px;
+}
+
+.permissionItemCode {
+  font-size: 11px;
+  color: var(--text-color-secondary);
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  height: 24px;
+  width: 24px;
+  font-size: 14px;
+  border-radius: 4px;
+  color: var(--text-color-regular);
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.icon:hover {
+  background-color: var(--fill-color);
+  color: var(--color-danger);
+}
+
+/* List transition animations */
+.listContainer {
+  animation: listEnter 0.3s ease;
+}
+
+@keyframes listEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.listContainer > *:nth-child(1) { animation-delay: 0ms; }
+.listContainer > *:nth-child(2) { animation-delay: 50ms; }
+.listContainer > *:nth-child(3) { animation-delay: 100ms; }
+.listContainer > *:nth-child(4) { animation-delay: 150ms; }
+.listContainer > *:nth-child(5) { animation-delay: 200ms; }

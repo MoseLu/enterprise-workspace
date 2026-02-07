@@ -1,0 +1,41 @@
+.zoomControls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 4px;
+}
+
+.zoomCenter {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+}
+
+.zoomInput {
+  width: 100px;
+  text-align: center;
+}
+
+.zoomInput :global(.ant-input) {
+  width: 100px;
+  height: 32px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0 8px;
+}
+
+.zoomButton {
+  padding: 8px;
+  min-width: 32px;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.zoomButton :global(.anticon) {
+  font-size: 18px;
+}

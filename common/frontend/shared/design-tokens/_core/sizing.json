@@ -1,0 +1,169 @@
+/**
+ * Core Sizing Tokens
+ * 核心尺寸令牌
+ *
+ * Design System: Enterprise Workspace
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "sizing": {
+    "icon": {
+      "xs": {
+        "value": "12px",
+        "type": "sizing",
+        "description": "超小图标"
+      },
+      "sm": {
+        "value": "16px",
+        "type": "sizing",
+        "description": "小图标"
+      },
+      "md": {
+        "value": "20px",
+        "type": "sizing",
+        "description": "中等图标"
+      },
+      "lg": {
+        "value": "24px",
+        "type": "sizing",
+        "description": "大图标"
+      },
+      "xl": {
+        "value": "32px",
+        "type": "sizing",
+        "description": "特大图标"
+      },
+      "2xl": {
+        "value": "48px",
+        "type": "sizing",
+        "description": "超大图标"
+      }
+    },
+    "avatar": {
+      "xs": {
+        "value": "24px",
+        "type": "sizing",
+        "description": "超小头像"
+      },
+      "sm": {
+        "value": "32px",
+        "type": "sizing",
+        "description": "小头像"
+      },
+      "md": {
+        "value": "40px",
+        "type": "sizing",
+        "description": "中等头像"
+      },
+      "lg": {
+        "value": "56px",
+        "type": "sizing",
+        "description": "大头像"
+      },
+      "xl": {
+        "value": "80px",
+        "type": "sizing",
+        "description": "特大头像"
+      },
+      "2xl": {
+        "value": "128px",
+        "type": "sizing",
+        "description": "超大头像"
+      }
+    },
+    "button": {
+      "height": {
+        "sm": {
+          "value": "28px",
+          "type": "sizing",
+          "description": "小按钮高度"
+        },
+        "md": {
+          "value": "36px",
+          "type": "sizing",
+          "description": "中等按钮高度"
+        },
+        "lg": {
+          "value": "44px",
+          "type": "sizing",
+          "description": "大按钮高度"
+        },
+        "xl": {
+          "value": "52px",
+          "type": "sizing",
+          "description": "特大按钮高度"
+        }
+      },
+      "min-width": {
+        "sm": {
+          "value": "64px",
+          "type": "sizing",
+          "description": "小按钮最小宽度"
+        },
+        "md": {
+          "value": "88px",
+          "type": "sizing",
+          "description": "中等按钮最小宽度"
+        },
+        "lg": {
+          "value": "120px",
+          "type": "sizing",
+          "description": "大按钮最小宽度"
+        }
+      }
+    },
+    "input": {
+      "height": {
+        "sm": {
+          "value": "28px",
+          "type": "sizing",
+          "description": "小输入框高度"
+        },
+        "md": {
+          "value": "36px",
+          "type": "sizing",
+          "description": "中等输入框高度"
+        },
+        "lg": {
+          "value": "44px",
+          "type": "sizing",
+          "description": "大输入框高度"
+        }
+      }
+    },
+    "container": {
+      "sm": {
+        "value": "640px",
+        "type": "sizing",
+        "description": "小容器"
+      },
+      "md": {
+        "value": "768px",
+        "type": "sizing",
+        "description": "中等容器"
+      },
+      "lg": {
+        "value": "1024px",
+        "type": "sizing",
+        "description": "大容器"
+      },
+      "xl": {
+        "value": "1280px",
+        "type": "sizing",
+        "description": "特大容器"
+      },
+      "2xl": {
+        "value": "1536px",
+        "type": "sizing",
+        "description": "超大容器"
+      },
+      "full": {
+        "value": "100%",
+        "type": "sizing",
+        "description": "全宽"
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+.sBottomLayerContent {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
+}
+
+.footerLink {
+  color: var(--ant-color-text-secondary, #6b7280);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--ant-color-primary, #3b82f6);
+  }
+
+  &.beianLink {
+    font-size: 12px;
+  }
+}
+
+.copyrightText {
+  color: var(--ant-color-text-tertiary, #9ca3af);
+  font-size: 12px;
+}

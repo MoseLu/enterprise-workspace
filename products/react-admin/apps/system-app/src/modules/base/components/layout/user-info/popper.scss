@@ -1,0 +1,55 @@
+// 用户下拉菜单样式（非 scoped）
+.user-info__popper {
+  .el-dropdown-menu__item {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    min-height: auto !important; // 防止被其他样式覆盖
+    height: auto !important; // 防止被其他样式覆盖
+    line-height: 1.5 !important; // 确保行高正常
+  }
+
+  .user-info__header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    width: 200px;
+    min-height: 76px; // 确保最小高度：56px 头像 + 20px padding
+    box-sizing: border-box; // 确保 padding 包含在高度内
+    border-bottom: 1px solid var(--el-color-info-light-9);
+
+    .user-info__details {
+      margin-left: 10px;
+      flex: 1;
+      font-size: 12px;
+      min-width: 0; // 允许 flex 子元素收缩
+
+      p {
+        margin: 0;
+        font-weight: 500;
+        line-height: 1.4; // 确保行高正常
+      }
+
+      // 职位不换行
+      .el-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        line-height: 1.4; // 确保行高正常
+      }
+    }
+  }
+
+  .btc-svg {
+    margin-right: 8px !important;
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    flex-shrink: 0 !important; // 防止图标被压缩
+    display: inline-block !important; // 确保图标显示
+  }
+}
+

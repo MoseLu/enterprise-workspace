@@ -1,0 +1,19 @@
+{
+  "recycle": {
+    "operator": "Operator",
+    "operation_desc": "Operation Description",
+    "ip_address": "IP Address",
+    "deleted_data": "Deleted Data",
+    "request_url": "Request URL",
+    "request_params": "Request Params",
+    "create_time": "Create Time",
+    "restore": "Restore",
+    "batch_restore": "Batch Restore",
+    "restore_confirm": "Are you sure you want to restore this data?",
+    "batch_restore_confirm": "Are you sure you want to restore the selected {count} items?",
+    "restore_success": "Restore successful",
+    "batch_restore_success": "Successfully restored {count} items",
+    "please_select_data": "Please select data to restore",
+    "restore_failed": "Restore failed"
+  }
+}

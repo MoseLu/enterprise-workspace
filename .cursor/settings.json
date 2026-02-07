@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "knowledge-base": {
+      "command": "node",
+      "args": ["E:/enterprise-workspace/mcp-servers/knowledge-base-server/dist/index.js"],
+      "cwd": "E:/enterprise-workspace",
+      "disabled": false
+    }
+  }
+}

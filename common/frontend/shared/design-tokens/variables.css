@@ -1,0 +1,546 @@
+/**
+ * Design Tokens - CSS Variables
+ * 自动生成的设计令牌 CSS 变量
+ *
+ * Design System: Enterprise Workspace
+ * Version: 1.0.0
+ *
+ * Generated from:
+ * - _core/*.json
+ * - glass/*.json
+ * - minimal/*.json
+ */
+
+/* ============================================================================
+   1. Core Colors - 核心颜色
+   ============================================================================ */
+
+:root {
+  /* Gray Scale */
+  --color-gray-50: #fafafa;
+  --color-gray-100: #f4f4f5;
+  --color-gray-150: #e4e4e7;
+  --color-gray-200: #d4d4d8;
+  --color-gray-300: #a1a1aa;
+  --color-gray-400: #71717a;
+  --color-gray-500: #52525b;
+  --color-gray-600: #3f3f46;
+  --color-gray-700: #27272a;
+  --color-gray-800: #18181b;
+  --color-gray-900: #09090b;
+  --color-gray-950: #09090b;
+
+  /* Semantic Colors */
+  --color-success-light: #86efac;
+  --color-success-main: #22c55e;
+  --color-success-dark: #15803d;
+  --color-success-contrast: #ffffff;
+
+  --color-warning-light: #fcd34d;
+  --color-warning-main: #f59e0b;
+  --color-warning-dark: #b45309;
+  --color-warning-contrast: #ffffff;
+
+  --color-error-light: #fca5a5;
+  --color-error-main: #ef4444;
+  --color-error-dark: #b91c1c;
+  --color-error-contrast: #ffffff;
+
+  --color-info-light: #93c5fd;
+  --color-info-main: #3b82f6;
+  --color-info-dark: #1d4ed8;
+  --color-info-contrast: #ffffff;
+
+  /* Functional Colors */
+  --color-divider: #d4d4d8;
+  --color-placeholder: #71717a;
+  --color-disabled: #a1a1aa;
+  --color-backdrop: rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================================================
+   2. Core Spacing - 核心间距
+   ============================================================================ */
+
+:root {
+  --spacing-base-unit: 4px;
+  --spacing-0: 0px;
+  --spacing-px: 1px;
+  --spacing-0-5: 2px;
+  --spacing-1: 4px;
+  --spacing-1-5: 6px;
+  --spacing-2: 8px;
+  --spacing-2-5: 10px;
+  --spacing-3: 12px;
+  --spacing-3-5: 14px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-7: 28px;
+  --spacing-8: 32px;
+  --spacing-9: 36px;
+  --spacing-10: 40px;
+  --spacing-11: 44px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+}
+
+/* ============================================================================
+   3. Core Typography - 核心排版
+   ============================================================================ */
+
+:root {
+  /* Font Families */
+  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family-serif: 'Merriweather', Georgia, Cambria, 'Times New Roman', Times, serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+
+  /* Font Sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  --font-size-5xl: 48px;
+
+  /* Line Heights */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+
+  /* Font Weights */
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* Letter Spacing */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+}
+
+/* ============================================================================
+   4. Core Transitions - 核心过渡
+   ============================================================================ */
+
+:root {
+  /* Durations */
+  --transition-duration-fastest: 75ms;
+  --transition-duration-faster: 100ms;
+  --transition-duration-fast: 150ms;
+  --transition-duration-normal: 200ms;
+  --transition-duration-slow: 300ms;
+  --transition-duration-slower: 500ms;
+  --transition-duration-slowest: 700ms;
+
+  /* Easings */
+  --transition-easing-linear: linear;
+  --transition-easing-ease: ease;
+  --transition-easing-ease-in: ease-in;
+  --transition-easing-ease-out: ease-out;
+  --transition-easing-ease-in-out: ease-in-out;
+  --transition-easing-ease-in-quart: cubic-bezier(0.5, 0, 0.75, 0);
+  --transition-easing-ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-easing-ease-in-back: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  --transition-easing-ease-out-back: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --transition-easing-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ============================================================================
+   5. Core Sizing - 核心尺寸
+   ============================================================================ */
+
+:root {
+  /* Icon Sizes */
+  --size-icon-xs: 12px;
+  --size-icon-sm: 16px;
+  --size-icon-md: 20px;
+  --size-icon-lg: 24px;
+  --size-icon-xl: 32px;
+  --size-icon-2xl: 48px;
+
+  /* Avatar Sizes */
+  --size-avatar-xs: 24px;
+  --size-avatar-sm: 32px;
+  --size-avatar-md: 40px;
+  --size-avatar-lg: 56px;
+  --size-avatar-xl: 80px;
+  --size-avatar-2xl: 128px;
+
+  /* Container Sizes */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+  --container-full: 100%;
+}
+
+/* ============================================================================
+   6. Glass Theme - 玻璃态主题
+   ============================================================================ */
+
+:root {
+  /* Glass Background */
+  --glass-color-background-primary: #1a1a1a;
+  --glass-color-background-secondary: #252525;
+  --glass-color-background-tertiary: #2a2a2a;
+  --glass-color-background-card: rgba(40, 40, 40, 0.8);
+  --glass-color-background-card-hover: rgba(50, 50, 50, 0.85);
+  --glass-color-background-overlay: rgba(0, 0, 0, 0.8);
+  --glass-color-background-modal: rgba(20, 20, 20, 0.95);
+
+  /* Glass Text */
+  --glass-color-text-primary: #ffffff;
+  --glass-color-text-secondary: #e0e0e0;
+  --glass-color-text-muted: rgba(255, 255, 255, 0.7);
+  --glass-color-text-disabled: rgba(255, 255, 255, 0.5);
+  --glass-color-text-placeholder: rgba(255, 255, 255, 0.4);
+
+  /* Glass Border */
+  --glass-color-border-light: rgba(255, 255, 255, 0.08);
+  --glass-color-border-medium: rgba(255, 255, 255, 0.12);
+  --glass-color-border-focus: rgba(255, 255, 255, 0.3);
+
+  /* Glass Interactive */
+  --glass-color-interactive-hover: rgba(255, 255, 255, 0.05);
+  --glass-color-interactive-active: rgba(255, 255, 255, 0.12);
+  --glass-color-interactive-focus: rgba(255, 255, 255, 0.15);
+  --glass-color-interactive-selected: rgba(255, 255, 255, 0.18);
+
+  /* Glass Status */
+  --glass-color-status-success: #22c55e;
+  --glass-color-status-warning: #f59e0b;
+  --glass-color-status-error: #ef4444;
+  --glass-color-status-info: #3b82f6;
+
+  /* Glass Effects */
+  --glass-effect-backdrop-blur-none: blur(0px);
+  --glass-effect-backdrop-blur-sm: blur(4px);
+  --glass-effect-backdrop-blur-md: blur(8px);
+  --glass-effect-backdrop-blur-lg: blur(12px);
+  --glass-effect-backdrop-blur-xl: blur(16px);
+  --glass-effect-backdrop-blur-2xl: blur(24px);
+
+  --glass-effect-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --glass-effect-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --glass-effect-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --glass-effect-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.4);
+  --glass-effect-shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  --glass-effect-shadow-glow: 0 0 20px rgba(255, 255, 255, 0.1);
+
+  --glass-border-radius-none: 0px;
+  --glass-border-radius-sm: 4px;
+  --glass-border-radius-md: 8px;
+  --glass-border-radius-lg: 12px;
+  --glass-border-radius-xl: 16px;
+  --glass-border-radius-2xl: 24px;
+  --glass-border-radius-3xl: 32px;
+  --glass-border-radius-full: 9999px;
+
+  --glass-opacity-0: 0;
+  --glass-opacity-25: 0.25;
+  --glass-opacity-50: 0.5;
+  --glass-opacity-75: 0.75;
+}
+
+/* ============================================================================
+   7. Bellis Theme - 默认/极简主题
+   ============================================================================ */
+
+:root {
+  /* Bellis Primary */
+  --minimal-color-primary-50: #f0f9ff;
+  --minimal-color-primary-100: #e0f2fe;
+  --minimal-color-primary-200: #bae6fd;
+  --minimal-color-primary-300: #7dd3fc;
+  --minimal-color-primary-400: #38bdf8;
+  --minimal-color-primary-500: #0ea5e9;
+  --minimal-color-primary-600: #0284c7;
+  --minimal-color-primary-700: #0369a1;
+  --minimal-color-primary-800: #075985;
+  --minimal-color-primary-900: #0c4a6e;
+  --minimal-color-primary-950: #082f49;
+
+  /* Bellis Neutral */
+  --minimal-color-neutral-white: #ffffff;
+  --minimal-color-neutral-50: #fafafa;
+  --minimal-color-neutral-100: #f4f4f5;
+  --minimal-color-neutral-200: #e4e4e7;
+  --minimal-color-neutral-300: #d4d4d8;
+  --minimal-color-neutral-400: #a1a1aa;
+  --minimal-color-neutral-500: #71717a;
+  --minimal-color-neutral-600: #52525b;
+  --minimal-color-neutral-700: #3f3f46;
+  --minimal-color-neutral-800: #27272a;
+  --minimal-color-neutral-900: #18181b;
+  --minimal-color-neutral-950: #09090b;
+
+  /* Bellis Background */
+  --minimal-color-background-default: #ffffff;
+  --minimal-color-background-secondary: #fafafa;
+  --minimal-color-background-tertiary: #f4f4f5;
+  --minimal-color-background-card: #ffffff;
+  --minimal-color-background-overlay: rgba(0, 0, 0, 0.5);
+
+  /* Bellis Text */
+  --minimal-color-text-primary: #18181b;
+  --minimal-color-text-secondary: #52525b;
+  --minimal-color-text-tertiary: #71717a;
+  --minimal-color-text-muted: #a1a1aa;
+  --minimal-color-text-disabled: #d4d4d8;
+  --minimal-color-text-placeholder: #a1a1aa;
+  --minimal-color-text-inverse: #ffffff;
+
+  /* Bellis Border */
+  --minimal-color-border-light: #e4e4e7;
+  --minimal-color-border-medium: #d4d4d8;
+  --minimal-color-border-dark: #a1a1aa;
+  --minimal-color-border-focus: #0ea5e9;
+
+  /* Bellis Interactive */
+  --minimal-color-interactive-hover: #f4f4f5;
+  --minimal-color-interactive-active: #e4e4e7;
+  --minimal-color-interactive-focus: rgba(14, 165, 233, 0.15);
+  --minimal-color-interactive-selected: rgba(14, 165, 233, 0.1);
+
+  /* Bellis Status */
+  --minimal-color-status-success: #22c55e;
+  --minimal-color-status-warning: #f59e0b;
+  --minimal-color-status-error: #ef4444;
+  --minimal-color-status-info: #3b82f6;
+
+  /* Bellis Effects */
+  --minimal-effect-shadow-none: none;
+  --minimal-effect-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --minimal-effect-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --minimal-effect-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --minimal-effect-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  --minimal-effect-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1), 0 10px 10px rgba(0, 0, 0, 0.04);
+  --minimal-effect-shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  --minimal-border-radius-none: 0px;
+  --minimal-border-radius-sm: 4px;
+  --minimal-border-radius-md: 6px;
+  --minimal-border-radius-lg: 8px;
+  --minimal-border-radius-xl: 12px;
+  --minimal-border-radius-2xl: 16px;
+  --minimal-border-radius-full: 9999px;
+
+  /* Bellis Layout */
+  --minimal-layout-sidebar-width-expanded: 240px;
+  --minimal-layout-sidebar-width-collapsed: 64px;
+  --minimal-layout-sidebar-width-mini: 48px;
+  --minimal-layout-sidebar-height: 100%;
+  --minimal-layout-sidebar-item-height: 44px;
+  --minimal-layout-sidebar-logo-height: 56px;
+  --minimal-layout-sidebar-transition-duration: 0.2s;
+  --minimal-layout-navbar-height: 64px;
+  --minimal-layout-navbar-padding-horizontal: 24px;
+  --minimal-layout-breadcrumb-gap: 8px;
+  --minimal-layout-content-padding: 24px;
+  --minimal-layout-content-padding-lg: 32px;
+  --minimal-layout-container-max-width: 1280px;
+  --minimal-layout-container-padding-horizontal: 24px;
+  --minimal-layout-grid-columns-desktop: 4;
+  --minimal-layout-grid-columns-laptop: 3;
+  --minimal-layout-grid-columns-tablet: 2;
+  --minimal-layout-grid-columns-mobile: 1;
+  --minimal-layout-grid-gap-sm: 12px;
+  --minimal-layout-grid-gap-md: 16px;
+  --minimal-layout-grid-gap-lg: 24px;
+}
+
+/* ============================================================================
+   8. Breakpoints - 断点
+   ============================================================================ */
+   9. Breakpoints - 断点
+   ============================================================================ */
+
+:root {
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* ============================================================================
+   10. Z-Index Scale - 层级
+   ============================================================================ */
+
+:root {
+  --z-index-dropdown: 1000;
+  --z-index-sticky: 1020;
+  --z-index-fixed: 1030;
+  --z-index-modal-backdrop: 1040;
+  --z-index-modal: 1050;
+  --z-index-popover: 1060;
+  --z-index-tooltip: 1070;
+  --z-index-notification: 1080;
+  --z-index-hologram: 1090;
+}
+
+/* ============================================================================
+   11. Utility Classes - 工具类
+   ============================================================================ */
+
+/* Glass Theme Utilities */
+.glass-card {
+  background: var(--glass-color-background-card);
+  backdrop-filter: var(--glass-effect-backdrop-blur-md);
+  border: 1px solid var(--glass-color-border-light);
+  border-radius: var(--glass-border-radius-lg);
+  box-shadow: var(--glass-effect-shadow-md);
+  transition: var(--transition-duration-normal) var(--transition-easing-ease-out);
+}
+
+.glass-card:hover {
+  box-shadow: var(--glass-effect-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.glass-popup {
+  background: var(--glass-color-background-overlay);
+  backdrop-filter: var(--glass-effect-backdrop-blur-sm);
+  border-radius: var(--glass-border-radius-md);
+  box-shadow: var(--glass-effect-shadow-lg);
+}
+
+.glass-nav {
+  background: var(--glass-color-background-card);
+  backdrop-filter: var(--glass-effect-backdrop-blur-md);
+  border-bottom: 1px solid var(--glass-color-border-light);
+}
+
+.glass-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-color-border-light);
+  border-radius: var(--glass-border-radius-md);
+  color: var(--glass-color-text-primary);
+  transition: var(--transition-duration-fast) var(--transition-easing-ease-out);
+}
+
+.glass-button:hover {
+  background: var(--glass-color-interactive-hover);
+  border-color: var(--glass-color-border-medium);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-color-border-light);
+  border-radius: var(--glass-border-radius-md);
+  color: var(--glass-color-text-primary);
+  transition: var(--transition-duration-fast) var(--transition-easing-ease-out);
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: var(--glass-color-border-focus);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+/* Bellis Theme Utilities */
+.minimal-card {
+  background: var(--minimal-color-background-card);
+  border-radius: var(--minimal-border-radius-lg);
+  box-shadow: var(--minimal-effect-shadow-sm);
+  border: 1px solid var(--minimal-color-border-light);
+}
+
+.minimal-card:hover {
+  box-shadow: var(--minimal-effect-shadow-md);
+}
+
+.minimal-button-primary {
+  background: var(--minimal-color-primary-500);
+  color: #ffffff;
+  border-radius: var(--minimal-border-radius-md);
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-duration-fast) var(--transition-easing-ease-out);
+  border: none;
+}
+
+.minimal-button-primary:hover {
+  background: var(--minimal-color-primary-600);
+}
+
+.minimal-button-secondary {
+  background: var(--minimal-color-neutral-100);
+  color: var(--minimal-color-neutral-700);
+  border-radius: var(--minimal-border-radius-md);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid var(--minimal-color-border-light);
+  transition: var(--transition-duration-fast) var(--transition-easing-ease-out);
+}
+
+.minimal-button-secondary:hover {
+  background: var(--minimal-color-neutral-200);
+}
+
+.minimal-button-ghost {
+  background: transparent;
+  color: var(--minimal-color-primary-500);
+  border-radius: var(--minimal-border-radius-md);
+  font-weight: var(--font-weight-medium);
+  transition: var(--transition-duration-fast) var(--transition-easing-ease-out);
+  border: none;
+}
+
+.minimal-button-ghost:hover {
+  background: var(--minimal-color-primary-50);
+}
+
+.minimal-input {
+  background: var(--minimal-color-background-default);
+  border: 1px solid var(--minimal-color-border-light);
+  border-radius: var(--minimal-border-radius-md);
+  color: var(--minimal-color-text-primary);
+  transition: var(--transition-duration-fast) var(--transition-easing-ease-out);
+}
+
+.minimal-input:focus {
+  outline: none;
+  border-color: var(--minimal-color-border-focus);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+}
+
+.minimal-sidebar {
+  background: var(--minimal-color-background-card);
+  border-right: 1px solid var(--minimal-color-border-light);
+  width: var(--minimal-layout-sidebar-width-expanded);
+  transition: width var(--minimal-layout-sidebar-transition-duration) var(--transition-easing-ease-in-out);
+}
+
+.minimal-sidebar.collapsed {
+  width: var(--minimal-layout-sidebar-width-collapsed);
+}
+
+.minimal-navbar {
+  height: var(--minimal-layout-navbar-height);
+  background: var(--minimal-color-background-card);
+  border-bottom: 1px solid var(--minimal-color-border-light);
+  box-shadow: var(--minimal-effect-shadow-xs);
+  padding: 0 var(--minimal-layout-navbar-padding-horizontal);
+}
+
+/* ============================================================================
+   End of Design Tokens CSS Variables
+   ============================================================================ */

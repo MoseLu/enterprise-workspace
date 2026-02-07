@@ -1,0 +1,35 @@
+/**
+ * SettingHeader Styles
+ * Enterprise Workspace - React User Setting Shared Components
+ */
+
+.settingHeader {
+  .closeWrap {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px;
+
+    .closeIcon {
+      display: block;
+      padding: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--ant-text-color-secondary);
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      border-radius: 5px;
+      transition: all 0.2s;
+
+      &:hover {
+        color: var(--ant-text-color);
+        background-color: var(--ant-colorBgLayout);
+      }
+
+      &:focus {
+        outline: 2px solid var(--ant-colorPrimary);
+        outline-offset: 2px;
+      }
+    }
+  }
+}

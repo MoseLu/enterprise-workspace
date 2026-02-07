@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Document Frontmatter Schema",
+  "description": "BTC 文档 frontmatter 验证模式",
+  "type": "object",
+  "required": ["title", "type", "project", "author", "created", "publish"],
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "文档标题",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "enum": ["summary", "rca", "howto", "decision", "guide", "api", "retro", "checklist"],
+      "description": "文档类型"
+    },
+    "project": {
+      "type": "string",
+      "description": "所属项目",
+      "minLength": 1
+    },
+    "package": {
+      "type": "string",
+      "description": "所属包（如 @btc/shared-components）"
+    },
+    "owner": {
+      "type": "string",
+      "description": "负责人（如 @alice）"
+    },
+    "author": {
+      "type": "string",
+      "description": "作者（如 ai:copilot-x 或真实用户名）",
+      "minLength": 1
+    },
+    "created": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "创建日期（YYYY-MM-DD）"
+    },
+    "updated": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "更新日期（YYYY-MM-DD）"
+    },
+    "publish": {
+      "type": "boolean",
+      "description": "是否发布到档案库"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "draft", "deprecated", "archived"],
+      "description": "文档状态"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "标签列表"
+    },
+    "confidentiality": {
+      "type": "string",
+      "enum": ["internal", "restricted", "public"],
+      "default": "internal",
+      "description": "保密级别"
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "repo": { "type": "string" },
+        "path": { "type": "string" },
+        "commit": { "type": "string" }
+      },
+      "description": "源文件信息"
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "pr": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        },
+        "issues": {
+          "type": "array",
+          "items": { "type": "string", "format": "uri" }
+        }
+      },
+      "description": "相关链接"
+    },
+    "reviewers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "评审者列表"
+    },
+    "last_review_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "上次评审日期"
+    },
+    "next_review_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "下次评审日期"
+    }
+  },
+  "additionalProperties": true
+}
+

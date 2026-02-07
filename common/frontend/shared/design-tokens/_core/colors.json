@@ -1,0 +1,118 @@
+/**
+ * Core Color Tokens
+ * 核心颜色令牌
+ *
+ * Design System: Enterprise Workspace
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "color": {
+    "gray": {
+      "50": {
+        "value": "#fafafa",
+        "type": "color",
+        "description": "最浅灰"
+      },
+      "100": {
+        "value": "#f4f4f5",
+        "type": "color",
+        "description": "浅灰"
+      },
+      "150": {
+        "value": "#e4e4e7",
+        "type": "color",
+        "description": "次浅灰"
+      },
+      "200": {
+        "value": "#d4d4d8",
+        "type": "color",
+        "description": "浅灰"
+      },
+      "300": {
+        "value": "#a1a1aa",
+        "type": "color",
+        "description": "中浅灰"
+      },
+      "400": {
+        "value": "#71717a",
+        "type": "color",
+        "description": "中灰"
+      },
+      "500": {
+        "value": "#52525b",
+        "type": "color",
+        "description": "中深灰"
+      },
+      "600": {
+        "value": "#3f3f46",
+        "type": "color",
+        "description": "深灰"
+      },
+      "700": {
+        "value": "#27272a",
+        "type": "color",
+        "description": "次深灰"
+      },
+      "800": {
+        "value": "#18181b",
+        "type": "color",
+        "description": "深灰"
+      },
+      "900": {
+        "value": "#09090b",
+        "type": "color",
+        "description": "最深灰"
+      }
+    },
+    "semantic": {
+      "success": {
+        "light": "#86efac",
+        "main": "#22c55e",
+        "dark": "#15803d",
+        "contrast": "#ffffff"
+      },
+      "warning": {
+        "light": "#fcd34d",
+        "main": "#f59e0b",
+        "dark": "#b45309",
+        "contrast": "#ffffff"
+      },
+      "error": {
+        "light": "#fca5a5",
+        "main": "#ef4444",
+        "dark": "#b91c1c",
+        "contrast": "#ffffff"
+      },
+      "info": {
+        "light": "#93c5fd",
+        "main": "#3b82f6",
+        "dark": "#1d4ed8",
+        "contrast": "#ffffff"
+      }
+    },
+    "functional": {
+      "divider": {
+        "value": "{color.gray.200}",
+        "type": "color",
+        "description": "分割线颜色"
+      },
+      "placeholder": {
+        "value": "{color.gray.400}",
+        "type": "color",
+        "description": "占位符颜色"
+      },
+      "disabled": {
+        "value": "{color.gray.300}",
+        "type": "color",
+        "description": "禁用状态颜色"
+      },
+      "backdrop": {
+        "value": "rgba(0, 0, 0, 0.5)",
+        "type": "color",
+        "description": "遮罩层颜色"
+      }
+    }
+  }
+}

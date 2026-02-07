@@ -1,0 +1,12 @@
+/**
+ * Permissions Page Styles
+ * React Admin - Access Control Module
+ */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  background: #f5f5f5;
+}

@@ -1,0 +1,522 @@
+/**
+ * Minimal Theme Component Tokens
+ * Minimal 极简主题组件令牌
+ *
+ * Design System: Enterprise Workspace
+ * Theme: Minimal / Minimalist
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "minimal": {
+    "component": {
+      "button": {
+        "height": {
+          "sm": "28px",
+          "md": "36px",
+          "lg": "44px",
+          "xl": "52px"
+        },
+        "padding-x": {
+          "sm": "12px",
+          "md": "16px",
+          "lg": "20px"
+        },
+        "radius": {
+          "value": "6px",
+          "type": "borderRadius",
+          "description": "按钮圆角"
+        },
+        "font-size": {
+          "sm": "12px",
+          "md": "14px",
+          "lg": "16px"
+        },
+        "font-weight": {
+          "value": "500",
+          "type": "fontWeight",
+          "description": "按钮字重"
+        },
+        "transition": {
+          "duration": "0.15s",
+          "description": "过渡动画"
+        },
+        "primary": {
+          "background": {
+            "value": "primary.500",
+            "type": "color",
+            "description": "主按钮背景"
+          },
+          "text": {
+            "value": "white",
+            "type": "color",
+            "description": "主按钮文字"
+          },
+          "hover": {
+            "background": {
+              "value": "primary.600",
+              "type": "color",
+              "description": "主按钮悬停背景"
+            }
+          }
+        },
+        "secondary": {
+          "background": {
+            "value": "neutral.100",
+            "type": "color",
+            "description": "次按钮背景"
+          },
+          "text": {
+            "value": "neutral.700",
+            "type": "color",
+            "description": "次按钮文字"
+          },
+          "hover": {
+            "background": {
+              "value": "neutral.200",
+              "type": "color",
+              "description": "次按钮悬停背景"
+            }
+          }
+        },
+        "ghost": {
+          "background": "transparent",
+          "text": {
+            "value": "primary.500",
+            "type": "color",
+            "description": "幽灵按钮文字"
+          },
+          "hover": {
+            "background": {
+              "value": "primary.50",
+              "type": "color",
+              "description": "幽灵按钮悬停背景"
+            }
+          }
+        }
+      },
+      "input": {
+        "height": {
+          "sm": "28px",
+          "md": "36px",
+          "lg": "44px"
+        },
+        "padding-x": {
+          "value": "12px",
+          "type": "spacing",
+          "description": "输入框水平内边距"
+        },
+        "radius": {
+          "value": "6px",
+          "type": "borderRadius",
+          "description": "输入框圆角"
+        },
+        "font-size": {
+          "value": "14px",
+          "type": "fontSize",
+          "description": "输入框字号"
+        },
+        "background": {
+          "value": "white",
+          "type": "color",
+          "description": "输入框背景"
+        },
+        "border": {
+          "value": "neutral.300",
+          "type": "color",
+          "description": "输入框边框"
+        },
+        "border-focus": {
+          "value": "primary.500",
+          "type": "color",
+          "description": "输入框聚焦边框"
+        },
+        "text": {
+          "value": "neutral.900",
+          "type": "color",
+          "description": "输入框文字"
+        },
+        "placeholder": {
+          "value": "neutral.400",
+          "type": "color",
+          "description": "输入框占位符"
+        }
+      },
+      "card": {
+        "padding": {
+          "value": "24px",
+          "type": "spacing",
+          "description": "卡片内边距"
+        },
+        "padding-sm": {
+          "value": "16px",
+          "type": "spacing",
+          "description": "小卡片内边距"
+        },
+        "radius": {
+          "value": "8px",
+          "type": "borderRadius",
+          "description": "卡片圆角"
+        },
+        "shadow": {
+          "value": "sm",
+          "type": "shadow",
+          "description": "卡片阴影"
+        },
+        "background": {
+          "value": "white",
+          "type": "color",
+          "description": "卡片背景"
+        }
+      },
+      "table": {
+        "header": {
+          "height": {
+            "value": "44px",
+            "type": "sizing",
+            "description": "表头高度"
+          },
+          "background": {
+            "value": "neutral.50",
+            "type": "color",
+            "description": "表头背景"
+          },
+          "text": {
+            "value": "neutral.700",
+            "type": "color",
+            "description": "表头文字"
+          },
+          "font-weight": {
+            "value": "600",
+            "type": "fontWeight",
+            "description": "表头字重"
+          }
+        },
+        "row": {
+          "height": {
+            "value": "52px",
+            "type": "sizing",
+            "description": "行高"
+          },
+          "hover": {
+            "background": {
+              "value": "neutral.50",
+              "type": "color",
+              "description": "行悬停背景"
+            }
+          },
+          "stripe": {
+            "background": {
+              "value": "neutral.50",
+              "type": "color",
+              "description": "斑马纹背景"
+            }
+          }
+        },
+        "cell": {
+          "padding": {
+            "value": "12px 16px",
+            "type": "spacing",
+            "description": "单元格内边距"
+          },
+          "border": {
+            "value": "neutral.200",
+            "type": "color",
+            "description": "单元格边框"
+          }
+        },
+        "radius": {
+          "value": "8px",
+          "type": "borderRadius",
+          "description": "表格圆角"
+        }
+      },
+      "pagination": {
+        "button": {
+          "size": {
+            "value": "32px",
+            "type": "sizing",
+            "description": "分页按钮尺寸"
+          },
+          "radius": {
+            "value": "6px",
+            "type": "borderRadius",
+            "description": "分页按钮圆角"
+          }
+        },
+        "active": {
+          "background": {
+            "value": "primary.500",
+            "type": "color",
+            "description": "当前页背景"
+          },
+          "text": {
+            "value": "white",
+            "type": "color",
+            "description": "当前页文字"
+          }
+        }
+      },
+      "breadcrumb": {
+        "separator": {
+          "value": "/",
+          "type": "other",
+          "description": "分隔符"
+        },
+        "link": {
+          "color": {
+            "value": "primary.500",
+            "type": "color",
+            "description": "链接颜色"
+          },
+          "hover": {
+            "color": {
+              "value": "primary.600",
+              "type": "color",
+              "description": "链接悬停颜色"
+            }
+          }
+        },
+        "current": {
+          "color": {
+            "value": "neutral.600",
+            "type": "color",
+            "description": "当前页颜色"
+          }
+        }
+      },
+      "tabs": {
+        "height": {
+          "value": "44px",
+          "type": "sizing",
+          "description": "标签页高度"
+        },
+        "padding": {
+          "horizontal": {
+            "value": "16px",
+            "type": "spacing",
+            "description": "标签水平内边距"
+          }
+        },
+        "active": {
+          "border": {
+            "value": "primary.500",
+            "type": "color",
+            "description": "激活边框"
+          },
+          "text": {
+            "value": "primary.500",
+            "type": "color",
+            "description": "激活文字"
+          }
+        },
+        "inactive": {
+          "text": {
+            "value": "neutral.600",
+            "type": "color",
+            "description": "未激活文字"
+          }
+        }
+      },
+      "select": {
+        "dropdown": {
+          "radius": {
+            "value": "6px",
+            "type": "borderRadius",
+            "description": "下拉框圆角"
+          },
+          "shadow": {
+            "value": "md",
+            "type": "shadow",
+            "description": "下拉框阴影"
+          }
+        },
+        "option": {
+          "height": {
+            "value": "36px",
+            "type": "sizing",
+            "description": "选项高度"
+          },
+          "padding": {
+            "value": "0 12px",
+            "type": "spacing",
+            "description": "选项内边距"
+          },
+          "hover": {
+            "background": {
+              "value": "neutral.100",
+              "type": "color",
+              "description": "选项悬停背景"
+            }
+          },
+          "selected": {
+            "background": {
+              "value": "primary.50",
+              "type": "color",
+              "description": "选中选项背景"
+            }
+          }
+        }
+      },
+      "checkbox": {
+        "size": {
+          "value": "16px",
+          "type": "sizing",
+          "description": "复选框尺寸"
+        },
+        "radius": {
+          "value": "4px",
+          "type": "borderRadius",
+          "description": "复选框圆角"
+        },
+        "checked": {
+          "background": {
+            "value": "primary.500",
+            "type": "color",
+            "description": "选中背景"
+          },
+          "border": {
+            "value": "primary.500",
+            "type": "color",
+            "description": "选中边框"
+          }
+        }
+      },
+      "radio": {
+        "size": {
+          "value": "16px",
+          "type": "sizing",
+          "description": "单选框尺寸"
+        },
+        "checked": {
+          "background": {
+            "value": "primary.500",
+            "type": "color",
+            "description": "选中背景"
+          }
+        }
+      },
+      "switch": {
+        "track": {
+          "width": {
+            "value": "44px",
+            "type": "sizing",
+            "description": "轨道宽度"
+          },
+          "height": {
+            "value": "24px",
+            "type": "sizing",
+            "description": "轨道高度"
+          },
+          "radius": {
+            "value": "12px",
+            "type": "borderRadius",
+            "description": "轨道圆角"
+          }
+        },
+        "thumb": {
+          "size": {
+            "value": "20px",
+            "type": "sizing",
+            "description": "滑块尺寸"
+          },
+          "radius": {
+            "value": "50%",
+            "type": "borderRadius",
+            "description": "滑块圆角"
+          }
+        }
+      },
+      "alert": {
+        "padding": {
+          "value": "12px 16px",
+          "type": "spacing",
+          "description": "警告框内边距"
+        },
+        "radius": {
+          "value": "6px",
+          "type": "borderRadius",
+          "description": "警告框圆角"
+        },
+        "icon": {
+          "size": {
+            "value": "20px",
+            "type": "sizing",
+            "description": "图标尺寸"
+          }
+        }
+      },
+      "loading": {
+        "spinner": {
+          "size": {
+            "sm": "16px",
+            "md": "24px",
+            "lg": "32px"
+          }
+        }
+      },
+      "modal": {
+        "padding": {
+          "value": "24px",
+          "type": "spacing",
+          "description": "模态框内边距"
+        },
+        "radius": {
+          "value": "8px",
+          "type": "borderRadius",
+          "description": "模态框圆角"
+        },
+        "shadow": {
+          "value": "lg",
+          "type": "shadow",
+          "description": "模态框阴影"
+        }
+      },
+      "tooltip": {
+        "padding": {
+          "value": "8px 12px",
+          "type": "spacing",
+          "description": "提示框内边距"
+        },
+        "radius": {
+          "value": "4px",
+          "type": "borderRadius",
+          "description": "提示框圆角"
+        },
+        "font-size": {
+          "value": "12px",
+          "type": "fontSize",
+          "description": "提示框字号"
+        },
+        "shadow": {
+          "value": "md",
+          "type": "shadow",
+          "description": "提示框阴影"
+        }
+      },
+      "tag": {
+        "padding-x": {
+          "value": "8px",
+          "type": "spacing",
+          "description": "标签水平内边距"
+        },
+        "padding-y": {
+          "value": "4px",
+          "type": "spacing",
+          "description": "标签垂直内边距"
+        },
+        "radius": {
+          "value": "4px",
+          "type": "borderRadius",
+          "description": "标签圆角"
+        },
+        "font-size": {
+          "value": "12px",
+          "type": "fontSize",
+          "description": "标签字号"
+        }
+      }
+    }
+  }
+}

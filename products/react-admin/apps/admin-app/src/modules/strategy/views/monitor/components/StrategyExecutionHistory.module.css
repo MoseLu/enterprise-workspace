@@ -1,0 +1,167 @@
+/**
+ * Strategy Execution History Styles
+ */
+
+.history {
+  .historyHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .headerInfo {
+    h3 {
+      margin: 0 0 4px 0;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 0;
+      color: var(--anticolor-text-secondary, #888);
+      font-size: 14px;
+    }
+  }
+
+  .headerControls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .statusSelect {
+    width: 120px;
+  }
+
+  .tablePagination {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .jsonPreview {
+    max-height: 300px;
+    overflow-y: auto;
+    font-size: 12px;
+    background: var(--anticolor-bg-container, #f5f5f5);
+    padding: 8px;
+    border-radius: 4px;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  .detailContent {
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  .detailSection {
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    h4 {
+      margin: 0 0 12px 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--anticolor-text-primary, #333);
+    }
+  }
+
+  .detailRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .detailItem {
+    flex: 1;
+    min-width: 200px;
+
+    .detailLabel {
+      font-size: 12px;
+      color: var(--anticolor-text-secondary, #888);
+      margin-bottom: 4px;
+    }
+
+    .detailValue {
+      font-size: 14px;
+      color: var(--anticolor-text, #333);
+    }
+  }
+
+  .stepsList {
+    .stepItem {
+      padding: 12px;
+      background: var(--anticolor-bg-container, #f5f5f5);
+      border-radius: 6px;
+      margin-bottom: 12px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .stepHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .stepName {
+      font-weight: 600;
+      color: var(--anticolor-text-primary, #333);
+    }
+
+    .stepDuration {
+      font-size: 12px;
+      color: var(--anticolor-text-secondary, #888);
+    }
+
+    .stepResult {
+      font-size: 12px;
+      color: var(--anticolor-text, #333);
+      margin-top: 8px;
+
+      pre {
+        margin: 8px 0 0 0;
+        padding: 8px;
+        background: var(--anticolor-bg, #fff);
+        border-radius: 4px;
+        max-height: 100px;
+        overflow: auto;
+      }
+    }
+
+    .stepError {
+      font-size: 12px;
+      color: #ff4d4f;
+      margin-top: 8px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .historyHeader {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .headerControls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .tablePagination {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "knowledge-base-server",
+  "version": "1.0.0",
+  "description": "Enterprise Workspace Knowledge Base MCP Server - RAG 检索能力",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w",
+    "start": "node dist/index.js",
+    "test": "node dist/test-cli.js"
+  },
+  "keywords": [
+    "mcp",
+    "knowledge-base",
+    "rag",
+    "enterprise-workspace"
+  ],
+  "author": "Enterprise Architecture Team",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

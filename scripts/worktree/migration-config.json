@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "pc-admin → react-admin 迁移配置",
+  "migration": {
+    "source": {
+      "path": "products/pc-admin",
+      "techStack": ["Vue3", "Element Plus", "Pinia", "Vue Router"]
+    },
+    "target": {
+      "path": "products/react-admin",
+      "techStack": ["React", "Ant Design", "Zustand", "React Router"]
+    },
+    "designSystem": "@enterprise-workspace/frontend"
+  },
+  "phases": [
+    {
+      "name": "验证期",
+      "apps": ["home-app", "docs-app"],
+      "priority": 1,
+      "status": "completed",
+      "description": "低复杂度应用验证技术栈"
+    },
+    {
+      "name": "第一批",
+      "apps": ["admin-app", "operations-app"],
+      "priority": 2,
+      "status": "in_progress",
+      "description": "中等复杂度业务应用"
+    },
+    {
+      "name": "第二批",
+      "apps": ["main-app", "layout-app"],
+      "priority": 3,
+      "status": "pending",
+      "description": "核心框架应用"
+    },
+    {
+      "name": "第三批",
+      "apps": [
+        "system-app",
+        "dashboard-app",
+        "logistics-app",
+        "finance-app",
+        "engineering-app",
+        "personnel-app",
+        "production-app",
+        "quality-app"
+      ],
+      "priority": 4,
+      "status": "pending",
+      "description": "剩余业务应用"
+    }
+  ],
+  "parallelGroups": [
+    {
+      "name": "group-1",
+      "apps": ["admin-app", "operations-app"],
+      "maxConcurrent": 2
+    },
+    {
+      "name": "group-2",
+      "apps": ["main-app", "layout-app"],
+      "maxConcurrent": 2
+    },
+    {
+      "name": "group-3",
+      "apps": ["system-app", "dashboard-app"],
+      "maxConcurrent": 2
+    },
+    {
+      "name": "group-4",
+      "apps": ["logistics-app", "finance-app"],
+      "maxConcurrent": 2
+    },
+    {
+      "name": "group-5",
+      "apps": ["engineering-app", "personnel-app"],
+      "maxConcurrent": 2
+    },
+    {
+      "name": "group-6",
+      "apps": ["production-app", "quality-app"],
+      "maxConcurrent": 2
+    }
+  ],
+  "shared": {
+    "packages": [
+      "shared-core",
+      "shared-components",
+      "shared-router"
+    ]
+  }
+}

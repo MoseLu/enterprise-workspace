@@ -1,0 +1,156 @@
+/**
+ * Glass Theme Colors
+ * 玻璃态主题颜色令牌
+ *
+ * Based on haowallpaper website design
+ * https://github.com/BellisGit/enterprise-workspace/blob/main/docs/others/设计方案/haowallpaper网站设计思路分析.md
+ *
+ * Design System: Enterprise Workspace
+ * Theme: Glass / Dark Theme
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "glass": {
+    "color": {
+      "background": {
+        "primary": {
+          "value": "#1a1a1a",
+          "type": "color",
+          "description": "深色主背景"
+        },
+        "secondary": {
+          "value": "#252525",
+          "type": "color",
+          "description": "深色次背景"
+        },
+        "tertiary": {
+          "value": "#2a2a2a",
+          "type": "color",
+          "description": "深色第三背景"
+        },
+        "card": {
+          "value": "rgba(40, 40, 40, 0.8)",
+          "type": "color",
+          "description": "玻璃态卡片背景"
+        },
+        "card-hover": {
+          "value": "rgba(50, 50, 50, 0.85)",
+          "type": "color",
+          "description": "玻璃态卡片悬停背景"
+        },
+        "overlay": {
+          "value": "rgba(0, 0, 0, 0.8)",
+          "type": "color",
+          "description": "遮罩层背景"
+        },
+        "modal": {
+          "value": "rgba(20, 20, 20, 0.95)",
+          "type": "color",
+          "description": "模态框背景"
+        }
+      },
+      "text": {
+        "primary": {
+          "value": "#ffffff",
+          "type": "color",
+          "description": "主要文本"
+        },
+        "secondary": {
+          "value": "#e0e0e0",
+          "type": "color",
+          "description": "次要文本"
+        },
+        "muted": {
+          "value": "rgba(255, 255, 255, 0.7)",
+          "type": "color",
+          "description": "柔和文本"
+        },
+        "disabled": {
+          "value": "rgba(255, 255, 255, 0.5)",
+          "type": "color",
+          "description": "禁用文本"
+        },
+        "placeholder": {
+          "value": "rgba(255, 255, 255, 0.4)",
+          "type": "color",
+          "description": "占位符文本"
+        }
+      },
+      "border": {
+        "light": {
+          "value": "rgba(255, 255, 255, 0.08)",
+          "type": "color",
+          "description": "浅色边框"
+        },
+        "medium": {
+          "value": "rgba(255, 255, 255, 0.12)",
+          "type": "color",
+          "description": "中色边框"
+        },
+        "focus": {
+          "value": "rgba(255, 255, 255, 0.3)",
+          "type": "color",
+          "description": "聚焦边框"
+        }
+      },
+      "interactive": {
+        "hover": {
+          "value": "rgba(255, 255, 255, 0.05)",
+          "type": "color",
+          "description": "悬停背景"
+        },
+        "active": {
+          "value": "rgba(255, 255, 255, 0.12)",
+          "type": "color",
+          "description": "激活背景"
+        },
+        "focus": {
+          "value": "rgba(255, 255, 255, 0.15)",
+          "type": "color",
+          "description": "聚焦背景"
+        },
+        "selected": {
+          "value": "rgba(255, 255, 255, 0.18)",
+          "type": "color",
+          "description": "选中背景"
+        }
+      },
+      "status": {
+        "success": {
+          "value": "#22c55e",
+          "type": "color",
+          "description": "成功状态"
+        },
+        "warning": {
+          "value": "#f59e0b",
+          "type": "color",
+          "description": "警告状态"
+        },
+        "error": {
+          "value": "#ef4444",
+          "type": "color",
+          "description": "错误状态"
+        },
+        "info": {
+          "value": "#3b82f6",
+          "type": "color",
+          "description": "信息状态"
+        }
+      },
+      "tag": {
+        "background": {
+          "value": "rgba(255, 255, 255, 0.1)",
+          "type": "color",
+          "description": "标签背景"
+        },
+        "text": {
+          "value": "rgba(255, 255, 255, 0.8)",
+          "type": "color",
+          "description": "标签文字"
+        }
+      }
+    }
+  }
+}

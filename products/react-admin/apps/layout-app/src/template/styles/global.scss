@@ -1,0 +1,95 @@
+// 导入共享组件样式（必须在文件开头，确保优先级）
+// 使用 @import 确保在构建时，SCSS 预处理器会将共享组件样式合并到 global.scss 中
+// 使用 @use ... as * 确保样式被正确导入并应用到全局（兼容 @use 模块化）
+@use '@btc/shared-components/styles/index.scss' as *;
+
+// Global styles for {{APP_NAME}} app
+
+// 自定义 CSS 变量（与 cool-admin 保持一致）
+:root {
+  --bg-color: var(--el-fill-color-lighter);
+}
+
+// 确保 body 和 html 有正确的背景色（双层背景效果）
+html,
+body {
+  background-color: var(--el-bg-color-page, #ffffff);
+  color: var(--el-text-color-primary, #303133);
+}
+
+// 暗色模式下的背景色
+html.dark,
+html.dark body {
+  background-color: var(--el-bg-color-page, #0a0a0a);
+  color: var(--el-text-color-primary, #e5eaf3);
+}
+
+// Reset default styles
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  // 当使用 layout-app 时，#app 挂载到 #subapp-viewport，由 layout-app 的样式控制宽度和布局
+  // 独立运行时，body 和 html 已经设置了 width: 100%，所以 #app 不需要额外设置
+}
+
+// Custom scrollbar (align with cool-admin)
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  opacity: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 1;
+}
+
+html.dark {
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+// 当鼠标悬停或滚动时显示滚动条
+*:hover {
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-thumb {
+    opacity: 1;
+  }
+}
+
+// 滚动时显示滚动条
+*:has(:focus-within),
+*:focus-within {
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-thumb {
+    opacity: 1;
+  }
+}
+

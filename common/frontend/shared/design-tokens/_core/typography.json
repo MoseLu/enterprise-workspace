@@ -1,0 +1,183 @@
+/**
+ * Core Typography Tokens
+ * 核心排版令牌
+ *
+ * Design System: Enterprise Workspace
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "typography": {
+    "font-family": {
+      "sans": {
+        "value": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+        "type": "fontFamily",
+        "description": "无衬线字体"
+      },
+      "serif": {
+        "value": "'Merriweather', Georgia, Cambria, 'Times New Roman', Times, serif",
+        "type": "fontFamily",
+        "description": "衬线字体"
+      },
+      "mono": {
+        "value": "'JetBrains Mono', 'Fira Code', 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace",
+        "type": "fontFamily",
+        "description": "等宽字体"
+      }
+    },
+    "font-size": {
+      "xs": {
+        "value": "12px",
+        "type": "fontSize",
+        "description": "超小字"
+      },
+      "sm": {
+        "value": "14px",
+        "type": "fontSize",
+        "description": "小字"
+      },
+      "base": {
+        "value": "16px",
+        "type": "fontSize",
+        "description": "基准字"
+      },
+      "lg": {
+        "value": "18px",
+        "type": "fontSize",
+        "description": "大字"
+      },
+      "xl": {
+        "value": "20px",
+        "type": "fontSize",
+        "description": "标题小"
+      },
+      "2xl": {
+        "value": "24px",
+        "type": "fontSize",
+        "description": "标题中"
+      },
+      "3xl": {
+        "value": "30px",
+        "type": "fontSize",
+        "description": "标题大"
+      },
+      "4xl": {
+        "value": "36px",
+        "type": "fontSize",
+        "description": "标题特大"
+      },
+      "5xl": {
+        "value": "48px",
+        "type": "fontSize",
+        "description": "超大标题"
+      }
+    },
+    "line-height": {
+      "none": {
+        "value": "1",
+        "type": "lineHeight",
+        "description": "无行高"
+      },
+      "tight": {
+        "value": "1.25",
+        "type": "lineHeight",
+        "description": "紧凑行高"
+      },
+      "snug": {
+        "value": "1.375",
+        "type": "lineHeight",
+        "description": "略紧凑"
+      },
+      "normal": {
+        "value": "1.5",
+        "type": "lineHeight",
+        "description": "常规行高"
+      },
+      "relaxed": {
+        "value": "1.625",
+        "type": "lineHeight",
+        "description": "略宽松"
+      },
+      "loose": {
+        "value": "2",
+        "type": "lineHeight",
+        "description": "宽松行高"
+      }
+    },
+    "font-weight": {
+      "thin": {
+        "value": "100",
+        "type": "fontWeight",
+        "description": "极细"
+      },
+      "extralight": {
+        "value": "200",
+        "type": "fontWeight",
+        "description": "特细"
+      },
+      "light": {
+        "value": "300",
+        "type": "fontWeight",
+        "description": "细体"
+      },
+      "normal": {
+        "value": "400",
+        "type": "fontWeight",
+        "description": "常规"
+      },
+      "medium": {
+        "value": "500",
+        "type": "fontWeight",
+        "description": "中等"
+      },
+      "semibold": {
+        "value": "600",
+        "type": "fontWeight",
+        "description": "半粗"
+      },
+      "bold": {
+        "value": "700",
+        "type": "fontWeight",
+        "description": "粗体"
+      },
+      "extrabold": {
+        "value": "800",
+        "type": "fontWeight",
+        "description": "特粗"
+      },
+      "black": {
+        "value": "900",
+        "type": "fontWeight",
+        "description": "黑体"
+      }
+    },
+    "letter-spacing": {
+      "tighter": {
+        "value": "-0.05em",
+        "type": "letterSpacing",
+        "description": "更紧凑"
+      },
+      "tight": {
+        "value": "-0.025em",
+        "type": "letterSpacing",
+        "description": "紧凑"
+      },
+      "normal": {
+        "value": "0",
+        "type": "letterSpacing",
+        "description": "常规"
+      },
+      "wide": {
+        "value": "0.025em",
+        "type": "letterSpacing",
+        "description": "宽松"
+      },
+      "wider": {
+        "value": "0.05em",
+        "type": "letterSpacing",
+        "description": "更宽松"
+      }
+    }
+  }
+}

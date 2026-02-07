@@ -1,0 +1,25 @@
+/**
+ * SettingItem Styles
+ * Enterprise Workspace - React User Setting Shared Components
+ */
+
+.settingItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 25px;
+  background: transparent !important;
+
+  .label {
+    font-size: 14px;
+    color: var(--ant-text-color-secondary);
+    background: transparent !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .mobileHide {
+    display: none !important;
+  }
+}

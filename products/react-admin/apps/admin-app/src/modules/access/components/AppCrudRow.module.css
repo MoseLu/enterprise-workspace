@@ -1,0 +1,11 @@
+/**
+ * AppCrudRow Styles
+ * React Admin - Access Control Module
+ */
+
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}

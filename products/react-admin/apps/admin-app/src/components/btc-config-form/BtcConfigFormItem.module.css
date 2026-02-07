@@ -1,0 +1,57 @@
+.formItem {
+  display: flex;
+  margin-bottom: 18px;
+}
+
+.label {
+  padding-right: 12px;
+  text-align: right;
+  box-sizing: border-box;
+  color: var(--anticolorTextSecondary, #666);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.labelText {
+  display: inline-flex;
+  align-items: center;
+  line-height: 32px;
+}
+
+.asterisk {
+  color: var(--anticolorError, #ff4d4f);
+  margin-right: 4px;
+}
+
+.content {
+  flex: 1;
+  line-height: 32px;
+}
+
+.errorMessage {
+  color: var(--anticolorError, #ff4d4f);
+  font-size: 12px;
+  line-height: 1;
+  padding-top: 4px;
+}
+
+.required .label {
+  color: var(--anticolorText, #333);
+}
+
+.error .label {
+  color: var(--anticolorError, #ff4d4f);
+}
+
+/* Compact mode */
+.compact {
+  margin-bottom: 12px;
+}
+
+.compact .labelText {
+  line-height: 24px;
+}
+
+.compact .content {
+  line-height: 24px;
+}

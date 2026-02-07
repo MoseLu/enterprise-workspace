@@ -1,0 +1,188 @@
+.deploymentTest {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  min-height: 0;
+  background-color: var(--ant-color-bg-container);
+  overflow-y: auto;
+}
+
+.header {
+  margin-bottom: 16px;
+  flex-shrink: 0;
+
+  .title {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ant-color-text);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.appSelectCard {
+  margin-bottom: 16px;
+  flex-shrink: 0;
+
+  .appTable {
+    margin-top: 16px;
+  }
+}
+
+.progressCard {
+  margin-bottom: 16px;
+  flex-shrink: 0;
+
+  .progressInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .progressDetails {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+
+    .progressText {
+      font-size: 14px;
+      color: var(--ant-color-text-secondary);
+    }
+
+    .progressStats {
+      font-size: 14px;
+    }
+  }
+}
+
+.resultsCard {
+  flex-shrink: 0;
+
+  .summarySection {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--ant-color-border);
+
+    > .ant-typography {
+      margin-bottom: 16px;
+    }
+  }
+
+  .summaryStats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .summaryItem {
+    flex: 1;
+    min-width: 120px;
+    padding: 16px;
+    background-color: var(--ant-color-bg-layout);
+    border-radius: 8px;
+    text-align: center;
+
+    .summaryLabel {
+      font-size: 14px;
+      color: var(--ant-color-text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .summaryValue {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--ant-color-text);
+
+      &.success {
+        color: var(--ant-color-success);
+      }
+
+      &.failed {
+        color: var(--ant-color-error);
+      }
+
+      &.highRate {
+        color: var(--ant-color-success);
+      }
+
+      &.lowRate {
+        color: var(--ant-color-error);
+      }
+    }
+  }
+}
+
+.detailsModal {
+  :global(.ant-modal-body) {
+    padding: 24px;
+  }
+
+  .detailsContent {
+    .detailHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--ant-color-border);
+
+      .ant-typography {
+        margin: 0;
+      }
+
+      .detailTag {
+        font-size: 16px;
+        padding: 4px 12px;
+      }
+    }
+
+    .errorsSection {
+      margin-top: 24px;
+
+      .errorIcon {
+        color: var(--ant-color-error);
+        margin-right: 8px;
+      }
+
+      .ant-typography {
+        margin-bottom: 16px;
+      }
+    }
+  }
+}
+
+// 动画
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// 响应式适配
+@media (max-width: 768px) {
+  .deploymentTest {
+    padding: 12px;
+  }
+
+  .header {
+    .title {
+      font-size: 20px;
+    }
+  }
+
+  .summaryStats {
+    flex-direction: column;
+  }
+
+  .summaryItem {
+    flex: none;
+    width: 100%;
+  }
+}

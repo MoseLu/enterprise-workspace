@@ -1,0 +1,129 @@
+/**
+ * Core Transition Tokens
+ * 核心过渡动画令牌
+ *
+ * Design System: Enterprise Workspace
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "transition": {
+    "duration": {
+      "fastest": {
+        "value": "75ms",
+        "type": "duration",
+        "description": "最快动画"
+      },
+      "faster": {
+        "value": "100ms",
+        "type": "duration",
+        "description": "较快动画"
+      },
+      "fast": {
+        "value": "150ms",
+        "type": "duration",
+        "description": "快速动画"
+      },
+      "normal": {
+        "value": "200ms",
+        "type": "duration",
+        "description": "常规动画"
+      },
+      "slow": {
+        "value": "300ms",
+        "type": "duration",
+        "description": "慢速动画"
+      },
+      "slower": {
+        "value": "500ms",
+        "type": "duration",
+        "description": "更慢动画"
+      },
+      "slowest": {
+        "value": "700ms",
+        "type": "duration",
+        "description": "最慢动画"
+      }
+    },
+    "easing": {
+      "linear": {
+        "value": "linear",
+        "type": "transitionTimingFunction",
+        "description": "线性"
+      },
+      "ease": {
+        "value": "ease",
+        "type": "transitionTimingFunction",
+        "description": "缓动"
+      },
+      "ease-in": {
+        "value": "ease-in",
+        "type": "transitionTimingFunction",
+        "description": "渐入"
+      },
+      "ease-out": {
+        "value": "ease-out",
+        "type": "transitionTimingFunction",
+        "description": "渐出"
+      },
+      "ease-in-out": {
+        "value": "ease-in-out",
+        "type": "transitionTimingFunction",
+        "description": "渐入渐出"
+      },
+      "ease-in-quart": {
+        "value": "cubic-bezier(0.5, 0, 0.75, 0)",
+        "type": "transitionTimingFunction",
+        "description": "四分之一缓入"
+      },
+      "ease-out-quart": {
+        "value": "cubic-bezier(0.25, 1, 0.5, 1)",
+        "type": "transitionTimingFunction",
+        "description": "四分之一缓出"
+      },
+      "ease-in-back": {
+        "value": "cubic-bezier(0.6, -0.28, 0.735, 0.045)",
+        "type": "transitionTimingFunction",
+        "description": "回退缓入"
+      },
+      "ease-out-back": {
+        "value": "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+        "type": "transitionTimingFunction",
+        "description": "回退缓出（弹性）"
+      },
+      "spring": {
+        "value": "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+        "type": "transitionTimingFunction",
+        "description": "弹簧效果"
+      }
+    },
+    "property": {
+      "all": {
+        "value": "all",
+        "type": "transitionProperty",
+        "description": "所有属性"
+      },
+      "colors": {
+        "value": "background-color, border-color, color, fill, stroke",
+        "type": "transitionProperty",
+        "description": "颜色属性"
+      },
+      "opacity": {
+        "value": "opacity",
+        "type": "transitionProperty",
+        "description": "透明度"
+      },
+      "transform": {
+        "value": "transform",
+        "type": "transitionProperty",
+        "description": "变换"
+      },
+      "shadow": {
+        "value": "box-shadow",
+        "type": "transitionProperty",
+        "description": "阴影"
+      }
+    }
+  }
+}

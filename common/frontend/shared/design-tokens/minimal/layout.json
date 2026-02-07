@@ -1,0 +1,85 @@
+/**
+ * Minimal Theme Layout
+ * Minimal 极简主题布局
+ *
+ * Design System: Enterprise Workspace
+ * Theme: Minimal / Minimalist
+ * Version: 1.0.0
+ */
+
+{
+  "$schema": "https://schemas.style-dictionary.io/v4.0.0/schema.json",
+  "minimal": {
+    "layout": {
+      "sidebar": {
+        "width": {
+          "expanded": "240px",
+          "collapsed": "64px",
+          "mini": "48px"
+        },
+        "height": "100%",
+        "item": {
+          "height": "44px",
+          "padding": "0 12px"
+        },
+        "logo": {
+          "height": "56px",
+          "padding": "12px 16px"
+        },
+        "transition": {
+          "duration": "0.2s"
+        }
+      },
+      "navbar": {
+        "height": "64px",
+        "padding": {
+          "horizontal": "24px"
+        },
+        "breadcrumb": {
+          "gap": "8px"
+        }
+      },
+      "content": {
+        "padding": "24px",
+        "padding-lg": "32px"
+      },
+      "container": {
+        "max-width": "1280px",
+        "padding": {
+          "horizontal": "24px"
+        }
+      },
+      "grid": {
+        "columns": {
+          "desktop": 4,
+          "laptop": 3,
+          "tablet": 2,
+          "mobile": 1
+        },
+        "gap": {
+          "sm": "12px",
+          "md": "16px",
+          "lg": "24px"
+        }
+      },
+      "breakpoint": {
+        "xs": "480px",
+        "sm": "640px",
+        "md": "768px",
+        "lg": "1024px",
+        "xl": "1280px",
+        "2xl": "1536px"
+      },
+      "z-index": {
+        "dropdown": 1000,
+        "sticky": 1020,
+        "fixed": 1030,
+        "modal-backdrop": 1040,
+        "modal": 1050,
+        "popover": 1060,
+        "tooltip": 1070,
+        "notification": 1080
+      }
+    }
+  }
+}
